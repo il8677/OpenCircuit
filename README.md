@@ -6,3 +6,8 @@ OpenCircuit aims to be an easy to use, transistor level circuit designer. Most c
 
 ## Dependencies
 This program is written in C++, using the SFML rendering framework and IMGUI for the user interface.
+
+## Building
+1. Build the static libraries for SFML
+2. Run premake on the projects root directory specifying the relevant action (e.g. vs2019)
+3. Build
