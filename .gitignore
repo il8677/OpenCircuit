@@ -1,0 +1,7 @@
+*.sln
+*.vcxproj
+*.user
+
+obj/
+.vs/
+bin/
