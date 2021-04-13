@@ -7,7 +7,7 @@ project "OpenCircuit"
     language "C++"
     targetdir "bin/%{cfg.buildcfg}"
 
-    files {"**.h", "**.cpp"}
+    files {"%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp"}
 
     includedirs{
         "%{prj.name}/depen/SFML/include"
