@@ -11,14 +11,16 @@ void ChunkRenderer::Render(Window& w) {
 	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
 	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
 
+	const sf::Color GRIDCOLOUR(255, 255, 255, 75);
+
 	//Theres probably a more efficient way of doing this all seperatley
 	for (int x = 0; x < CHUNK_X; x++) {
 		int index = x * 2;
 		grid[index].position = sf::Vector2f(x * VERTDIST, 0.0f);
 		grid[index + 1].position = sf::Vector2f(x * VERTDIST, CHUNK_Y*VERTDIST);
 
-		grid[index].color = sf::Color::White;
-		grid[index + 1].color = sf::Color::White;
+		grid[index].color = GRIDCOLOUR;
+		grid[index + 1].color = GRIDCOLOUR;
 	}
 
 	for (int y = 0; y < CHUNK_Y; y++) {
@@ -26,8 +28,8 @@ void ChunkRenderer::Render(Window& w) {
 		grid[index].position = sf::Vector2f(0.0f, y * VERTDIST);
 		grid[index + 1].position = sf::Vector2f(CHUNK_X * VERTDIST, y * VERTDIST);
 
-		grid[index].color = sf::Color::White;
-		grid[index + 1].color = sf::Color::White;
+		grid[index].color = GRIDCOLOUR;
+		grid[index + 1].color = GRIDCOLOUR;
 	}
 
 	for (int x = 0; x < CHUNK_X; x++) {
