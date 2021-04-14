@@ -1,4 +1,7 @@
+#pragma once
 #include <SFML/Graphics.hpp>
+
+// TODO: Abstract from SFML
 
 class Window {
 public:
@@ -13,6 +16,8 @@ public:
 
 	void imGuiBegin();
 	void imGuiDraw();
+
+	void renderVerts(sf::VertexArray va);
 private:
 	sf::RenderWindow _window;
 	sf::Clock _deltaClock;

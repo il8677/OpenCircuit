@@ -1,4 +1,5 @@
 #pragma once
+#include "../Window/window.h"
 
 // TODO: Abstract and decouple from SFML
 
@@ -11,5 +12,5 @@ public:
 
 	ChunkRenderer(Chunk& c);
 
-
+	void Render(Window& w);
 };

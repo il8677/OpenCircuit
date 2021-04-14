@@ -6,8 +6,8 @@
 #include "Job.h"
 #include "../Utility/vec4.h"
 
-#define CHUNK_X 16
-#define CHUNK_Y 16
+#define CHUNK_X 32
+#define CHUNK_Y 32
 
 //0 = nothing
 //1 = wire
@@ -31,6 +31,8 @@ protected:
 public:
 	std::vector<Input*>  getInputs();
 	std::vector<Output*> getOutputs();
+
+	int getCellId(int x, int y) const;
 
 	void setComponent(Component* c, int x, int y);
 

@@ -11,7 +11,7 @@ std::vector<Input*> Chunk::getInputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (cMap[x][y]->id == 2)
+			if (cMap[x][y]->id() == 2)
 				returnVector.push_back((Input*)cMap[x][y]);
 		}
 	}
@@ -25,11 +25,16 @@ std::vector<Output*> Chunk::getOutputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (cMap[x][y]->id == 3)
+			if (cMap[x][y]->id() == 3)
 				returnVector.push_back((Output*)cMap[x][y]);
 		}
 	}
 	return returnVector;
+}
+
+int Chunk::getCellId(int x, int y) const
+{
+	return cMap[x][y]->id();
 }
 
 void Chunk::setComponent(Component* c, int x, int y) {
@@ -64,7 +69,7 @@ void Chunk::createUpdateJob(int x, int y, DIR d) {
 void Chunk::updateInputs() {
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (cMap[x][y]->id == 2) 
+			if (cMap[x][y]->id() == 2) 
 				createUpdatesAround(x, y);
 		}
 	}

@@ -36,6 +36,11 @@ void Window::imGuiDraw() {
 	ImGui::SFML::Render(_window);
 }
 
+void Window::renderVerts(sf::VertexArray va)
+{
+	_window.draw(va);
+}
+
 Window::~Window() {
 	ImGui::SFML::Shutdown();
 }
@@ -47,4 +52,5 @@ Window::Window(int x, int y) : _window(sf::VideoMode(x, y), "OpenCircuit")
 	ImGui::SFML::Init(_window);
 	_window.resetGLStates();
 	_deltaClock.restart();
+
 }

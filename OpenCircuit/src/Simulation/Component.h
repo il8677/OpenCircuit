@@ -8,11 +8,12 @@
 //4 = transistor
 //5 = ntransistor
 
-#define COMPONENTDEF(identifier) public: static const int id = identifier
+#define COMPONENTDEF(identifier) public: virtual int id() override{return identifier;} 
 
 class Component
 {
-	COMPONENTDEF(0);
+public:
+	virtual int id() { return 0;}
 protected:
 	bool _state;
 
@@ -29,32 +30,32 @@ public:
 };
 
 class Wire : public Component {
-	COMPONENTDEF(1);
+	COMPONENTDEF(1)
 protected:
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 public:
 };
 
 class Input : public Component {
-	COMPONENTDEF(2);
+	COMPONENTDEF(2)
 protected:
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 public:
 };
 
 class Output : public Wire {
-	COMPONENTDEF(3);
+	COMPONENTDEF(3)
 public:
 };
 
 class Transistor : public Component {
-	COMPONENTDEF(4);
+	COMPONENTDEF(4)
 public:	
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 };
 
 class nTransistor : public Transistor {
-	COMPONENTDEF(5);
+	COMPONENTDEF(5)
 public:
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 };
