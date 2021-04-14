@@ -2,11 +2,11 @@
 
 //TODO: Split implementations into seperate files
 bool Component::getState() {
-	return state;
+	return _state;
 }
 
 void Component::setState(bool s) {
-	state = s;
+	_state = s;
 }
 
 bool Component::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
@@ -14,9 +14,9 @@ bool Component::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
 }
 
 bool Component::update(vec4<bool> neighbours, DIR sourceDir) {
-	bool oldState = state;
-	state = predictOutput(neighbours, sourceDir);
-	return !oldState == state;
+	bool oldState = _state;
+	_state = predictOutput(neighbours, sourceDir);
+	return !oldState == _state;
 }
 
 bool Wire::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
@@ -24,7 +24,7 @@ bool Wire::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
 }
 
 bool Input::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
-	return state;
+	return _state;
 }
 
 bool Transistor::predictOutput(vec4<bool> neighbours, DIR sourceDir) const {

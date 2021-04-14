@@ -14,7 +14,7 @@ class Component
 {
 	COMPONENTDEF(0);
 protected:
-	bool state;
+	bool _state;
 
 	// Returns what the updated state would be after a change from  the specified direction
 	virtual bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const;
