@@ -21,6 +21,9 @@ public:
 	void renderVerts(sf::VertexArray va);
 
 	void addEventCallback(int eventId, EventCallback ec);
+
+	void screenToWorld(int &x, int &y);
+
 private:
 	EventManager _eManager;
 

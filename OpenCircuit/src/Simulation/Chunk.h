@@ -35,6 +35,7 @@ public:
 	int getCellId(int x, int y) const;
 
 	void setComponent(Component* c, int x, int y);
+	void setComponent(int cid, int x, int y);
 
 	//Creates an update job around all the input cells
 	void updateInputs();

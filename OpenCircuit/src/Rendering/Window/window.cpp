@@ -7,6 +7,10 @@ bool Window::isOpen() {
 	return _window.isOpen();
 }
 
+void Window::screenToWorld(int& x, int& y) {
+
+}
+
 void Window::handleEvents()
 {
 	sf::Event e;
@@ -32,6 +36,8 @@ void Window::handleEvents()
 			case sf::Mouse::Left:
 				id = EventCode::LeftDown;
 				break;
+			default:
+				continue;
 			}
 			_eManager.handleEvent(new MouseButtonEvent(e.mouseButton.x, e.mouseButton.y, id));
 		}

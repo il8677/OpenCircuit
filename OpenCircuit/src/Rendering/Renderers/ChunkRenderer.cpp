@@ -75,3 +75,10 @@ void ChunkRenderer::Render(Window& w) {
 	w.renderVerts(cells);
 	w.renderVerts(grid);
 }
+
+void ChunkRenderer::worldToGrid(int& x, int& y)
+{
+	x = x / VERTDIST;
+	y = y / VERTDIST;
+}
+

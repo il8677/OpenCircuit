@@ -38,8 +38,15 @@ int Chunk::getCellId(int x, int y) const
 }
 
 void Chunk::setComponent(Component* c, int x, int y) {
-	delete cMap[x][y];
-	cMap[x][y] = c;
+	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X) {
+		delete cMap[x][y];
+		cMap[x][y] = c;
+	}
+}
+
+void Chunk::setComponent(int cid, int x, int y)
+{
+	setComponent(Component::components[cid]->copy(), x, y);
 }
 
 void Chunk::createUpdatesAround(int x, int y) {
@@ -96,3 +103,5 @@ Chunk::Chunk() {
 		}
 	}
 }
+
+std::vector<Component* > Component::components;

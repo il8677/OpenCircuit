@@ -9,6 +9,22 @@ void Component::setState(bool s) {
 	_state = s;
 }
 
+void Component::initializeComponenets()
+{
+	static bool ran;
+	if (!ran) {
+		ran = true;
+
+		Component::components.push_back(new Component());
+		Component::components.push_back(new Wire());
+		Component::components.push_back(new Input());
+		Component::components.push_back(new Output());
+		Component::components.push_back(new Transistor());
+		Component::components.push_back(new nTransistor());
+	}
+
+}
+
 bool Component::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
 	return false;
 }

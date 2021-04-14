@@ -11,6 +11,7 @@ class ChunkRenderer {
 public:
 
 	ChunkRenderer(Chunk& c);
-
 	void Render(Window& w);
+
+	void worldToGrid(int& x, int& y); // TODO: Move this to a better place
 };
