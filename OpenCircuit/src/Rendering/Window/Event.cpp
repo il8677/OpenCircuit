@@ -1,5 +1,7 @@
 #include "Event.h"
 
+Event::Event(int id) : id(id) {};
+
 KeyEvent::KeyEvent(int keyCode) : Event(keyCode) {
 
 }

@@ -8,7 +8,27 @@ ChunkRenderer::ChunkRenderer(Chunk& c) : c(c) {
 }
 
 void ChunkRenderer::Render(Window& w) {
-	sf::VertexArray va(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
+	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
+	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
+
+	//Theres probably a more efficient way of doing this all seperatley
+	for (int x = 0; x < CHUNK_X; x++) {
+		int index = x * 2;
+		grid[index].position = sf::Vector2f(x * VERTDIST, 0.0f);
+		grid[index + 1].position = sf::Vector2f(x * VERTDIST, CHUNK_Y*VERTDIST);
+
+		grid[index].color = sf::Color::White;
+		grid[index + 1].color = sf::Color::White;
+	}
+
+	for (int y = 0; y < CHUNK_Y; y++) {
+		int index = (CHUNK_X*2) + y * 2;
+		grid[index].position = sf::Vector2f(0.0f, y * VERTDIST);
+		grid[index + 1].position = sf::Vector2f(CHUNK_X * VERTDIST, y * VERTDIST);
+
+		grid[index].color = sf::Color::White;
+		grid[index + 1].color = sf::Color::White;
+	}
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
@@ -38,17 +58,18 @@ void ChunkRenderer::Render(Window& w) {
 				break;
 			}
 
-			va[index].color = vColour;
-			va[index+1].color = vColour;
-			va[index+2].color = vColour;
-			va[index+3].color = vColour;
+			cells[index].color = vColour;
+			cells[index+1].color = vColour;
+			cells[index+2].color = vColour;
+			cells[index+3].color = vColour;
 
-			va[index].position = sf::Vector2f(x * VERTDIST, y * VERTDIST);
-			va[index+1].position = sf::Vector2f((x+1) * VERTDIST, y * VERTDIST);
-			va[index+2].position = sf::Vector2f((x+1) * VERTDIST, (y+1) * VERTDIST);
-			va[index+3].position = sf::Vector2f(x * VERTDIST, (y+1) * VERTDIST);
+			cells[index].position = sf::Vector2f(x * VERTDIST, y * VERTDIST);
+			cells[index+1].position = sf::Vector2f((x+1) * VERTDIST, y * VERTDIST);
+			cells[index+2].position = sf::Vector2f((x+1) * VERTDIST, (y+1) * VERTDIST);
+			cells[index+3].position = sf::Vector2f(x * VERTDIST, (y+1) * VERTDIST);
 		}
 	}
 
-	w.renderVerts(va);
+	w.renderVerts(cells);
+	w.renderVerts(grid);
 }
