@@ -11,7 +11,8 @@ project "OpenCircuit"
     files {"%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp"}
 
     includedirs{
-        "%{prj.name}/depen/SFML/include"
+        "%{prj.name}/depen/SFML/include",
+        "%{prj.name}/depen/ImGUI/include"
     }
 
     libdirs{

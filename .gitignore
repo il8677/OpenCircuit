@@ -6,3 +6,4 @@ obj/
 .vs/
 bin/
 *.filters
+imgui.ini
