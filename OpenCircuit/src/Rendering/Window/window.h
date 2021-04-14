@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "EventManager.h"
 
 // TODO: Abstract from SFML
 
@@ -18,7 +19,11 @@ public:
 	void imGuiDraw();
 
 	void renderVerts(sf::VertexArray va);
+
+	void addEventCallback(int eventId, EventCallback ec);
 private:
+	EventManager _eManager;
+
 	sf::RenderWindow _window;
 	sf::Clock _deltaClock;
 };
