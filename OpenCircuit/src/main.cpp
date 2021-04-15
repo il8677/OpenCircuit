@@ -100,16 +100,16 @@ public:
 
 	void run() {
 		while (w.isOpen()) {
-			w.imGuiBegin();
 			w.handleEvents();
 
 			w.beginDraw();
 
 			ChunkRenderer::Render(w, *currentChunk);
 
+			w.imGuiBegin();
 			drawImGui();
-
 			w.imGuiDraw();
+
 			w.endDraw();
 		}
 
