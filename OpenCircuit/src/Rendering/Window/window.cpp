@@ -21,7 +21,12 @@ void Window::handleEvents()
 		if (e.type == sf::Event::Closed)
 			_window.close();
 		else if (e.type == sf::Event::KeyPressed) {
-			_eManager.handleEvent(new KeyEvent(e.key.code));
+			if(e.key.code <= 74)
+				_eManager.handleEvent(new KeyEvent(e.key.code));
+		}
+		else if (e.type == sf::Event::KeyReleased) {
+			if (e.key.code <= 74)
+				_eManager.handleEvent(new KeyEvent(e.key.code + 100));
 		}
 		else if (e.type == sf::Event::MouseMoved) {
 			_eManager.handleEvent(new MouseMovedEvent(e.mouseMove.x, e.mouseMove.y));
@@ -31,10 +36,10 @@ void Window::handleEvents()
 
 			switch (e.mouseButton.button) {
 			case sf::Mouse::Right:
-				id = EventCode::RightDown;
+				id = EventCode::M_RightDown;
 				break;
 			case sf::Mouse::Left:
-				id = EventCode::LeftDown;
+				id = EventCode::M_LeftDown;
 				break;
 			default:
 				continue;

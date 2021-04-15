@@ -5,13 +5,11 @@
 
 class Chunk;
 
-class ChunkRenderer {
-	Chunk& c;
+static class ChunkRenderer {
 
 public:
 
-	ChunkRenderer(Chunk& c);
-	void Render(Window& w);
+	static void Render(Window& w, Chunk& c);
 
-	void worldToGrid(int& x, int& y); // TODO: Move this to a better place
+	static void worldToGrid(int& x, int& y); // TODO: Move this to a better place
 };

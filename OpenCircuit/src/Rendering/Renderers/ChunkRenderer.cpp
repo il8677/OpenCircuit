@@ -3,11 +3,7 @@
 
 #define VERTDIST 30
 
-ChunkRenderer::ChunkRenderer(Chunk& c) : c(c) {
-
-}
-
-void ChunkRenderer::Render(Window& w) {
+void ChunkRenderer::Render(Window& w, Chunk& c) {
 	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
 	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
 
