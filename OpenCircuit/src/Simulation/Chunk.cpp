@@ -50,22 +50,22 @@ void Chunk::setComponent(int cid, int x, int y)
 }
 
 void Chunk::createUpdatesAround(int x, int y) {
-	createUpdateJob(M_UP, DIR::UP);
-	createUpdateJob(M_RIGHT, DIR::RIGHT);
-	createUpdateJob(M_DOWN, DIR::DOWN);
-	createUpdateJob(M_LEFT, DIR::LEFT);
+	createUpdateJob(M_UP, DIR::DOWN);
+	createUpdateJob(M_RIGHT, DIR::LEFT);
+	createUpdateJob(M_DOWN, DIR::UP);
+	createUpdateJob(M_LEFT, DIR::RIGHT);
 }
 
-inline bool Chunk::getState(int x, int y) const
+inline bool Chunk::getState(int x, int y, DIR from) const
 {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
-		return cMap[x][y]->getState();
+		return cMap[x][y]->getState(from);
 	return false;
 }
 
 inline vec4<bool> Chunk::getNeighbours(int x, int y) const
 {
-	return vec4<bool>(getState(M_UP), getState(M_RIGHT), getState(M_DOWN), getState(M_LEFT));
+	return vec4<bool>(getState(M_UP, DOWN), getState(M_RIGHT, LEFT), getState(M_DOWN, RIGHT), getState(M_LEFT, UP));
 }
 
 void Chunk::createUpdateJob(int x, int y, DIR d) {
@@ -74,10 +74,34 @@ void Chunk::createUpdateJob(int x, int y, DIR d) {
 }
 
 void Chunk::updateInputs() {
+
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			if (cMap[x][y]->id() == 2) 
 				createUpdatesAround(x, y);
+		}
+	}
+}
+
+void Chunk::reset()
+{
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			if (cMap[x][y]->id() != 2) {
+				cMap[x][y]->setState(0);
+			}
+		}
+	}
+
+	std::queue<Job> queue;
+	std::swap(jobQueue, queue);
+
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			if (cMap[x][y]->id() == 2)
+				createUpdatesAround(x, y);
+			else if (cMap[x][y]->id() > 4)
+				createUpdateJob(x, y, NONE);
 		}
 	}
 }

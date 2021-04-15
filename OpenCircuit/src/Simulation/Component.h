@@ -8,7 +8,7 @@
 //2 = input
 //3 = outputs
 //4 = transistor
-//5 = ntransistor
+//5 = Not
 
 #define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name();}
 
@@ -17,6 +17,7 @@ class Component
 public:
 	virtual int id() { return 0;}
 	virtual Component* copy() { return new Component(); }
+
 protected:
 	bool _state;
 
@@ -28,7 +29,7 @@ public:
 	// Returns if value was changed
 	bool update(vec4<bool> neighbours, DIR updatedDirection);
 
-	bool getState();
+	virtual bool getState(DIR direction);
 	void setState(bool s);
 
 	static std::vector<Component*> components;
@@ -47,6 +48,7 @@ class Input : public Component {
 protected:
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 public:
+	bool* getStatePointer();
 };
 
 class Output : public Wire {
@@ -60,8 +62,11 @@ public:
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 };
 
-class nTransistor : public Transistor {
-	COMPONENTDEF(5, nTransistor)
+class Not : public Component {
+	COMPONENTDEF(5, Not)
 public:
+
+	bool getState(DIR direction) override;
+
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
 };

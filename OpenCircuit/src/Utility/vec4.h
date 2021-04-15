@@ -4,7 +4,7 @@
 class ImVec4;
 
 enum DIR {
-	UP = 0, RIGHT, DOWN, LEFT
+	NONE = -1, UP = 0, RIGHT, DOWN, LEFT
 };
 
 template<typename T>

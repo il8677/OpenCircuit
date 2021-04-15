@@ -22,10 +22,11 @@ class Chunk
 	std::queue<Job> jobQueue;
 
 	inline void createUpdateJob(int x, int y, DIR d);
+
 	inline void createUpdatesAround(int x, int y);
-	
-	inline bool getState(int x, int y) const;
+
 	inline vec4<bool> getNeighbours(int x, int y) const;
+
 protected:
 
 public:
@@ -33,12 +34,14 @@ public:
 	std::vector<Output*> getOutputs();
 
 	int getCellId(int x, int y) const;
+	inline bool getState(int x, int y, DIR from=NONE) const;
 
 	void setComponent(Component* c, int x, int y);
 	void setComponent(int cid, int x, int y);
 
 	//Creates an update job around all the input cells
 	void updateInputs();
+	void reset();
 
 	//Propogate jobs
 	void tick();

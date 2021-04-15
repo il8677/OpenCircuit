@@ -69,6 +69,9 @@ void ChunkRenderer::Render(Window& w, Chunk& c) {
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
 			
+			if (!c.getState(x, y, NONE)) {
+				vColour = vColour * sf::Color(100, 100, 100);;
+			}
 
 			cells[index].color = vColour;
 			cells[index+1].color = vColour;

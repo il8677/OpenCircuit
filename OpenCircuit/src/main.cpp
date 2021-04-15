@@ -22,9 +22,11 @@ class App {
 	Chunk* currentChunk;
 
 	void drawImGui() {
+		ImGui::ShowDemoWindow();
+
 		ImGui::Begin("Pallette");
 		//Bad practice but whatever
-		static char* componentTooltips[6] = {"Nothing", "Wire", "Input", "Output", "Transistor", "nTransistor"};
+		static char* componentTooltips[6] = {"Nothing", "Wire", "Input", "Output", "Transistor", "Not"};
 		for (int i = 1; i < 6; i++) {
 			ImGui::PushID(i);
 			ImGui::SameLine();
@@ -39,6 +41,36 @@ class App {
 
 			ImGui::PopStyleColor(3);
 			ImGui::PopID();
+		}
+		ImGui::End();
+
+		ImGui::Begin("Simulation Manager");
+		ImGui::Text("Inputs");
+		std::vector<Input*> inputs = currentChunk->getInputs();
+		for (int i = 0; i < inputs.size(); i++) {
+			ImGui::PushID(i);
+			if(i > 0)
+				ImGui::SameLine();
+			if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
+				currentChunk->updateInputs();
+			}
+			ImGui::PopID();
+		}
+
+		ImGui::Text("Outputs");
+		std::vector<Output*> outputs = currentChunk->getOutputs();
+		for (int i = 0; i < outputs.size(); i++) {
+			if (i > 0)
+				ImGui::SameLine();
+			ImGui::Text("%d", outputs[i]->getState(NONE));
+		}
+
+		ImGui::Text("Controls");
+		if (ImGui::Button("Reset")) {
+			currentChunk->reset();
+		}
+		if (ImGui::Button("Tick")) {
+			currentChunk->tick();
 		}
 		ImGui::End();
 	}

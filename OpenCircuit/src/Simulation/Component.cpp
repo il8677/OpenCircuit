@@ -1,7 +1,7 @@
 #include "Component.h"
 
 //TODO: Split implementations into seperate files
-bool Component::getState() {
+bool Component::getState(DIR direction) {
 	return _state;
 }
 
@@ -20,7 +20,7 @@ void Component::initializeComponenets()
 		Component::components.push_back(new Input());
 		Component::components.push_back(new Output());
 		Component::components.push_back(new Transistor());
-		Component::components.push_back(new nTransistor());
+		Component::components.push_back(new Not());
 	}
 
 }
@@ -43,10 +43,22 @@ bool Input::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
 	return _state;
 }
 
+bool* Input::getStatePointer()
+{
+	return &_state;
+}
+
 bool Transistor::predictOutput(vec4<bool> neighbours, DIR sourceDir) const {
 	return neighbours.up && neighbours.left;
 }
 
-bool nTransistor::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
-	return !Transistor::predictOutput(neighbours, sourceDir);
+bool Not::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
+	return !neighbours.left;
+}
+
+bool Not::getState(DIR direction) {
+	if (direction == LEFT)
+		return !_state;
+	
+	return _state;
 }
