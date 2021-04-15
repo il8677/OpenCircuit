@@ -22,8 +22,6 @@ class App {
 	Chunk* currentChunk;
 
 	void drawImGui() {
-		ImGui::ShowDemoWindow();
-
 		ImGui::Begin("Pallette");
 		//Bad practice but whatever
 		static char* componentTooltips[6] = {"Nothing", "Wire", "Input", "Output", "Transistor", "Not"};
