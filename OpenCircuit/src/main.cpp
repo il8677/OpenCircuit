@@ -23,10 +23,22 @@ class App {
 
 	void drawImGui() {
 		ImGui::Begin("Pallette");
-		for (int i = 0; i < 6; i++) {
-			if (ImGui::ColorButton(std::to_string(i).c_str(), vec4ToImVec4(ChunkRenderer::getComponentColour(i)))) {
-
+		//Bad practice but whatever
+		static char* componentTooltips[6] = {"Nothing", "Wire", "Input", "Output", "Transistor", "nTransistor"};
+		for (int i = 1; i < 6; i++) {
+			ImGui::PushID(i);
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Button, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			if (ImGui::Button(" ", ImVec2(20,20))) {
+				leftBrush = i;
 			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip(componentTooltips[i]);
+
+			ImGui::PopStyleColor(3);
+			ImGui::PopID();
 		}
 		ImGui::End();
 	}

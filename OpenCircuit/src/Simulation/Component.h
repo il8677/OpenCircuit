@@ -32,7 +32,6 @@ public:
 	void setState(bool s);
 
 	static std::vector<Component*> components;
-
 	static void initializeComponenets();
 };
 
