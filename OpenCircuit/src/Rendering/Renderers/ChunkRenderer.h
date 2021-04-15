@@ -1,5 +1,6 @@
 #pragma once
 #include "../Window/window.h"
+#include "../../Utility/vec4.h"
 
 // TODO: Abstract and decouple from SFML
 
@@ -9,7 +10,8 @@ static class ChunkRenderer {
 
 public:
 
-	static void Render(Window& w, Chunk& c);
+	static vec4<unsigned char> getComponentColour(int componenetId);
 
+	static void Render(Window& w, Chunk& c);
 	static void worldToGrid(int& x, int& y); // TODO: Move this to a better place
 };

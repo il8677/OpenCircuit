@@ -3,6 +3,40 @@
 
 #define VERTDIST 30
 
+// TODO: Do something better than this
+vec4<unsigned char> sfToVec4(sf::Color c) {
+	return vec4<unsigned char>(c.r, c.g, c.b, c.a);
+}
+
+sf::Color vec4ToSf(vec4<unsigned char> c) {
+	return sf::Color(c.r, c.g, c.b, c.a);
+}
+
+vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
+{
+	switch (componenetId)
+	{
+	case 1:
+		return sfToVec4(sf::Color::Yellow);
+		break;
+	case 2:
+		return sfToVec4(sf::Color::Green);
+		break;
+	case 3:
+		return sfToVec4(sf::Color::Magenta);
+		break;
+	case 4:
+		return sfToVec4(sf::Color::Blue);
+		break;
+	case 5:
+		return sfToVec4(sf::Color::Cyan);
+		break;
+	default:
+		return sfToVec4(sf::Color::Black);
+		break;
+	}
+}
+
 void ChunkRenderer::Render(Window& w, Chunk& c) {
 	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
 	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
@@ -33,28 +67,8 @@ void ChunkRenderer::Render(Window& w, Chunk& c) {
 			int cellId = c.getCellId(x, y);
 			int index = (x*CHUNK_X + y)*4;
 
-			sf::Color vColour;
-			switch (cellId)
-			{
-			case 1:
-				vColour = sf::Color::Yellow;
-				break;
-			case 2:
-				vColour = sf::Color::Green;
-				break;
-			case 3:
-				vColour = sf::Color::Magenta;
-				break;
-			case 4:
-				vColour = sf::Color::Blue;
-				break;
-			case 5:
-				vColour = sf::Color::Cyan;
-				break;
-			default:
-				vColour = sf::Color::Black;
-				break;
-			}
+			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
+			
 
 			cells[index].color = vColour;
 			cells[index+1].color = vColour;

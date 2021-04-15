@@ -1,4 +1,7 @@
 #pragma once
+#include <imgui.h>
+
+class ImVec4;
 
 enum DIR {
 	UP = 0, RIGHT, DOWN, LEFT

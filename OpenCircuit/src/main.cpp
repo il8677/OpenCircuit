@@ -7,22 +7,31 @@
 #include "Simulation/Chunk.h"
 #include "Simulation/Schematic.h"
 
-#include <iostream>>
+#include <iostream>
+#include <string>
 
+// TODO: Do something much better than this
+ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
+	return ImVec4(v4.x / 255.0f, v4.y / 255.0f, v4.z / 255.0f, v4.w / 255.0f);
+}
 
 class App {
 	Window w;
-
 	int rightBrush = 0, leftBrush = 1;
-
-	void drawImGui() {
-		ImGui::Begin("Pallette");
-	
-		ImGui::End();
-	}
 
 	Chunk* currentChunk;
 
+	void drawImGui() {
+		ImGui::Begin("Pallette");
+		for (int i = 0; i < 6; i++) {
+			if (ImGui::ColorButton(std::to_string(i).c_str(), vec4ToImVec4(ChunkRenderer::getComponentColour(i)))) {
+
+			}
+		}
+		ImGui::End();
+	}
+
+	//Handler for mouse down events, paints targeted square
 	void paint(Event * e) {
 		MouseButtonEvent* mbe = (MouseButtonEvent*) e;
 
@@ -43,6 +52,8 @@ public:
 
 		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {paint(e); });
 		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {paint(e); });
+
+		currentChunk = new Chunk();
 	}
 
 	void run() {
@@ -52,6 +63,7 @@ public:
 
 			w.beginDraw();
 
+			ChunkRenderer::Render(w, *currentChunk);
 
 			drawImGui();
 
