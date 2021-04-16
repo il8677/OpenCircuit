@@ -1,7 +1,8 @@
 #include "window.h"
+#include "Event.h"
+
 #include <imgui.h>
 #include <imgui-SFML.h>
-#include "Event.h"
 
 bool Window::isOpen() {
 	return _window.isOpen();
@@ -29,7 +30,7 @@ void Window::handleEvents()
 				_eManager.handleEvent(new KeyEvent(e.key.code + 100));
 		}
 		else if (e.type == sf::Event::MouseMoved) {
-			_eManager.handleEvent(new MouseMovedEvent(e.mouseMove.x, e.mouseMove.y));
+			_eManager.handleEvent(new MouseMovedEvent(e.mouseMove.x, e.mouseMove.y, sf::Mouse::isButtonPressed(sf::Mouse::Left), sf::Mouse::isButtonPressed(sf::Mouse::Right)));
 		}
 		else if (e.type == sf::Event::MouseButtonPressed) {
 			int id;

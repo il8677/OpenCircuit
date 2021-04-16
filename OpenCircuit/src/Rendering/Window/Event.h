@@ -13,8 +13,11 @@ public:
 
 class MouseMovedEvent : public Event {
 public:
+    bool leftDown;
+    bool rightDown; //TODO: Have a better system for identifying which mouse buttons are down
     int posx, posy;
-    MouseMovedEvent(int x, int y);
+
+    MouseMovedEvent(int x, int y, bool ld, bool rd);
 };
 
 class MouseButtonEvent : public Event {

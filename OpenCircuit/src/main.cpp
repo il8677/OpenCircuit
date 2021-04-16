@@ -74,17 +74,32 @@ class App {
 	}
 
 	//Handler for mouse down events, paints targeted square
-	void paint(Event * e) {
+	void paint(int screenposX, int screenPosY, bool right) {
+
+
+		w.screenToWorld(screenposX, screenPosY);
+		ChunkRenderer::worldToGrid(screenposX, screenPosY);
+
+		int resultComponent = right ? rightBrush : leftBrush;
+		currentChunk->setComponent(resultComponent, screenposX, screenPosY);
+	}
+	
+	void mouseDownHandler(Event* e) {
 		MouseButtonEvent* mbe = (MouseButtonEvent*) e;
 
 		int targetX = mbe->posx;
 		int targetY = mbe->posy;
 
-		w.screenToWorld(targetX, targetY);
-		ChunkRenderer::worldToGrid(targetX, targetY);
+		paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
+	}
 
-		int resultComponent = mbe->id == EventCode::M_LeftDown ? leftBrush : rightBrush;
-		currentChunk->setComponent(resultComponent, targetX, targetY);
+	//Handler for mouse move
+	void mouseMoveHandler(Event* e) {
+		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
+
+		if (mbe->rightDown || mbe->leftDown) {
+			paint(mbe->posx, mbe->posy, mbe->rightDown);
+		}
 	}
 
 public:
@@ -92,8 +107,10 @@ public:
 	App() : w(1920, 1080){
 		Component::initializeComponenets();
 
-		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {paint(e); });
-		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {paint(e); });
+		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
+		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {mouseDownHandler(e); });
+
+		w.addEventCallback(EventCode::M_MouseMove, [this](Event* e) {mouseMoveHandler(e); });
 
 		currentChunk = new Chunk();
 	}
