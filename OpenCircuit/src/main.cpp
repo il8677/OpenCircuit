@@ -109,8 +109,12 @@ public:
 
 		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
 		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {mouseDownHandler(e); });
-
 		w.addEventCallback(EventCode::M_MouseMove, [this](Event* e) {mouseMoveHandler(e); });
+
+		//This is probably bad practice (or at least weird), but I was too lazy to write a proper event system
+		for (int i = 0; i < 5; i++) {
+			w.addEventCallback(EventCode::D_Num1 + i, [this, i](Event* e) {leftBrush = i + 1; });
+		}
 
 		currentChunk = new Chunk();
 	}
