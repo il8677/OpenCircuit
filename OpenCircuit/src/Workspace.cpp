@@ -15,10 +15,8 @@ Schematic* Workspace::getSchematic()
 {
 	return &schematics[workingSchematic];
 }
-#include <iostream>
 void Workspace::deleteSchematic(int i)
 {
-	std::cout << "Delete " << i << std::endl;
 	if (i == workingSchematic)
 		workingSchematic = 0;
 	

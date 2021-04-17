@@ -1,3 +1,5 @@
+#include <map>
+
 #include "Chunk.h"
 
 #define M_UP x, y - 1
@@ -136,7 +138,23 @@ Chunk::Chunk() {
 			cMap[x][y] = std::make_shared<Component>();
 		}
 	}
+
 }
 
+Chunk::Chunk(const Chunk& original) {
+	std::map<Component*, std::shared_ptr<Component>&> processedComponents;
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			Component* c = original.cMap[x][y].get();
+
+			if (processedComponents.find(c) == processedComponents.end()) {
+				cMap[x][y] = std::shared_ptr<Component>(c->copy());
+				processedComponents[c] = cMap[x][y];
+			} else {
+				cMap[x][y] = processedComponents[c];
+			}
+		}
+	}
+}
 
 std::vector<Component* > Component::components;

@@ -49,4 +49,7 @@ public:
 	void clear();
 
 	Chunk();
+
+	//Copy constructor, peforms deep copy creating new objects contained by shared_ptrs
+	Chunk(const Chunk&);
 };
