@@ -13,12 +13,25 @@ Schematic* Workspace::getSchematic(int i)
 
 Schematic* Workspace::getSchematic()
 {
-	return workingSchematic;
+	return &schematics[workingSchematic];
+}
+#include <iostream>
+void Workspace::deleteSchematic(int i)
+{
+	std::cout << "Delete " << i << std::endl;
+	if (i == workingSchematic)
+		workingSchematic = 0;
+	
+	if(schematics.size() > 1){
+		if (i < workingSchematic)
+			workingSchematic = 0;
+		schematics.erase(schematics.begin() + i);		
+	}
 }
 
 void Workspace::setWorkingSchematic(int i)
 {
-	workingSchematic = &schematics[i];
+	workingSchematic = i;
 }
 
 
@@ -37,10 +50,10 @@ void Workspace::newSchematic(std::string name)
 	}
 	schematics.emplace_back(name);
 
-	workingSchematic = &schematics.back();
+	workingSchematic = schematics.size()-1;
 }
 
 void Workspace::paint(int gridx, int gridy, int id)
 {
-	workingSchematic->getChunk()->setComponent(id, gridx, gridy);
+	schematics[workingSchematic].getChunk()->setComponent(id, gridx, gridy);
 }

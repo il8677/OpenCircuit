@@ -20,7 +20,6 @@ class App {
 
 	Workspace workspace;
 
-
 	//Handler for mouse down events, paints targeted square
 	void paint(int screenposX, int screenPosY, bool right) {
 		w.screenToWorld(screenposX, screenPosY);
@@ -43,9 +42,8 @@ class App {
 	void mouseMoveHandler(Event* e) {
 		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
 
-		if (mbe->rightDown || mbe->leftDown) {
+		if (mbe->rightDown || mbe->leftDown)
 			paint(mbe->posx, mbe->posy, mbe->rightDown);
-		}
 	}
 
 public:
@@ -166,6 +164,12 @@ private:
 				ImGui::PushID(i);
 				if (ImGui::Button("Edit")) {
 					workspace.setWorkingSchematic(i);
+				}
+				if (i > 0) {
+					ImGui::SameLine();
+					if (ImGui::Button("x")) {
+						workspace.deleteSchematic(i);
+					}
 				}
 				ImGui::PopID();
 			}

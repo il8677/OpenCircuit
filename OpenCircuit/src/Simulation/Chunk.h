@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <vector>
 #include <queue>
 
@@ -18,7 +19,7 @@
 class Chunk
 {
 	// TODO: use shared_ptr
-	Component* cMap[CHUNK_X][CHUNK_Y];
+	std::shared_ptr<Component> cMap[CHUNK_X][CHUNK_Y];
 	std::queue<Job> jobQueue;
 
 	inline void createUpdateJob(int x, int y, DIR d);
@@ -47,7 +48,5 @@ public:
 	void tick();
 	void clear();
 
-	~Chunk();
 	Chunk();
-	Chunk(const Chunk&);
 };

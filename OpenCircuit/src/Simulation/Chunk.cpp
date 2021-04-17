@@ -12,7 +12,7 @@ std::vector<Input*> Chunk::getInputs()
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			if (cMap[x][y]->id() == 2)
-				returnVector.push_back((Input*)cMap[x][y]);
+				returnVector.push_back((Input*)cMap[x][y].get());
 		}
 	}
 
@@ -26,7 +26,7 @@ std::vector<Output*> Chunk::getOutputs()
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			if (cMap[x][y]->id() == 3)
-				returnVector.push_back((Output*)cMap[x][y]);
+				returnVector.push_back((Output*)cMap[x][y].get());
 		}
 	}
 	return returnVector;
@@ -39,8 +39,7 @@ int Chunk::getCellId(int x, int y) const
 
 void Chunk::setComponent(Component* c, int x, int y) {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X) {
-		delete cMap[x][y];
-		cMap[x][y] = c;
+		cMap[x][y] = std::shared_ptr<Component> (c);
 	}
 }
 
@@ -125,21 +124,8 @@ void Chunk::clear()
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			if (cMap[x][y]->id() != 0) {
-				delete cMap[x][y];
-				cMap[x][y] = new Component();
+				cMap[x][y] = std::make_shared<Component> ();
 			}
-		}
-	}
-}
-
-#include <iostream>
-
-Chunk::~Chunk()
-{
-	std::cout << this << " Destructor\n";
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
-			delete cMap[x][y];
 		}
 	}
 }
@@ -147,18 +133,10 @@ Chunk::~Chunk()
 Chunk::Chunk() {
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++){
-			cMap[x][y] = new Component();
+			cMap[x][y] = std::make_shared<Component>();
 		}
 	}
 }
 
-Chunk::Chunk(const Chunk& oldChunk)
-{
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
-			cMap[x][y] = oldChunk.cMap[x][y]->copy();
-		}
-	}
-}
 
 std::vector<Component* > Component::components;

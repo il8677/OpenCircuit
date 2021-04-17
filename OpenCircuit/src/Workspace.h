@@ -10,12 +10,13 @@ class Workspace
 {
 	std::vector<Schematic> schematics;
 	
-	Schematic* workingSchematic;
+	int workingSchematic;
 public:
 	Workspace();
 
 	Schematic* getSchematic(int i);
 	Schematic* getSchematic();
+	void deleteSchematic(int i);
 
 	void setWorkingSchematic(int i);
 
