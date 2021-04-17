@@ -4,8 +4,7 @@
 #include "Rendering/Window/Event.h"
 #include "Rendering/Renderers/ChunkRenderer.h"
 #include "Rendering/Window/window.h"
-#include "Simulation/Chunk.h"
-#include "Simulation/Schematic.h"
+#include "Workspace.h"
 
 #include <iostream>
 #include <string>
@@ -19,69 +18,16 @@ class App {
 	Window w;
 	int rightBrush = 0, leftBrush = 1;
 
-	Chunk* currentChunk;
+	Workspace workspace;
 
-	void drawImGui() {
-		ImGui::Begin("Pallette");
-		//Bad practice but whatever
-		static char* componentTooltips[6] = {"Nothing", "Wire", "Input", "Output", "Transistor", "Not"};
-		for (int i = 1; i < 6; i++) {
-			ImGui::PushID(i);
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Button, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			if (ImGui::Button(" ", ImVec2(20,20))) {
-				leftBrush = i;
-			}
-			if (ImGui::IsItemHovered())
-				ImGui::SetTooltip(componentTooltips[i]);
-
-			ImGui::PopStyleColor(3);
-			ImGui::PopID();
-		}
-		ImGui::End();
-
-		ImGui::Begin("Simulation Manager");
-		ImGui::Text("Inputs");
-		std::vector<Input*> inputs = currentChunk->getInputs();
-		for (int i = 0; i < inputs.size(); i++) {
-			ImGui::PushID(i);
-			if(i > 0)
-				ImGui::SameLine();
-			if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
-				currentChunk->updateInputs();
-			}
-			ImGui::PopID();
-		}
-
-		ImGui::Text("Outputs");
-		std::vector<Output*> outputs = currentChunk->getOutputs();
-		for (int i = 0; i < outputs.size(); i++) {
-			if (i > 0)
-				ImGui::SameLine();
-			ImGui::Text("%d", outputs[i]->getState(NONE));
-		}
-
-		ImGui::Text("Controls");
-		if (ImGui::Button("Reset")) {
-			currentChunk->reset();
-		}
-		if (ImGui::Button("Tick")) {
-			currentChunk->tick();
-		}
-		ImGui::End();
-	}
 
 	//Handler for mouse down events, paints targeted square
 	void paint(int screenposX, int screenPosY, bool right) {
-
-
 		w.screenToWorld(screenposX, screenPosY);
 		ChunkRenderer::worldToGrid(screenposX, screenPosY);
 
 		int resultComponent = right ? rightBrush : leftBrush;
-		currentChunk->setComponent(resultComponent, screenposX, screenPosY);
+		workspace.paint(screenposX, screenPosY, resultComponent);
 	}
 	
 	void mouseDownHandler(Event* e) {
@@ -115,8 +61,6 @@ public:
 		for (int i = 0; i < 5; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [this, i](Event* e) {leftBrush = i + 1; });
 		}
-
-		currentChunk = new Chunk();
 	}
 
 	void run() {
@@ -125,7 +69,7 @@ public:
 
 			w.beginDraw();
 
-			ChunkRenderer::Render(w, *currentChunk);
+			ChunkRenderer::Render(w, workspace.getSchematic()->getChunk());
 
 			w.imGuiBegin();
 			drawImGui();
@@ -133,8 +77,122 @@ public:
 
 			w.endDraw();
 		}
-
 	}
+	
+private:
+	void openWorkspaceWindow() {
+	}
+
+	void newWorkspace() {
+	}
+
+	void drawImGui() {
+		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+		ImGuiWindowFlags menuBarFlags =
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize   |
+			ImGuiWindowFlags_NoNav      |
+			ImGuiWindowFlags_NoMove     |
+			ImGuiWindowFlags_MenuBar;
+
+
+		ImGui::Begin("Pallette");
+		//Bad practice but whatever
+		static char* componentTooltips[6] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not" };
+		for (int i = 1; i < 6; i++) {
+			ImGui::PushID(i);
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Button, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
+			if (ImGui::Button(" ", ImVec2(20, 20)))
+				leftBrush = i;
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip(componentTooltips[i]);
+
+			ImGui::PopStyleColor(3);
+			ImGui::PopID();
+		}
+		ImGui::End();
+
+		ImGui::Begin("Simulation Manager");
+		ImGui::Text("Inputs");
+		std::vector<Input*> inputs = workspace.getSchematic()->getChunk()->getInputs();
+		for (int i = 0; i < inputs.size(); i++) {
+			ImGui::PushID(i);
+			if (i > 0)
+				ImGui::SameLine();
+			if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
+				workspace.getSchematic()->getChunk()->updateInputs();
+			}
+			ImGui::PopID();
+		}
+
+		ImGui::Text("Outputs");
+		std::vector<Output*> outputs = workspace.getSchematic()->getChunk()->getOutputs();
+		for (int i = 0; i < outputs.size(); i++) {
+			if (i > 0)
+				ImGui::SameLine();
+			ImGui::Text("%d", outputs[i]->getState(NONE));
+		}
+
+		ImGui::Text("Controls");
+		if (ImGui::Button("Reset")) {
+			workspace.getSchematic()->getChunk()->reset();
+		}
+		if (ImGui::Button("Tick")) {
+			workspace.getSchematic()->getChunk()->tick();
+		}
+		ImGui::End();
+
+		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(250,400));
+		ImGui::Begin("Workspace", NULL, menuBarFlags);
+		ImGui::Text("Schematics");
+
+		if (ImGui::CollapsingHeader("New schematic")) {
+			static char newSchematicName[20];
+			ImGui::InputText("Name", newSchematicName, 20);
+			if (ImGui::Button("Create")) {
+				workspace.newSchematic(std::string(newSchematicName));
+			}
+		}
+
+		if (ImGui::CollapsingHeader("Edit schematics")) {
+			for (int i = 0; i < workspace.schematicCount(); i++) {
+				ImGui::Text(workspace.getSchematic(i)->getName().c_str());
+				ImGui::SameLine();
+
+				ImGui::PushID(i);
+				if (ImGui::Button("Edit")) {
+					workspace.setWorkingSchematic(i);
+				}
+				ImGui::PopID();
+			}
+		}
+		ImGui::End();
+
+		/*
+		//'Menu bar'
+
+		ImGui::Begin("Menu bar", NULL, menuBarFlags);
+		ImGui::BeginMenuBar();
+
+		if (ImGui::BeginMenu("File")) {
+			}
+			if (ImGui::MenuItem("New Workspace"))  newWorkspace();
+			if (ImGui::MenuItem("Save Workspace"))  newWorkspace();
+			if (ImGui::MenuItem("Open Workspace")) openWorkspaceWindow();
+			//if (ImGui::MenuItem("Save")) saveSchematic();
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+		ImGui::End();
+		*/
+	}
+
+
 };
 
 

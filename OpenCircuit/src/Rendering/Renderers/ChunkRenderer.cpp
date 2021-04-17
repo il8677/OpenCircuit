@@ -37,7 +37,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 	}
 }
 
-void ChunkRenderer::Render(Window& w, Chunk& c) {
+void ChunkRenderer::Render(Window& w, Chunk* c) {
 	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
 	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
 
@@ -64,12 +64,12 @@ void ChunkRenderer::Render(Window& w, Chunk& c) {
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			int cellId = c.getCellId(x, y);
+			int cellId = c->getCellId(x, y);
 			int index = (x*CHUNK_X + y)*4;
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
 			
-			if (!c.getState(x, y, NONE)) {
+			if (!c->getState(x, y, NONE)) {
 				vColour = vColour * sf::Color(100, 100, 100);;
 			}
 

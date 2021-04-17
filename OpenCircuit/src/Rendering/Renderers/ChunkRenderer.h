@@ -12,6 +12,6 @@ public:
 
 	static vec4<unsigned char> getComponentColour(int componenetId);
 
-	static void Render(Window& w, Chunk& c);
+	static void Render(Window& w, Chunk* c);
 	static void worldToGrid(int& x, int& y); // TODO: Move this to a better place
 };

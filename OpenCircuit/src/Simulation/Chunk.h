@@ -45,6 +45,9 @@ public:
 
 	//Propogate jobs
 	void tick();
+	void clear();
 
+	~Chunk();
 	Chunk();
+	Chunk(const Chunk&);
 };

@@ -10,7 +10,7 @@
 //4 = transistor
 //5 = Not
 
-#define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name();}
+#define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name(*this);}
 
 class Component
 {

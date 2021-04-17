@@ -120,10 +120,43 @@ void Chunk::tick() {
 	}
 }
 
+void Chunk::clear()
+{
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			if (cMap[x][y]->id() != 0) {
+				delete cMap[x][y];
+				cMap[x][y] = new Component();
+			}
+		}
+	}
+}
+
+#include <iostream>
+
+Chunk::~Chunk()
+{
+	std::cout << this << " Destructor\n";
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			delete cMap[x][y];
+		}
+	}
+}
+
 Chunk::Chunk() {
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++){
 			cMap[x][y] = new Component();
+		}
+	}
+}
+
+Chunk::Chunk(const Chunk& oldChunk)
+{
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			cMap[x][y] = oldChunk.cMap[x][y]->copy();
 		}
 	}
 }
