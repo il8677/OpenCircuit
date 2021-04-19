@@ -73,8 +73,12 @@ bool Junction::update(vec4<bool> neighbours, DIR sourceDir) {
 	return !(old == utarget);
 }
 
-
 bool Junction::getState(DIR sourceDir) {
 
 	return (sourceDir % 2 == 0) ? _udState : _state;
+}
+
+void Junction::setState(bool s) {
+	Component::setState(s);
+	_udState = s;
 }

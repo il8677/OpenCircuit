@@ -9,6 +9,7 @@
 //3 = outputs
 //4 = transistor
 //5 = Not
+//6 = Junction
 
 #define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name(*this);}
 
@@ -31,7 +32,7 @@ public:
 
 	//Returns the state for the given direction
 	virtual bool getState(DIR direction);
-	void setState(bool s);
+	virtual void setState(bool s);
 
 	static std::vector<Component*> components;
 	static void initializeComponenets();
@@ -79,4 +80,6 @@ protected:
 public:
 	bool getState(DIR direction) override;
 	bool update(vec4<bool> neighbours, DIR sourceDir) override;
+	
+	void setState(bool s) override;
 };

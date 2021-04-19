@@ -101,7 +101,7 @@ void Chunk::reset()
 		for (int y = 0; y < CHUNK_Y; y++) {
 			if (cMap[x][y]->id() == 2)
 				createUpdatesAround(x, y);
-			else if (cMap[x][y]->id() > 4)
+			else if (cMap[x][y]->id() == 5)
 				createUpdateJob(x, y, NONE);
 		}
 	}
