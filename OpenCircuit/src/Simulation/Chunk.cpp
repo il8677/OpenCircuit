@@ -66,7 +66,7 @@ inline bool Chunk::getState(int x, int y, DIR from) const
 
 inline vec4<bool> Chunk::getNeighbours(int x, int y) const
 {
-	return vec4<bool>(getState(M_UP, DOWN), getState(M_RIGHT, LEFT), getState(M_DOWN, RIGHT), getState(M_LEFT, UP));
+	return vec4<bool>(getState(M_UP, DOWN), getState(M_RIGHT, LEFT), getState(M_DOWN, UP), getState(M_LEFT, RIGHT));
 }
 
 void Chunk::createUpdateJob(int x, int y, DIR d) {
@@ -142,7 +142,7 @@ Chunk::Chunk() {
 }
 
 Chunk::Chunk(const Chunk& original) {
-	std::map<Component*, std::shared_ptr<Component>&> processedComponents;
+	std::map<Component*, std::shared_ptr<Component>> processedComponents;
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			Component* c = original.cMap[x][y].get();

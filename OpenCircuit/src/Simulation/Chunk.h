@@ -2,13 +2,14 @@
 #include <memory>
 #include <vector>
 #include <queue>
+#include <forward_list>
 
 #include "Component.h"
 #include "Job.h"
 #include "../Utility/vec4.h"
 
-#define CHUNK_X 32
-#define CHUNK_Y 32
+#define CHUNK_X 64
+#define CHUNK_Y 64
 
 //0 = nothing
 //1 = wire
@@ -21,6 +22,8 @@ class Chunk
 	// TODO: use shared_ptr
 	std::shared_ptr<Component> cMap[CHUNK_X][CHUNK_Y];
 	std::queue<Job> jobQueue;
+
+	std::forward_list<std::weak_ptr<Component>> subcircuits;
 
 	inline void createUpdateJob(int x, int y, DIR d);
 

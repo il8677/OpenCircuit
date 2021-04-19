@@ -21,6 +21,7 @@ void Component::initializeComponenets()
 		Component::components.push_back(new Output());
 		Component::components.push_back(new Transistor());
 		Component::components.push_back(new Not());
+		Component::components.push_back(new Junction());
 	}
 
 }
@@ -61,4 +62,19 @@ bool Not::getState(DIR direction) {
 		return !_state;
 	
 	return _state;
+}
+
+bool Junction::update(vec4<bool> neighbours, DIR sourceDir) {
+	//if dir is divisible by 2 it means its up / down (0 and 2 respectivley)
+	bool& utarget = (sourceDir % 2 == 0) ? _udState : _state;
+	bool old = utarget;
+	utarget = neighbours.values[sourceDir];
+
+	return !(old == utarget);
+}
+
+
+bool Junction::getState(DIR sourceDir) {
+
+	return (sourceDir % 2 == 0) ? _udState : _state;
 }

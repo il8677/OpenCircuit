@@ -56,7 +56,7 @@ public:
 		w.addEventCallback(EventCode::M_MouseMove, [this](Event* e) {mouseMoveHandler(e); });
 
 		//This is probably bad practice (or at least weird), but I was too lazy to write a proper event system
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [this, i](Event* e) {leftBrush = i + 1; });
 		}
 	}
@@ -96,8 +96,8 @@ private:
 
 		ImGui::Begin("Pallette");
 		//Bad practice but whatever
-		static char* componentTooltips[6] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not" };
-		for (int i = 1; i < 6; i++) {
+		static char* componentTooltips[7] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not", "Junction"};
+		for (int i = 1; i < 7; i++) {
 			ImGui::PushID(i);
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Button, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));

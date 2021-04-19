@@ -27,8 +27,9 @@ public:
 
 	// Updates the component state after a change from the specified direction
 	// Returns if value was changed
-	bool update(vec4<bool> neighbours, DIR updatedDirection);
+	virtual bool update(vec4<bool> neighbours, DIR updatedDirection);
 
+	//Returns the state for the given direction
 	virtual bool getState(DIR direction);
 	void setState(bool s);
 
@@ -69,4 +70,13 @@ public:
 	bool getState(DIR direction) override;
 
 	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
+};
+
+class Junction : public Component {
+	COMPONENTDEF(6, Junction);
+protected:
+	bool _udState; // State for the up down track _state is used for l/r state
+public:
+	bool getState(DIR direction) override;
+	bool update(vec4<bool> neighbours, DIR sourceDir) override;
 };

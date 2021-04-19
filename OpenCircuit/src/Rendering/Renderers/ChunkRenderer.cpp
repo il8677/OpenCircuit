@@ -1,7 +1,7 @@
 #include "ChunkRenderer.h"
 #include "../../Simulation/Chunk.h"
 
-#define VERTDIST 30
+#define VERTDIST 15
 
 // TODO: Do something better than this
 vec4<unsigned char> sfToVec4(sf::Color c) {
@@ -30,6 +30,9 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 		break;
 	case 5:
 		return sfToVec4(sf::Color::Cyan);
+		break;
+	case 6:
+		return sfToVec4(sf::Color::Red);
 		break;
 	default:
 		return sfToVec4(sf::Color::Black);
