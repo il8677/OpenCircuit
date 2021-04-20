@@ -82,3 +82,8 @@ void Junction::setState(bool s) {
 	Component::setState(s);
 	_udState = s;
 }
+
+bool Constant::update(vec4<bool> neighbours, DIR sourceDir)
+{
+	return false;
+}

@@ -34,8 +34,8 @@ class Chunk
 protected:
 
 public:
-	std::vector<Input*>  getInputs();
-	std::vector<Output*> getOutputs();
+	std::vector<Input*>  getInputs() const;
+	std::vector<Output*> getOutputs() const;
 
 	int getCellId(int x, int y) const;
 	inline bool getState(int x, int y, DIR from=NONE) const;

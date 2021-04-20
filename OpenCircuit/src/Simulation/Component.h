@@ -83,3 +83,9 @@ public:
 	
 	void setState(bool s) override;
 };
+
+class Constant : public Component {
+	COMPONENTDEF(7, Constant);
+public:
+	bool update(vec4<bool> neighbours, DIR sourceDir) override;
+};

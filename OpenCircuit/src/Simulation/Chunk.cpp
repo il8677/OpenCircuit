@@ -7,7 +7,7 @@
 #define M_DOWN x, y + 1
 #define M_LEFT x - 1, y
 
-std::vector<Input*> Chunk::getInputs()
+std::vector<Input*> Chunk::getInputs() const
 {
 	std::vector<Input*> returnVector;
 
@@ -21,7 +21,7 @@ std::vector<Input*> Chunk::getInputs()
 	return returnVector;
 }
 
-std::vector<Output*> Chunk::getOutputs()
+std::vector<Output*> Chunk::getOutputs() const
 {
 	std::vector<Output*> returnVector;
 
