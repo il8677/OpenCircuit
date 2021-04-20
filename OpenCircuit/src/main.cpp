@@ -18,6 +18,10 @@ class App {
 	Window w;
 	int rightBrush = 0, leftBrush = 1;
 
+	bool doAutotick = false;
+	int autoTickState = 0;
+	int autoTickAmount = 60;
+
 	Workspace workspace;
 
 	//Handler for mouse down events, paints targeted square
@@ -74,6 +78,14 @@ public:
 			w.imGuiDraw();
 
 			w.endDraw();
+
+			if (doAutotick) {
+				autoTickState++;
+				if (autoTickState > autoTickAmount) {
+					autoTickState = 0;
+					workspace.getSchematic()->getChunk()->tick();
+				}
+			}
 		}
 	}
 	
@@ -114,32 +126,38 @@ private:
 		ImGui::End();
 
 		ImGui::Begin("Simulation Manager");
-		ImGui::Text("Inputs");
-		std::vector<Input*> inputs = workspace.getSchematic()->getChunk()->getInputs();
-		for (int i = 0; i < inputs.size(); i++) {
-			ImGui::PushID(i);
-			if (i > 0)
-				ImGui::SameLine();
-			if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
-				workspace.getSchematic()->getChunk()->updateInputs();
+		if (ImGui::CollapsingHeader("Inputs")) {
+			std::vector<Input*> inputs = workspace.getSchematic()->getChunk()->getInputs();
+			for (int i = 0; i < inputs.size(); i++) {
+				ImGui::PushID(i);
+				if (i > 0)
+					ImGui::SameLine();
+				if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
+					workspace.getSchematic()->getChunk()->updateInputs();
+				}
+				ImGui::PopID();
 			}
-			ImGui::PopID();
 		}
+		if (ImGui::CollapsingHeader("Outputs")) {
 
-		ImGui::Text("Outputs");
-		std::vector<Output*> outputs = workspace.getSchematic()->getChunk()->getOutputs();
-		for (int i = 0; i < outputs.size(); i++) {
-			if (i > 0)
-				ImGui::SameLine();
-			ImGui::Text("%d", outputs[i]->getState(NONE));
+			std::vector<Output*> outputs = workspace.getSchematic()->getChunk()->getOutputs();
+			for (int i = 0; i < outputs.size(); i++) {
+				if (i > 0)
+					ImGui::SameLine();
+				ImGui::Text("%d", outputs[i]->getState(NONE));
+			}
 		}
+		if (ImGui::CollapsingHeader("Controls")) {
+			if (ImGui::Button("Reset")) {
+				workspace.getSchematic()->getChunk()->reset();
+			}
+			if (ImGui::Button("Tick")) {
+				workspace.getSchematic()->getChunk()->tick();
+			}
 
-		ImGui::Text("Controls");
-		if (ImGui::Button("Reset")) {
-			workspace.getSchematic()->getChunk()->reset();
-		}
-		if (ImGui::Button("Tick")) {
-			workspace.getSchematic()->getChunk()->tick();
+			ImGui::Text("Autotick");
+			ImGui::SliderInt("Tick period", &autoTickAmount, 1, 100);
+			ImGui::Checkbox("Do autotick", &doAutotick);
 		}
 		ImGui::End();
 
