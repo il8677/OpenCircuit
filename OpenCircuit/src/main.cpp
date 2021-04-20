@@ -6,6 +6,8 @@
 #include "Rendering/Window/window.h"
 #include "Workspace.h"
 
+#include "Debug.h"
+
 #include <iostream>
 #include <string>
 
@@ -24,30 +26,47 @@ class App {
 
 	Workspace workspace;
 
-	//Handler for mouse down events, paints targeted square
-	void paint(int screenposX, int screenPosY, bool right) {
-		w.screenToWorld(screenposX, screenPosY);
-		ChunkRenderer::worldToGrid(screenposX, screenPosY);
+	int subcircuitPlacement = 0;
 
+	//Handler for mouse down events, paints targeted square
+	void paint(int gridPosX, int gridPosY, bool right) {
+		
 		int resultComponent = right ? rightBrush : leftBrush;
-		workspace.paint(screenposX, screenPosY, resultComponent);
+		workspace.paint(gridPosX, gridPosY, resultComponent);
 	}
 	
 	void mouseDownHandler(Event* e) {
-		MouseButtonEvent* mbe = (MouseButtonEvent*) e;
+		MouseButtonEvent* mbe = (MouseButtonEvent*)e;
 
 		int targetX = mbe->posx;
 		int targetY = mbe->posy;
 
-		paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
+
+		w.screenToWorld(targetX, targetY);
+		ChunkRenderer::worldToGrid(targetX, targetY);
+
+		if (subcircuitPlacement) {
+			Schematic& s = *workspace.getSchematic(subcircuitPlacement);
+			workspace.getSchematic()->getChunk()->placeSubcircuit(targetX, targetY, s);
+			subcircuitPlacement = 0;
+		}
+		else {
+			paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
+		}
 	}
 
 	//Handler for mouse move
 	void mouseMoveHandler(Event* e) {
 		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
 
+		int targetX = mbe->posx;
+		int targetY = mbe->posy;
+
+		w.screenToWorld(targetX, targetY);
+		ChunkRenderer::worldToGrid(targetX, targetY);
+
 		if (mbe->rightDown || mbe->leftDown)
-			paint(mbe->posx, mbe->posy, mbe->rightDown);
+			paint(targetX, targetY, mbe->rightDown);
 	}
 
 public:
@@ -188,6 +207,10 @@ private:
 					if (ImGui::Button("x")) {
 						workspace.deleteSchematic(i);
 					}
+					ImGui::SameLine();
+					if (ImGui::Button("Place")) {
+						subcircuitPlacement = i;
+					}
 				}
 				ImGui::PopID();
 			}
@@ -212,9 +235,10 @@ private:
 		ImGui::EndMenuBar();
 		ImGui::End();
 		*/
+#ifdef DEBUG
+		Debug::drawImGui(workspace, w);
+#endif // DEBUG
 	}
-
-
 };
 
 

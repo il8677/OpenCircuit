@@ -23,6 +23,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 		return sfToVec4(sf::Color::Green);
 		break;
 	case 3:
+	case 7:
 		return sfToVec4(sf::Color::Magenta);
 		break;
 	case 4:
@@ -33,6 +34,9 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 		break;
 	case 6:
 		return sfToVec4(sf::Color::Red);
+		break;
+	case 999:
+		return sfToVec4(sf::Color(100, 100, 100, 255));
 		break;
 	default:
 		return sfToVec4(sf::Color::Black);

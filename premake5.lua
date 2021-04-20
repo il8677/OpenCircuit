@@ -41,6 +41,8 @@ project "OpenCircuit"
             "sfml-system-s-d.lib",
             "sfml-network-s-d.lib"
         }
+
+    	defines "SFML_STATIC"
         symbols "On"
         
     filter "configurations:Release"

@@ -8,8 +8,11 @@
 #include "Job.h"
 #include "../Utility/vec4.h"
 
-#define CHUNK_X 64
-#define CHUNK_Y 64
+#define CHUNK_X 10
+#define CHUNK_Y 10
+
+class Subcircuit;
+class Schematic;
 
 //0 = nothing
 //1 = wire
@@ -19,11 +22,12 @@
 //5 = ntransistor
 class Chunk
 {
+	friend class Debug;
 	// TODO: use shared_ptr
-	std::shared_ptr<Component> cMap[CHUNK_X][CHUNK_Y];
+	Component* cMap[CHUNK_X][CHUNK_Y];
 	std::queue<Job> jobQueue;
 
-	std::forward_list<std::weak_ptr<Component>> subcircuits;
+	std::forward_list<Subcircuit*> subcircuits;
 
 	inline void createUpdateJob(int x, int y, DIR d);
 
@@ -43,6 +47,8 @@ public:
 	void setComponent(Component* c, int x, int y);
 	void setComponent(int cid, int x, int y);
 
+	void placeSubcircuit(int x, int y, Schematic& s);
+
 	//Creates an update job around all the input cells
 	void updateInputs();
 	void reset();
@@ -52,6 +58,7 @@ public:
 	void clear();
 
 	Chunk();
+	~Chunk();
 
 	//Copy constructor, peforms deep copy creating new objects contained by shared_ptrs
 	Chunk(const Chunk&);

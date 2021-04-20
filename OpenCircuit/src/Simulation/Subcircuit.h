@@ -1,35 +1,41 @@
 #pragma once
 #include "Component.h"
-#include "Chunk.h"
+#include "Schematic.h"
 
 #include <memory>
 #include <vector>
 
 class Subcircuit : Component
 {
-	Chunk c;
-
-	std::vector<std::weak_ptr<Wire>> inputs;
-	std::vector<std::weak_ptr<Constant>> outputs;
+	Schematic containedCircuit;
+	//Pointer to the array location of the heap allocated memory location, this way it still works if the component is overwritten by user
+	std::vector<Component**> inputs;
+	std::vector<Component**> outputs;
 
 public: 
 	virtual int id() override { return 999; } 
-	virtual Component* copy() override { 
+	virtual Component* copy() override {
 		throw 1;
 	}
 
-	void addInput(std::shared_ptr<Wire>& inp);
-	void addOutput(std::shared_ptr<Constant>& out);
+	void addInput(Component** inp);
+	void addOutput(Component** out);
 
-	Subcircuit(Chunk& containedChunk);
+	Subcircuit(Schematic& containedChunk);
 	
-	int outputPinsCount() const;
-	int inputPinsCount() const;
+	int outputPinsCount();
+	int inputPinsCount();
 
-	int getSizeX() const;
-	int getSizeY() const;
+	int getSizeX();
+	int getSizeY();
 	void tick();
 
+	void setSchematic(Schematic& s);
+	Schematic& getSchematic();
+
+	std::string getName();
+
 	bool update(vec4<bool> neighbours, DIR sourceDir) override;
+	bool getState(DIR direction) override;
 };
 

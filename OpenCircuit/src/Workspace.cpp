@@ -53,5 +53,6 @@ void Workspace::newSchematic(std::string name)
 
 void Workspace::paint(int gridx, int gridy, int id)
 {
-	schematics[workingSchematic].getChunk()->setComponent(id, gridx, gridy);
+	if(schematics[workingSchematic].getChunk()->getCellId(gridx, gridy) != 999)
+		schematics[workingSchematic].getChunk()->setComponent(id, gridx, gridy);
 }

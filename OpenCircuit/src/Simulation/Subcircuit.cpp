@@ -1,60 +1,79 @@
 #include "Subcircuit.h"
 
-void Subcircuit::addInput(std::shared_ptr<Wire>& inp)
+void Subcircuit::addInput(Component** inp)
 {
-	inputs.push_back(std::weak_ptr<Wire>(inp));
+	inputs.push_back(inp);
 }
 
-void Subcircuit::addOutput(std::shared_ptr<Constant>& out)
+void Subcircuit::addOutput(Component** out)
 {
-	outputs.push_back(std::weak_ptr<Constant>(out));
+	outputs.push_back(out);
 }
 
-Subcircuit::Subcircuit(Chunk& containedChunk) {
-	c = containedChunk;
-	c.reset();
+Subcircuit::Subcircuit(Schematic& containedChunk) : containedCircuit(containedChunk) {
+	containedCircuit.getChunk()->reset();
 }
 
 void Subcircuit::tick() {
-	c.tick();
+	containedCircuit.getChunk()->tick();
 
-	auto circuitOutputs = c.getOutputs();
+	auto circuitOutputs = containedCircuit.getChunk()->getOutputs();
 	for (int i = 0; i < outputPinsCount(); i++) {
-		std::shared_ptr<Constant> out = outputs[i].lock();
-		out.get()->setState(circuitOutputs[i]->getState(NONE));
+		(*outputs[i])->setState(circuitOutputs[i]->getState(NONE));
 	}
+}
+
+void Subcircuit::setSchematic(Schematic& s)
+{
+	containedCircuit = s;
+}
+
+Schematic& Subcircuit::getSchematic()
+{
+	return containedCircuit;
+}
+
+std::string Subcircuit::getName()
+{
+	return containedCircuit.getName();
 }
 
 bool Subcircuit::update(vec4<bool> neighbours, DIR sourceDir)
 {
-	auto circuitInputs = c.getInputs();
+	auto circuitInputs = containedCircuit.getChunk()->getInputs();
 	for (int i = 0; i < inputPinsCount(); i++) {
-		auto in = inputs[i].lock();
-		circuitInputs[i]->setState(in->getState(NONE));
+		circuitInputs[i]->setState((*inputs[i])->getState(NONE));
 	}
+
+	containedCircuit.getChunk()->updateInputs();
 
 	return false;
 }
 
-int Subcircuit::outputPinsCount() const {
-	return c.getOutputs().size();
+bool Subcircuit::getState(DIR direction)
+{
+	return true;
 }
 
-int Subcircuit::inputPinsCount() const {
-	return c.getInputs().size();
+int Subcircuit::outputPinsCount() {
+	return containedCircuit.getChunk()->getOutputs().size();
 }
 
-int Subcircuit::getSizeX() const{
+int Subcircuit::inputPinsCount() {
+	return containedCircuit.getChunk()->getInputs().size();
+}
+
+int Subcircuit::getSizeX(){
+	return 3;
+}
+
+int Subcircuit::getSizeY(){
 	int maxPins = inputPinsCount() > outputPinsCount() ? inputPinsCount() : outputPinsCount();
 
 	if (maxPins > 2) {
-		return 3 + 2 * (maxPins-2);
+		return 3 + 2 * (maxPins - 2);
 	}
 	else {
 		return 3;
 	}
-}
-
-int Subcircuit::getSizeY() const{
-	return 3;
 }

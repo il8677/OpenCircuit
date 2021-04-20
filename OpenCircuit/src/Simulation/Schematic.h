@@ -1,6 +1,7 @@
 #pragma once
-#include "Chunk.h"
 #include <string>
+#include "Chunk.h"
+
 class Schematic
 {
 	Chunk chunk;
