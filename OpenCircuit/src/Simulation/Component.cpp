@@ -1,13 +1,5 @@
 #include "Component.h"
 
-//TODO: Split implementations into seperate files
-bool Component::getState(DIR direction) {
-	return _state;
-}
-
-void Component::setState(bool s) {
-	_state = s;
-}
 
 void Component::initializeComponenets()
 {
@@ -26,64 +18,62 @@ void Component::initializeComponenets()
 
 }
 
-bool Component::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
-	return false;
+//TODO: Split implementations into seperate files
+bool Component::getOutput(DIR direction, char state) {
+	return state;
 }
 
-bool Component::update(vec4<bool> neighbours, DIR sourceDir) {
-	bool oldState = _state;
-	_state = predictOutput(neighbours, sourceDir);
-	return !oldState == _state;
+char Component::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
+	return 0;
 }
 
-bool Wire::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
+char Wire::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
 	return neighbours.values[sourceDir];
 }
 
-bool Input::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
-	return _state;
-}
-
-bool* Input::getStatePointer()
-{
-	return &_state;
-}
-
-bool Transistor::predictOutput(vec4<bool> neighbours, DIR sourceDir) const {
+char Transistor::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
 	return neighbours.up && neighbours.left;
 }
 
-bool Not::predictOutput(vec4<bool> neighbours, DIR sourceDir) const{
+char Not::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
 	return !neighbours.left;
 }
 
-bool Not::getState(DIR direction) {
-	if (direction == LEFT)
-		return !_state;
-	
-	return _state;
+char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
+	//Bit 1 = u/d, bit 2 = l/r
+	char mask = (sourceDir % 2 == 0 ? 1 : 2) & neighbours.values[sourceDir];
+
+	return state & mask;
 }
 
-bool Junction::update(vec4<bool> neighbours, DIR sourceDir) {
-	//if dir is divisible by 2 it means its up / down (0 and 2 respectivley)
-	bool& utarget = (sourceDir % 2 == 0) ? _udState : _state;
-	bool old = utarget;
-	utarget = neighbours.values[sourceDir];
+bool Junction::getOutput(DIR sourceDir, char state) {
+	//Reversed as we want to mask in
+	char mask = (sourceDir % 2 == 0 ? 2 : 1);
 
-	return !(old == utarget);
+	return state & mask;
 }
 
-bool Junction::getState(DIR sourceDir) {
-
-	return (sourceDir % 2 == 0) ? _udState : _state;
-}
-
-void Junction::setState(bool s) {
-	Component::setState(s);
-	_udState = s;
-}
-
-bool Constant::update(vec4<bool> neighbours, DIR sourceDir)
+char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const
 {
-	return false;
+	return state;
+}
+
+int SubcircuitProxy::getSizeX() {
+	return 3;
+}
+
+#include "Schematic.h"
+
+int SubcircuitProxy::getSizeY() {
+	int maxPins = s.inputCount() > s.outputCount() ? s.inputCount() : s.outputCount();
+
+	if (maxPins > 2) {
+		return 3 + 2 * (maxPins - 2);
+	}
+	else {
+		return 3;
+	}
+}
+SubcircuitProxy::SubcircuitProxy(Schematic& s) : s(s)
+{
 }

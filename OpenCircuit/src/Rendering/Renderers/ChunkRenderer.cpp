@@ -71,12 +71,12 @@ void ChunkRenderer::Render(Window& w, Chunk* c) {
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			int cellId = c->getCellId(x, y);
+			int cellId = c->schematic.getCellId(x, y);
 			int index = (x*CHUNK_X + y)*4;
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
 			
-			if (!c->getState(x, y, NONE)) {
+			if (!c->getOutput(x, y, NONE)) {
 				vColour = vColour * sf::Color(100, 100, 100);;
 			}
 

@@ -5,8 +5,7 @@
 #include "Rendering/Renderers/ChunkRenderer.h"
 #include "Rendering/Window/window.h"
 #include "Workspace.h"
-
-#include "Debug.h"
+#include "Simulation/Component.h"
 
 #include <iostream>
 #include <string>
@@ -46,8 +45,7 @@ class App {
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
 		if (subcircuitPlacement) {
-			Schematic& s = *workspace.getSchematic(subcircuitPlacement);
-			workspace.getSchematic()->getChunk()->placeSubcircuit(targetX, targetY, s);
+			workspace.placeSubcircuit(targetX, targetY, subcircuitPlacement);
 			subcircuitPlacement = 0;
 		}
 		else {
@@ -90,7 +88,7 @@ public:
 
 			w.beginDraw();
 
-			ChunkRenderer::Render(w, workspace.getSchematic()->getChunk());
+			ChunkRenderer::Render(w, workspace.getChunk());
 
 			w.imGuiBegin();
 			drawImGui();
@@ -102,7 +100,7 @@ public:
 				autoTickState++;
 				if (autoTickState > autoTickAmount) {
 					autoTickState = 0;
-					workspace.getSchematic()->getChunk()->tick();
+					workspace.getChunk()->tick();
 				}
 			}
 		}
@@ -146,32 +144,32 @@ private:
 
 		ImGui::Begin("Simulation Manager");
 		if (ImGui::CollapsingHeader("Inputs")) {
-			std::vector<Input*> inputs = workspace.getSchematic()->getChunk()->getInputs();
+			std::vector<char*> inputs = workspace.getChunk()->getInputs();
 			for (int i = 0; i < inputs.size(); i++) {
 				ImGui::PushID(i);
 				if (i > 0)
 					ImGui::SameLine();
-				if (ImGui::Checkbox(" ", inputs[i]->getStatePointer())) {
-					workspace.getSchematic()->getChunk()->updateInputs();
+				if (ImGui::Checkbox(" ", (bool*)inputs[i])) {
+					workspace.getChunk()->updateInputs();
 				}
 				ImGui::PopID();
 			}
 		}
 		if (ImGui::CollapsingHeader("Outputs")) {
 
-			std::vector<Output*> outputs = workspace.getSchematic()->getChunk()->getOutputs();
+			std::vector<char*> outputs = workspace.getChunk()->getOutputs();
 			for (int i = 0; i < outputs.size(); i++) {
 				if (i > 0)
 					ImGui::SameLine();
-				ImGui::Text("%d", outputs[i]->getState(NONE));
+				ImGui::Text("%d", outputs[i]);
 			}
 		}
 		if (ImGui::CollapsingHeader("Controls")) {
 			if (ImGui::Button("Reset")) {
-				workspace.getSchematic()->getChunk()->reset();
+				workspace.getChunk()->reset();
 			}
 			if (ImGui::Button("Tick")) {
-				workspace.getSchematic()->getChunk()->tick();
+				workspace.getChunk()->tick();
 			}
 
 			ImGui::Text("Autotick");

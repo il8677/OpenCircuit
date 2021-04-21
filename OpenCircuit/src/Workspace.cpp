@@ -1,22 +1,27 @@
 #include "Workspace.h"
 
-Workspace::Workspace()
+Workspace::Workspace() : workingChunk(schematics[0])
 {
-	newSchematic("Base schematic");
+	
 }
 
 Schematic* Workspace::getSchematic(int i)
 {
-	return &schematics[i];
+	return &(schematics[i]);
+}
+
+Schematic* Workspace::getSchematic() {
+	return &workingChunk.schematic;
 }
 
 
-Schematic* Workspace::getSchematic()
-{
-	return &schematics[workingSchematic];
+Chunk* Workspace::getChunk() {
+	return &workingChunk;
 }
+
 void Workspace::deleteSchematic(int i)
 {
+	/*
 	if (i == workingSchematic)
 		workingSchematic = 0;
 	
@@ -25,11 +30,12 @@ void Workspace::deleteSchematic(int i)
 			workingSchematic = 0;
 		schematics.erase(schematics.begin() + i);		
 	}
+	*/
 }
 
 void Workspace::setWorkingSchematic(int i)
 {
-	workingSchematic = i;
+	workingChunk = Chunk(schematics[i]);
 }
 
 
@@ -40,19 +46,18 @@ int Workspace::schematicCount()
 
 void Workspace::newSchematic(std::string name)
 {
-	for (int i = 0; i < schematics.size(); i++) {
-		if (schematics[i].getName() == name) {
-			schematics[i].clearChunk();
-			return;
-		}
-	}
 	schematics.emplace_back(name);
+	setWorkingSchematic(schematics.size()-1);
+}
 
-	workingSchematic = schematics.size()-1;
+void Workspace::placeSubcircuit(int x, int y, int sid) {
+	Schematic& s = *getSchematic(sid);
+	getSchematic()->placeSubcircuit(x, y, s);
+	workingChunk.reset();
 }
 
 void Workspace::paint(int gridx, int gridy, int id)
 {
-	if(schematics[workingSchematic].getChunk()->getCellId(gridx, gridy) != 999)
-		schematics[workingSchematic].getChunk()->setComponent(id, gridx, gridy);
+	if (workingChunk.schematic.getCellId(gridx, gridy) != 999)
+		workingChunk.schematic.setComponent(id, gridx, gridy);
 }

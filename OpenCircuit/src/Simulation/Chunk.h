@@ -1,18 +1,14 @@
 #pragma once
-#include <memory>
 #include <vector>
 #include <queue>
 #include <forward_list>
 
-#include "Component.h"
-#include "Job.h"
 #include "../Utility/vec4.h"
-
-#define CHUNK_X 10
-#define CHUNK_Y 10
+#include "Schematic.h"
+#include "Job.h"
+#include <memory>
 
 class Subcircuit;
-class Schematic;
 
 //0 = nothing
 //1 = wire
@@ -22,44 +18,35 @@ class Schematic;
 //5 = ntransistor
 class Chunk
 {
-	friend class Debug;
-	// TODO: use shared_ptr
-	Component* cMap[CHUNK_X][CHUNK_Y];
 	std::queue<Job> jobQueue;
 
-	std::forward_list<Subcircuit*> subcircuits;
+	char states[CHUNK_X][CHUNK_Y];
 
 	inline void createUpdateJob(int x, int y, DIR d);
-
 	inline void createUpdatesAround(int x, int y);
 
 	inline vec4<bool> getNeighbours(int x, int y) const;
-
-protected:
-
 public:
-	std::vector<Input*>  getInputs() const;
-	std::vector<Output*> getOutputs() const;
+	//TODO: Figure out a way for this not to be heap allocated
+	std::vector<Subcircuit*> subcircuits;
 
-	int getCellId(int x, int y) const;
-	inline bool getState(int x, int y, DIR from=NONE) const;
+	Schematic& schematic;
 
-	void setComponent(Component* c, int x, int y);
-	void setComponent(int cid, int x, int y);
-
-	void placeSubcircuit(int x, int y, Schematic& s);
+	inline bool getOutput(int x, int y, DIR from=NONE) const;
 
 	//Creates an update job around all the input cells
 	void updateInputs();
 	void reset();
 
+	std::vector<char*> getOutputs();
+	std::vector<char*> getInputs();
+
 	//Propogate jobs
 	void tick();
-	void clear();
 
-	Chunk();
+	Chunk(Schematic&);
+	Chunk(const Chunk&);
 	~Chunk();
 
-	//Copy constructor, peforms deep copy creating new objects contained by shared_ptrs
-	Chunk(const Chunk&);
+	Chunk* operator=(const Chunk&);
 };

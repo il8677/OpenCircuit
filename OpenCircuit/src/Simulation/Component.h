@@ -19,20 +19,10 @@ public:
 	virtual int id() { return 0;}
 	virtual Component* copy() { return new Component(); }
 
-protected:
-	bool _state;
-
 	// Returns what the updated state would be after a change from  the specified direction
-	virtual bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const;
-public:
+	virtual char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const;
 
-	// Updates the component state after a change from the specified direction
-	// Returns if value was changed
-	virtual bool update(vec4<bool> neighbours, DIR updatedDirection);
-
-	//Returns the state for the given direction
-	virtual bool getState(DIR direction);
-	virtual void setState(bool s);
+	virtual bool getOutput(DIR direction, char state);
 
 	static std::vector<Component*> components;
 	static void initializeComponenets();
@@ -40,17 +30,13 @@ public:
 
 class Wire : public Component {
 	COMPONENTDEF(1, Wire)
-protected:
-	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 public:
 };
 
 class Input : public Component {
 	COMPONENTDEF(2, Input)
-protected:
-	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
-public:
-	bool* getStatePointer();
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 
 class Output : public Wire {
@@ -60,32 +46,54 @@ public:
 
 class Transistor : public Component {
 	COMPONENTDEF(4, Transistor)
-public:	
-	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 
 class Not : public Component {
 	COMPONENTDEF(5, Not)
 public:
 
-	bool getState(DIR direction) override;
+	bool getOutput(DIR direction, char state) override;
 
-	bool predictOutput(vec4<bool> neighbours, DIR sourceDir) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 
 class Junction : public Component {
 	COMPONENTDEF(6, Junction);
-protected:
-	bool _udState; // State for the up down track _state is used for l/r state
 public:
-	bool getState(DIR direction) override;
-	bool update(vec4<bool> neighbours, DIR sourceDir) override;
-	
-	void setState(bool s) override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
+
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Constant : public Component {
 	COMPONENTDEF(7, Constant);
+};
+
+class WireInput : public Wire {
+	COMPONENTDEF(8, WireInput);
+
+};
+
+class Schematic;
+class SubcircuitProxy : public Component {
 public:
-	bool update(vec4<bool> neighbours, DIR sourceDir) override;
+	Schematic& s;
+
+//TODO: Implement this better
+	std::vector<int> inx;
+	std::vector<int> iny;
+
+	std::vector<int> outx;
+	std::vector<int> outy;
+
+	virtual int id() override { return 999; }
+	virtual Component* copy() override {
+		throw 1;
+	}
+
+	int getSizeX();
+	int getSizeY();
+
+	SubcircuitProxy(Schematic&);
 };

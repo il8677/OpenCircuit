@@ -8,14 +8,18 @@
 
 class Workspace
 {
-	std::vector<Schematic> schematics;
+	std::vector<Schematic> schematics = { Schematic("Base schematic") };
 	
-	int workingSchematic;
+	Chunk workingChunk;
 public:
 	Workspace();
 
 	Schematic* getSchematic(int i);
+
 	Schematic* getSchematic();
+
+	Chunk* getChunk();
+
 	void deleteSchematic(int i);
 
 	void setWorkingSchematic(int i);
@@ -23,6 +27,8 @@ public:
 	int schematicCount();
 
 	void newSchematic(std::string name);
+
+	void placeSubcircuit(int x, int y, int cid);
 
 	void paint(int gridx, int gridy, int id);
 };
