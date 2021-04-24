@@ -1,9 +1,6 @@
 #include "window.h"
 #include "Event.h"
 
-#include <imgui.h>
-#include <imgui-SFML.h>
-
 bool Window::isOpen() {
 	return _window.isOpen();
 }

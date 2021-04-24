@@ -53,8 +53,6 @@ class Not : public Component {
 	COMPONENTDEF(5, Not)
 public:
 
-	bool getOutput(DIR direction, char state) override;
-
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 

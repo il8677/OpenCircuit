@@ -19,7 +19,7 @@ void Chunk::createUpdatesAround(int x, int y) {
 	createUpdateJob(M_LEFT, DIR::RIGHT);
 }
 
-inline bool Chunk::getOutput(int x, int y, DIR from) const
+bool Chunk::getOutput(int x, int y, DIR from) const
 {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
 		return schematic.getComponent(x,y)->getOutput(from, states[x][y]);

@@ -1,5 +1,8 @@
 #pragma once
+#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
 #include "EventManager.h"
 
 // TODO: Abstract from SFML

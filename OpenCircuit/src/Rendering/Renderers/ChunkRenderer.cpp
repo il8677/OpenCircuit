@@ -1,4 +1,5 @@
 #include "ChunkRenderer.h"
+#include "../Window/window.h"
 #include "../../Simulation/Chunk.h"
 
 #define VERTDIST 15

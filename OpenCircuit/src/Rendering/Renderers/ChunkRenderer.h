@@ -1,6 +1,7 @@
 #pragma once
-#include "../Window/window.h"
 #include "../../Utility/vec4.h"
+
+class Window;
 
 // TODO: Abstract and decouple from SFML
 

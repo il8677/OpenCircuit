@@ -84,7 +84,11 @@ std::vector<Output*> Schematic::getOutputs() const
 
 int Schematic::inputCount()
 {
-	return 0;
+	return getInputs().size();
+}
+
+int Schematic::outputCount() {
+	return getOutputs().size();
 }
 
 

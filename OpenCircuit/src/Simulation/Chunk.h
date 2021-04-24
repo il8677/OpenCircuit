@@ -32,7 +32,7 @@ public:
 
 	Schematic& schematic;
 
-	inline bool getOutput(int x, int y, DIR from=NONE) const;
+	bool getOutput(int x, int y, DIR from=NONE) const;
 
 	//Creates an update job around all the input cells
 	void updateInputs();
