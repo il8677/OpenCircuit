@@ -1,5 +1,5 @@
 #include "ChunkRenderer.h"
-#include "../Window/window.h"
+#include "../Window/SFMLWindow.h"
 #include "../../Simulation/Chunk.h"
 
 #define VERTDIST 15
@@ -45,7 +45,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 	}
 }
 
-void ChunkRenderer::Render(Window& w, Chunk* c) {
+void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
 	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
 	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
 

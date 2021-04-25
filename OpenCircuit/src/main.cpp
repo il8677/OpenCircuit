@@ -3,7 +3,7 @@
 
 #include "Rendering/Window/Event.h"
 #include "Rendering/Renderers/ChunkRenderer.h"
-#include "Rendering/Window/window.h"
+#include "Rendering/Window/SFMLWindow.h"
 #include "Workspace.h"
 #include "Simulation/Component.h"
 
@@ -16,7 +16,7 @@ ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
 }
 
 class App {
-	Window w;
+	SFMLWindow w;
 	int rightBrush = 0, leftBrush = 1;
 
 	bool doAutotick = false;

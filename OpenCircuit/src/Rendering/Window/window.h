@@ -1,35 +1,22 @@
 #pragma once
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <imgui.h>
-#include <imgui-SFML.h>
-#include "EventManager.h"
 
-// TODO: Abstract from SFML
+#include "EventManager.h"
 
 class Window {
 public:
-	Window(int x, int y);
-	~Window();
+	virtual bool isOpen()=0;
+	virtual void handleEvents()=0;
 
-	bool isOpen();
-	void handleEvents();
+	virtual void beginDraw()=0;
+	virtual void endDraw()=0;
 
-	void beginDraw();
-	void endDraw();
+	virtual void imGuiBegin()=0;
+	virtual void imGuiDraw()=0;
 
-	void imGuiBegin();
-	void imGuiDraw();
+	virtual void addEventCallback(int eventId, EventCallback ec)=0;
 
-	void renderVerts(sf::VertexArray va);
+	virtual void screenToWorld(int &x, int &y)=0;
 
-	void addEventCallback(int eventId, EventCallback ec);
-
-	void screenToWorld(int &x, int &y);
-
-private:
+protected:
 	EventManager _eManager;
-
-	sf::RenderWindow _window;
-	sf::Clock _deltaClock;
 };

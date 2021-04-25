@@ -1,15 +1,23 @@
-#include "window.h"
 #include "Event.h"
 
-bool Window::isOpen() {
+#include "SFMLWindow.h"
+#include <imgui.h>
+#include <imgui-SFML.h>
+
+bool SFMLWindow::isOpen() {
 	return _window.isOpen();
 }
 
-void Window::screenToWorld(int& x, int& y) {
+void SFMLWindow::screenToWorld(int& x, int& y) {
 
 }
 
-void Window::handleEvents()
+void SFMLWindow::renderVerts(sf::VertexArray va)
+{
+	_window.draw(va);
+}
+
+void SFMLWindow::handleEvents()
 {
 	sf::Event e;
 
@@ -47,39 +55,34 @@ void Window::handleEvents()
 	}
 }
 
-void Window::beginDraw()
+void SFMLWindow::beginDraw()
 {
 	_window.clear(sf::Color::Black);
 }
 
-void Window::endDraw()
+void SFMLWindow::endDraw()
 {
 	_window.display();
 }
 
-void Window::imGuiBegin() {
+void SFMLWindow::imGuiBegin() {
 	ImGui::SFML::Update(_window, _deltaClock.restart());
 }
 
-void Window::imGuiDraw() {
+void SFMLWindow::imGuiDraw() {
 	ImGui::SFML::Render(_window);
 }
 
-void Window::renderVerts(sf::VertexArray va)
-{
-	_window.draw(va);
-}
-
-void Window::addEventCallback(int eventId, EventCallback ec)
+void SFMLWindow::addEventCallback(int eventId, EventCallback ec)
 {
 	_eManager.addEventCallback(eventId, ec);
 }
 
-Window::~Window() {
+SFMLWindow::~SFMLWindow() {
 	ImGui::SFML::Shutdown();
 }
 
-Window::Window(int x, int y) : _window(sf::VideoMode(x, y), "OpenCircuit")
+SFMLWindow::SFMLWindow(int x, int y) : _window(sf::VideoMode(x, y), "OpenCircuit")
 {
 	_window.setVerticalSyncEnabled(true);
 	
