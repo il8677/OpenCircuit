@@ -75,7 +75,7 @@ std::vector<char*> Chunk::getOutputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x, y) == 2)
+			if (schematic.getCellId(x, y) == 3)
 				returnVector.push_back(&states[x][y]);
 		}
 	}
@@ -89,7 +89,7 @@ std::vector<char*> Chunk::getInputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x, y) == 3)
+			if (schematic.getCellId(x, y) == 2)
 				returnVector.push_back(&states[x][y]);
 		}
 	}
