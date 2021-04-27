@@ -185,6 +185,10 @@ Chunk::Chunk(const Chunk& c)
 	}
 }
 
+Chunk::Chunk(){
+
+}
+
 Chunk::~Chunk()
 {
 

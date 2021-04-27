@@ -7,7 +7,7 @@ class SFMLWindow;
 
 class Chunk;
 
-static class ChunkRenderer {
+class ChunkRenderer {
 
 public:
 

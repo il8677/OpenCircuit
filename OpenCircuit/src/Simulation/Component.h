@@ -54,7 +54,6 @@ class Not : public Component {
 public:
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 	bool getOutput(DIR direction, char state) override;
-	bool not;
 };
 
 class Junction : public Component {
