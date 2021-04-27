@@ -1,8 +1,9 @@
 #include "Workspace.h"
 
-Workspace::Workspace() : workingChunk(schematics[0])
+Workspace::Workspace() : workingChunk(Chunk(Schematic("")))
 {
-	
+	schematics.emplace_back("Base schematic");
+	workingChunk = Chunk(schematics[0]);
 }
 
 Schematic* Workspace::getSchematic(int i)
@@ -11,7 +12,7 @@ Schematic* Workspace::getSchematic(int i)
 }
 
 Schematic* Workspace::getSchematic() {
-	return &workingChunk.schematic;
+	return workingChunk.schematic;
 }
 
 
@@ -58,6 +59,6 @@ void Workspace::placeSubcircuit(int x, int y, int sid) {
 
 void Workspace::paint(int gridx, int gridy, int id)
 {
-	if (workingChunk.schematic.getCellId(gridx, gridy) != 999)
-		workingChunk.schematic.setComponent(id, gridx, gridy);
+	if (workingChunk.schematic->getCellId(gridx, gridy) != 999)
+		workingChunk.schematic->setComponent(id, gridx, gridy);
 }

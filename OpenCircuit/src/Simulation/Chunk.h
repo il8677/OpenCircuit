@@ -26,11 +26,14 @@ class Chunk
 	inline void createUpdatesAround(int x, int y);
 
 	inline vec4<bool> getNeighbours(int x, int y) const;
+
+	void populateSubcircuits();
+
 public:
 	//TODO: Figure out a way for this not to be heap allocated
-	std::vector<Subcircuit*> subcircuits;
+	std::vector<Subcircuit> subcircuits;
 
-	Schematic& schematic;
+	Schematic* schematic;
 
 	bool getOutput(int x, int y, DIR from=NONE) const;
 
@@ -44,9 +47,10 @@ public:
 	//Propogate jobs
 	void tick();
 
+
 	Chunk(Schematic&);
 	Chunk(const Chunk&);
 	~Chunk();
 
-	Chunk* operator=(const Chunk&);
+	Chunk& operator=(const Chunk&);
 };

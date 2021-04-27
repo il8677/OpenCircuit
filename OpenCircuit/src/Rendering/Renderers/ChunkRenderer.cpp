@@ -18,13 +18,14 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 	switch (componenetId)
 	{
 	case 1:
+	case 8:
+	case 7:
 		return sfToVec4(sf::Color::Yellow);
 		break;
 	case 2:
 		return sfToVec4(sf::Color::Green);
 		break;
 	case 3:
-	case 7:
 		return sfToVec4(sf::Color::Magenta);
 		break;
 	case 4:
@@ -37,7 +38,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 		return sfToVec4(sf::Color::Red);
 		break;
 	case 999:
-		return sfToVec4(sf::Color(100, 100, 100, 255));
+		return sfToVec4(sf::Color(255, 255, 255, 255));
 		break;
 	default:
 		return sfToVec4(sf::Color::Black);
@@ -72,7 +73,7 @@ void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			int cellId = c->schematic.getCellId(x, y);
+			int cellId = c->schematic->getCellId(x, y);
 			int index = (x*CHUNK_X + y)*4;
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );

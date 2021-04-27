@@ -12,6 +12,7 @@ class Subcircuit
 	std::vector<char*> outputs;
 
 public: 
+	std::queue<char*> updatedCells;
 
 	void addInput(char* inp);
 	void addOutput(char* out);
@@ -20,7 +21,7 @@ public:
 	void tick();
 
 	void setSchematic(Schematic& s);
-	Schematic& getSchematic();
+	Schematic* getSchematic();
 
 	std::string getName();
 	

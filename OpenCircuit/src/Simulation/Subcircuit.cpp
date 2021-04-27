@@ -23,8 +23,10 @@ void Subcircuit::tick() {
 	containedCircuit.tick();;
 
 	auto circuitOutputs = containedCircuit.getOutputs();
-	for (int i = 0; i < circuitOutputs.size(); i++)
+	for (int i = 0; i < circuitOutputs.size(); i++) {
+		if (*outputs[i] != *circuitOutputs[i]) updatedCells.push(outputs[i]);
 		*outputs[i] = *circuitOutputs[i];
+	}
 
 	auto circuitInputs = containedCircuit.getInputs();
 	for (int i = 0; i < circuitInputs.size(); i++) 
@@ -39,13 +41,13 @@ void Subcircuit::setSchematic(Schematic& s)
 	containedCircuit = Chunk(s);
 }
 
-Schematic& Subcircuit::getSchematic()
+Schematic* Subcircuit::getSchematic()
 {
 	return containedCircuit.schematic;
 }
 
 std::string Subcircuit::getName()
 {
-	return getSchematic().getName();
+	return getSchematic()->getName();
 }
 

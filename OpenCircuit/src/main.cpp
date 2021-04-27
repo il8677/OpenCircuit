@@ -161,7 +161,7 @@ private:
 			for (int i = 0; i < outputs.size(); i++) {
 				if (i > 0)
 					ImGui::SameLine();
-				ImGui::Text("%d", outputs[i]);
+				ImGui::Text("%d", *outputs[i]);
 			}
 		}
 		if (ImGui::CollapsingHeader("Controls")) {

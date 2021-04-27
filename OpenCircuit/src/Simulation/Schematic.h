@@ -9,8 +9,8 @@ class Input;
 class Output;
 class SubcircuitProxy;
 
-#define CHUNK_X 10
-#define CHUNK_Y 10
+#define CHUNK_X 64
+#define CHUNK_Y 64
 
 class Schematic
 {
@@ -40,7 +40,7 @@ public:
 	Schematic(std::string name);
 	~Schematic();
 
-	//Copy constructor, peforms deep copy creating new objects, shouldn't really ever be used but hey, its here
+	//Copy constructor, peforms deep copy creating new objects
 	Schematic(const Schematic&);
 };
 

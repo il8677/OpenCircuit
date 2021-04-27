@@ -8,7 +8,7 @@
 
 class Workspace
 {
-	std::vector<Schematic> schematics = { Schematic("Base schematic") };
+	std::vector<Schematic> schematics;
 	
 	Chunk workingChunk;
 public:

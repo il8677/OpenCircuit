@@ -22,7 +22,7 @@ void Chunk::createUpdatesAround(int x, int y) {
 bool Chunk::getOutput(int x, int y, DIR from) const
 {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
-		return schematic.getComponent(x,y)->getOutput(from, states[x][y]);
+		return schematic->getComponent(x,y)->getOutput(from, states[x][y]);
 	return false;
 }
 
@@ -40,7 +40,7 @@ void Chunk::updateInputs() {
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x,y) == 2) 
+			if (schematic->getCellId(x,y) == 2) 
 				createUpdatesAround(x, y);
 		}
 	}
@@ -50,7 +50,7 @@ void Chunk::reset()
 {
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x,y) != 2) {
+			if (schematic->getCellId(x,y) != 2) {
 				states[x][y] = 0;
 			}
 		}
@@ -61,12 +61,14 @@ void Chunk::reset()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x, y) == 2)
+			if (schematic->getCellId(x, y) == 2)
 				createUpdatesAround(x, y);
-			else if (schematic.getCellId(x,y) == 5)
+			else if (schematic->getCellId(x,y) == 5)
 				createUpdateJob(x, y, NONE);
 		}
 	}
+
+	populateSubcircuits();
 }
 
 std::vector<char*> Chunk::getOutputs()
@@ -75,7 +77,7 @@ std::vector<char*> Chunk::getOutputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x, y) == 3)
+			if (schematic->getCellId(x, y) == 3)
 				returnVector.push_back(&states[x][y]);
 		}
 	}
@@ -89,7 +91,7 @@ std::vector<char*> Chunk::getInputs()
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			if (schematic.getCellId(x, y) == 2)
+			if (schematic->getCellId(x, y) == 2)
 				returnVector.push_back(&states[x][y]);
 		}
 	}
@@ -105,7 +107,7 @@ void Chunk::tick() {
 		Job& j = queue.front();
 
 		char last = states[j.x][j.y];
-		states[j.x][j.y] = schematic.getComponent(j.x, j.y)->predictState(getNeighbours(j.x, j.y), j.d, last);
+		states[j.x][j.y] = schematic->getComponent(j.x, j.y)->predictState(getNeighbours(j.x, j.y), j.d, last);
 
 		bool changed = !(last == states[j.x][j.y]);
 		
@@ -114,31 +116,68 @@ void Chunk::tick() {
 	}
 
 	for (int i = 0; i < subcircuits.size(); i++) {
-		subcircuits[i]->tick();
+		//TODO: speed this up (Don't use queue, since searching through the state map is relativley slow
+		subcircuits[i].tick();
+		std::queue<char*> updateQueue;
+		std::swap(updateQueue, subcircuits[i].updatedCells);
+
+		while (!updateQueue.empty()) {
+			char* c = updateQueue.front();
+			for (int x = 0; x < CHUNK_X; x++) {
+				for (int y = 0; y < CHUNK_Y; y++) {
+					if (&states[x][y] == c) {
+						createUpdatesAround(x, y);
+						x = CHUNK_X;
+						break;
+					}
+				}
+			}
+
+			updateQueue.pop();
+		}
 	}
 }
 
-Chunk::Chunk(Schematic& usedSchematic) : schematic(usedSchematic){
+
+
+Chunk::Chunk(Schematic& usedSchematic){
+	schematic = &usedSchematic;
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
-			states[x][y] = false;
+			states[x][y] = 0;
 		}
 	}
 
 	for (auto it = usedSchematic.subcircuits.begin(); it != usedSchematic.subcircuits.end(); ++it) {
-		subcircuits.push_back(new Subcircuit((*it)->s));
+		subcircuits.push_back(Subcircuit((*it)->s));
 		for (int i = 0; i < (*it)->inx.size(); i++) {
-			subcircuits.back()->addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
+			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
 		}
 		
 		for (int i = 0; i < (*it)->outx.size(); i++) {
-			subcircuits.back()->addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
+			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
 		}
 	}
 }
 
-Chunk::Chunk(const Chunk& c) : schematic(c.schematic)
+void Chunk::populateSubcircuits() {
+	subcircuits.clear();
+
+	for (auto it = schematic->subcircuits.begin(); it != schematic->subcircuits.end(); ++it) {
+		subcircuits.push_back(Subcircuit((*it)->s));
+		for (int i = 0; i < (*it)->inx.size(); i++) {
+			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
+		}
+
+		for (int i = 0; i < (*it)->outx.size(); i++) {
+			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
+		}
+	}
+}
+
+Chunk::Chunk(const Chunk& c)
 {
+	schematic = c.schematic;
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			states[x][y] = c.states[x][y];
@@ -148,15 +187,19 @@ Chunk::Chunk(const Chunk& c) : schematic(c.schematic)
 
 Chunk::~Chunk()
 {
-	for (int i = 0; i < subcircuits.size(); i++) {
-		delete subcircuits[i];
-	}
+
 }
 
-Chunk* Chunk::operator=(const Chunk& other)
+Chunk& Chunk::operator=(const Chunk& other)
 {
-	
-	return this;
+	schematic = other.schematic;
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			states[x][y] = other.states[x][y];
+		}
+	}
+
+	return *this;
 }
 
 std::vector<Component*> Component::components;

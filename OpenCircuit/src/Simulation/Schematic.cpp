@@ -22,33 +22,27 @@ Schematic::~Schematic() {
 	}
 }
 
-Schematic::Schematic(const Schematic& original) {
-	std::map<Component*, Component*> processedComponents;
 
+Schematic::Schematic(const Schematic& original) {
+	name = original.name;
 	for (int x = 0; x < CHUNK_X; x++)
 		for (int y = 0; y < CHUNK_Y; y++)
-			cMap[x][y] = 0;
+			cMap[x][y] = nullptr;
 
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			Component* c = original.cMap[x][y];
 			if (cMap[x][y] == nullptr) { //If the component isn't nullptr, it's part of a subcircuit, so should be ignored
 				if (c->id() == 999) {
-					placeSubcircuit(x, y, ((Subcircuit*)c)->getSchematic());
-				}
-				else if (processedComponents.find(c) == processedComponents.end()) {
-					cMap[x][y] = c->copy();
-					processedComponents[c] = cMap[x][y];
+					placeSubcircuit(x, y, *((Subcircuit*)c)->getSchematic());
 				}
 				else {
-					cMap[x][y] = processedComponents[c];
+					cMap[x][y] = c->copy();
 				}
 			}
 		}
 	}
 }
-
-
 
 std::string Schematic::getName() {
 	return name;
