@@ -171,6 +171,7 @@ Schematic::Schematic(const Schematic& original) {
 			}
 		}
 	}
+	subcircuits = original.subcircuits;
 }
 
 Schematic::Schematic(Schematic&& original) noexcept
@@ -183,6 +184,7 @@ Schematic::Schematic(Schematic&& original) noexcept
 			original.cMap[x][y] = nullptr;
 		}
 	}
+	subcircuits = original.subcircuits;
 }
 
 Schematic& Schematic::operator=(const Schematic& o) {
@@ -198,6 +200,8 @@ Schematic& Schematic::operator=(const Schematic& o) {
 			cMap[x][y] = o.cMap[x][y]->copy();
 		}
 	}
+
+	subcircuits = o.subcircuits;
 
 	return *this;
 }
@@ -217,6 +221,8 @@ Schematic& Schematic::operator=(Schematic&& o) {
 			o.cMap[x][y] = nullptr;
 		}
 	}
+
+	subcircuits = o.subcircuits;
 
 	return *this;
 }

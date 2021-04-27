@@ -69,6 +69,7 @@ void Chunk::reset()
 	}
 
 	populateSubcircuits();
+	std::cout << std::endl;
 }
 
 std::vector<char*> Chunk::getOutputs()
@@ -148,17 +149,9 @@ Chunk::Chunk(Schematic& usedSchematic){
 		}
 	}
 
-	for (auto it = usedSchematic.subcircuits.begin(); it != usedSchematic.subcircuits.end(); ++it) {
-		subcircuits.push_back(Subcircuit((*it)->s));
-		for (int i = 0; i < (*it)->inx.size(); i++) {
-			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
-		}
-		
-		for (int i = 0; i < (*it)->outx.size(); i++) {
-			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
-		}
-	}
+	populateSubcircuits();
 }
+
 
 void Chunk::populateSubcircuits() {
 	subcircuits.clear();
@@ -173,7 +166,7 @@ void Chunk::populateSubcircuits() {
 			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
 		}
 
-		subcircuits.back();
+		//subcircuits.back().reset();
 	}
 }
 
