@@ -69,7 +69,6 @@ void Chunk::reset()
 	}
 
 	populateSubcircuits();
-	std::cout << std::endl;
 }
 
 std::vector<char*> Chunk::getOutputs()
