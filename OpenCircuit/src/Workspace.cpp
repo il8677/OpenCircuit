@@ -1,6 +1,6 @@
 #include "Workspace.h"
 
-Workspace::Workspace() : workingChunk(Chunk(Schematic("")))
+Workspace::Workspace() 
 {
 	schematics.emplace_back("Base schematic");
 	workingChunk = Chunk(schematics[0]);

@@ -1,6 +1,6 @@
 #pragma once
 
-enum DIR;
+#include "../Utility/vec4.h"
 
 struct Job
 {
