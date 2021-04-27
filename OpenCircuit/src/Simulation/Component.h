@@ -11,7 +11,7 @@
 //5 = Not
 //6 = Junction
 
-#define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name(*this);}
+#define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name();}
 
 class Component
 {
@@ -87,7 +87,7 @@ public:
 
 	virtual int id() override { return 999; }
 	virtual Component* copy() override {
-		throw 1;
+		exit(1000);
 	}
 
 	int getSizeX();

@@ -172,6 +172,8 @@ void Chunk::populateSubcircuits() {
 		for (int i = 0; i < (*it)->outx.size(); i++) {
 			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
 		}
+
+		subcircuits.back();
 	}
 }
 
@@ -183,6 +185,8 @@ Chunk::Chunk(const Chunk& c)
 			states[x][y] = c.states[x][y];
 		}
 	}
+
+	populateSubcircuits();
 }
 
 Chunk::Chunk(){
@@ -203,6 +207,7 @@ Chunk& Chunk::operator=(const Chunk& other)
 		}
 	}
 
+	populateSubcircuits();
 	return *this;
 }
 

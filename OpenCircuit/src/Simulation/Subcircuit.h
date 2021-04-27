@@ -17,7 +17,7 @@ public:
 	void addInput(char* inp);
 	void addOutput(char* out);
 
-
+	void reset();
 	void tick();
 
 	void setSchematic(Schematic& s);

@@ -11,6 +11,7 @@ class Workspace
 	std::vector<Schematic> schematics;
 	
 	Chunk workingChunk;
+	int workingChunkId;
 public:
 	Workspace();
 
@@ -25,6 +26,9 @@ public:
 	void setWorkingSchematic(int i);
 
 	int schematicCount();
+	int getWorkingChunk();
+
+	void moveUp(int i);
 
 	void newSchematic(std::string name);
 

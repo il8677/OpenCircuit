@@ -50,6 +50,7 @@ public:
 
 	Chunk(Schematic&);
 	Chunk(const Chunk&);
+
 	Chunk();
 	~Chunk();
 

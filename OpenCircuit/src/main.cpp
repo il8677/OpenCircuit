@@ -25,7 +25,7 @@ class App {
 
 	Workspace workspace;
 
-	int subcircuitPlacement = 0;
+	int subcircuitPlacement = -1;
 
 	//Handler for mouse down events, paints targeted square
 	void paint(int gridPosX, int gridPosY, bool right) {
@@ -44,9 +44,9 @@ class App {
 		w.screenToWorld(targetX, targetY);
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
-		if (subcircuitPlacement) {
+		if (subcircuitPlacement != -1) {
 			workspace.placeSubcircuit(targetX, targetY, subcircuitPlacement);
-			subcircuitPlacement = 0;
+			subcircuitPlacement = -1;
 		}
 		else {
 			paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
@@ -192,11 +192,15 @@ private:
 		}
 
 		if (ImGui::CollapsingHeader("Edit schematics")) {
-			for (int i = 0; i < workspace.schematicCount(); i++) {
+			for (int i = workspace.schematicCount()-1; i >= 0; i--) {
+				ImGui::PushID(i);
+				if (ImGui::Button("^")) {
+					workspace.moveUp(i);
+				}
+				ImGui::SameLine();
 				ImGui::Text(workspace.getSchematic(i)->getName().c_str());
 				ImGui::SameLine();
 
-				ImGui::PushID(i);
 				if (ImGui::Button("Edit")) {
 					workspace.setWorkingSchematic(i);
 				}
@@ -205,6 +209,11 @@ private:
 					if (ImGui::Button("x")) {
 						workspace.deleteSchematic(i);
 					}
+
+				}
+				//Subcircuits can only be placed in circuits *below* the current circuit
+				if (i < workspace.getWorkingChunk()) {
+
 					ImGui::SameLine();
 					if (ImGui::Button("Place")) {
 						subcircuitPlacement = i;

@@ -27,7 +27,11 @@ public:
 
 	Component* getComponent(int, int);
 
+	void replace(int x, int y, Component* with);
+
 	void placeSubcircuit(int x, int y, Schematic& s);
+	void deleteSubcircuit(SubcircuitProxy* s);
+	void deleteSubcircuit(int x, int y);
 
 	std::vector<Input*>  getInputs() const;
 	std::vector<Output*> getOutputs() const;
@@ -42,5 +46,11 @@ public:
 
 	//Copy constructor, peforms deep copy creating new objects
 	Schematic(const Schematic&);
+
+	//Move constructor, takes ownership of all heap allocated objects
+	Schematic(Schematic&&) noexcept;
+
+	Schematic& operator=(const Schematic&);
+	Schematic& operator=(Schematic&&);
 };
 

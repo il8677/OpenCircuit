@@ -19,8 +19,13 @@ Subcircuit::Subcircuit(Schematic& containedSchematic) : containedCircuit(contain
 	containedCircuit.reset();
 }
 
+void Subcircuit::reset()
+{
+	containedCircuit.reset();
+}
+
 void Subcircuit::tick() {
-	containedCircuit.tick();;
+	containedCircuit.tick();
 
 	auto circuitOutputs = containedCircuit.getOutputs();
 	for (int i = 0; i < circuitOutputs.size(); i++) {

@@ -37,8 +37,8 @@ void Workspace::deleteSchematic(int i)
 void Workspace::setWorkingSchematic(int i)
 {
 	workingChunk = Chunk(schematics[i]);
+	workingChunkId = i;
 }
-
 
 int Workspace::schematicCount()
 {
@@ -51,6 +51,16 @@ void Workspace::newSchematic(std::string name)
 	setWorkingSchematic(schematics.size()-1);
 }
 
+void Workspace::moveUp(int i) {
+	std::swap(schematics[i], schematics[i + 1]);
+	setWorkingSchematic(workingChunkId);
+}
+
+int Workspace::getWorkingChunk()
+{
+	return workingChunkId;
+}
+
 void Workspace::placeSubcircuit(int x, int y, int sid) {
 	Schematic& s = *getSchematic(sid);
 	getSchematic()->placeSubcircuit(x, y, s);
@@ -61,4 +71,6 @@ void Workspace::paint(int gridx, int gridy, int id)
 {
 	if (workingChunk.schematic->getCellId(gridx, gridy) != 999)
 		workingChunk.schematic->setComponent(id, gridx, gridy);
+	else if (id == 0)
+		workingChunk.schematic->deleteSubcircuit(gridx, gridy);
 }
