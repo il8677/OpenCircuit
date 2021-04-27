@@ -39,16 +39,27 @@ char Not::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
 	return !neighbours.left;
 }
 
-char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
-	//Bit 1 = u/d, bit 2 = l/r
-	char mask = (sourceDir % 2 == 0 ? 1 : 2) & neighbours.values[sourceDir];
+bool Not::getOutput(DIR direction, char state)
+{
+	if (direction == RIGHT) {
+		return state;
+	}
+	return !state;
+}
 
-	return state & mask;
+char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
+	//Bit 1 of state stores u/d, bit 2 stores l/r
+
+	//This returns which bit we're meant to be using, if we want to toggle bit 1 it returns 01, otherwise, it returns 10
+	//conveluted, but it works
+	char mask = (sourceDir % 2 == 0 ? 1 : 2);
+	char others = state & ~mask; // Everything except what we want masked
+
+	return others | (neighbours.values[sourceDir]<< (mask-1));
 }
 
 bool Junction::getOutput(DIR sourceDir, char state) {
-	//Reversed as we want to mask in
-	char mask = (sourceDir % 2 == 0 ? 2 : 1);
+	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 
 	return state & mask;
 }
@@ -77,3 +88,4 @@ int SubcircuitProxy::getSizeY() {
 SubcircuitProxy::SubcircuitProxy(Schematic& s) : s(s)
 {
 }
+

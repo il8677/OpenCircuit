@@ -107,7 +107,7 @@ void Chunk::tick() {
 		char last = states[j.x][j.y];
 		states[j.x][j.y] = schematic.getComponent(j.x, j.y)->predictState(getNeighbours(j.x, j.y), j.d, last);
 
-		bool changed = last == states[j.x][j.y];
+		bool changed = !(last == states[j.x][j.y]);
 		
 		queue.pop();
 		if(changed) createUpdatesAround(j.x, j.y);
