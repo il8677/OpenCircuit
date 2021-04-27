@@ -8,7 +8,13 @@ OpenCircuit aims to be an easy to use, transistor level circuit designer. Most c
 This program is written in C++, using the SFML rendering framework and IMGUI for the user interface.
 
 ## Building
-Only configured for windows so far
-1. Build the static libraries for SFML
-2. Run premake on the projects root directory specifying the relevant action (e.g. vs2019)
-3. Build
+### Windows
+1. Build or download the static libraries for SFML, the project will look in OpenCircuit\depen\SFML\lib
+2. Run premake on the projects root directory specifying what program to create files for (e.g. vs2019)
+3. Open and build
+
+### Linux
+1. Install SFML, either with your package manager or building it from source and placing the lib files in OpenCircuit/depen/SFML/lib and the headers in Opencircuit/depen/SFML/include
+2. Run premake on the projects root directory, specifying what program to create files fro (e.g. gmake)
+3. Run make
+4. The binary is now in bin/Release/
