@@ -88,7 +88,10 @@ void Schematic::deleteSubcircuit(SubcircuitProxy* s) {
 			}
 		}
 	}
-	if(found) delete s;
+	if (found) {
+		subcircuits.remove(s);
+		delete s;
+	}
 }
 
 void Schematic::deleteSubcircuit(int x, int y)
@@ -100,7 +103,7 @@ void Schematic::deleteSubcircuit(int x, int y)
 
 void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 {
-	SubcircuitProxy* sc = new SubcircuitProxy(s);
+	SubcircuitProxy* sc = new SubcircuitProxy(&s);
 
 
 	const int xend = xstart + sc->getSizeX();
@@ -114,7 +117,7 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 			}
 		}
 		//Place 'inputs'
-		for (int i = 0; i < sc->s.inputCount() * 2; i += 2) {
+		for (int i = 0; i < sc->s->inputCount() * 2; i += 2) {
 			WireInput* wirePlacement = new WireInput();
 			replace(xstart - 1,ystart + i, (Component*)wirePlacement);
 
@@ -122,7 +125,7 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 			sc->iny.push_back(ystart + i);
 		}
 		//Place 'outputs'
-		for (int i = 0; i < sc->s.outputCount() * 2; i += 2) {
+		for (int i = 0; i < sc->s->outputCount() * 2; i += 2) {
 			Constant* constantPlacement = new Constant();
 			replace(xend, ystart + i, constantPlacement);
 
@@ -151,7 +154,7 @@ Schematic::~Schematic() {
 	}
 
 	for (auto i = subcircuits.begin(); i != subcircuits.end(); ++i) {
-		delete* i;
+		//delete* i;
 	}
 }
 

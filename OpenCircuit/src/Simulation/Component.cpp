@@ -76,7 +76,7 @@ int SubcircuitProxy::getSizeX() {
 #include "Schematic.h"
 
 int SubcircuitProxy::getSizeY() {
-	int maxPins = s.inputCount() > s.outputCount() ? s.inputCount() : s.outputCount();
+	int maxPins = s->inputCount() > s->outputCount() ? s->inputCount() : s->outputCount();
 
 	if (maxPins > 2) {
 		return 3 + 2 * (maxPins - 2);
@@ -85,7 +85,7 @@ int SubcircuitProxy::getSizeY() {
 		return 3;
 	}
 }
-SubcircuitProxy::SubcircuitProxy(Schematic& s) : s(s)
+SubcircuitProxy::SubcircuitProxy(Schematic* s) : s(s)
 {
 }
 

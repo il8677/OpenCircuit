@@ -138,20 +138,6 @@ void Chunk::tick() {
 	}
 }
 
-
-
-Chunk::Chunk(Schematic& usedSchematic){
-	schematic = &usedSchematic;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
-			states[x][y] = 0;
-		}
-	}
-
-	populateSubcircuits();
-}
-
-
 void Chunk::populateSubcircuits() {
 	subcircuits.clear();
 
@@ -188,6 +174,17 @@ Chunk::Chunk(){
 Chunk::~Chunk()
 {
 
+}
+
+Chunk::Chunk(Schematic* usedSchematic) {
+	schematic = usedSchematic;
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			states[x][y] = 0;
+		}
+	}
+
+	populateSubcircuits();
 }
 
 Chunk& Chunk::operator=(const Chunk& other)

@@ -15,7 +15,7 @@ Subcircuit::Subcircuit(const Chunk& containedChunk) : containedCircuit(contained
 	containedCircuit.reset();
 }
 
-Subcircuit::Subcircuit(Schematic& containedSchematic) : containedCircuit(containedSchematic) {
+Subcircuit::Subcircuit(Schematic* containedSchematic) : containedCircuit(containedSchematic) {
 	containedCircuit.reset();
 }
 
@@ -41,7 +41,7 @@ void Subcircuit::tick() {
 
 }
 
-void Subcircuit::setSchematic(Schematic& s)
+void Subcircuit::setSchematic(Schematic* s)
 {
 	containedCircuit = Chunk(s);
 }

@@ -2,13 +2,13 @@
 
 Workspace::Workspace() 
 {
-	schematics.emplace_back("Base schematic");
+	schematics.push_back(new Schematic("Base schematic"));
 	workingChunk = Chunk(schematics[0]);
 }
 
 Schematic* Workspace::getSchematic(int i)
 {
-	return &(schematics[i]);
+	return schematics[i];
 }
 
 Schematic* Workspace::getSchematic() {
@@ -47,7 +47,7 @@ int Workspace::schematicCount()
 
 void Workspace::newSchematic(std::string name)
 {
-	schematics.emplace_back(name);
+	schematics.push_back(new Schematic(name));
 	setWorkingSchematic(schematics.size()-1);
 }
 

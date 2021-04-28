@@ -76,7 +76,7 @@ class WireInput : public Wire {
 class Schematic;
 class SubcircuitProxy : public Component {
 public:
-	Schematic& s;
+	Schematic* s;
 
 //TODO: Implement this better
 	std::vector<int> inx;
@@ -93,5 +93,5 @@ public:
 	int getSizeX();
 	int getSizeY();
 
-	SubcircuitProxy(Schematic&);
+	SubcircuitProxy(Schematic*);
 };

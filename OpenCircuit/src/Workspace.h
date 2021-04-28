@@ -8,7 +8,7 @@
 
 class Workspace
 {
-	std::vector<Schematic> schematics;
+	std::vector<Schematic*> schematics;
 	
 	Chunk workingChunk;
 	int workingChunkId;

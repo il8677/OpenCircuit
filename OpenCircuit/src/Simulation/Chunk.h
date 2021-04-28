@@ -48,7 +48,7 @@ public:
 	void tick();
 
 
-	Chunk(Schematic&);
+	Chunk(Schematic*);
 	Chunk(const Chunk&);
 
 	Chunk();

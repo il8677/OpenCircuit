@@ -20,12 +20,12 @@ public:
 	void reset();
 	void tick();
 
-	void setSchematic(Schematic& s);
+	void setSchematic(Schematic* s);
 	Schematic* getSchematic();
 
 	std::string getName();
 	
 	Subcircuit(const Chunk& containedChunk);
-	Subcircuit(Schematic& containedSchematic);
+	Subcircuit(Schematic* containedSchematic);
 };
 
