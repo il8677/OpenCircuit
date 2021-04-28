@@ -149,6 +149,10 @@ Schematic::~Schematic() {
 			delete cMap[x][y];
 		}
 	}
+
+	for (auto i = subcircuits.begin(); i != subcircuits.end(); ++i) {
+		delete* i;
+	}
 }
 
 
@@ -172,6 +176,9 @@ Schematic::Schematic(const Schematic& original) {
 		}
 	}
 	subcircuits = original.subcircuits;
+	for (auto i = original.subcircuits.begin(); i != original.subcircuits.end(); ++i)
+		subcircuits.push_front(new SubcircuitProxy(**i));
+
 }
 
 Schematic::Schematic(Schematic&& original) noexcept
@@ -185,6 +192,8 @@ Schematic::Schematic(Schematic&& original) noexcept
 		}
 	}
 	subcircuits = original.subcircuits;
+	for (auto i = original.subcircuits.begin(); i != original.subcircuits.end(); ++i)
+		*i = nullptr;
 }
 
 Schematic& Schematic::operator=(const Schematic& o) {
@@ -200,8 +209,9 @@ Schematic& Schematic::operator=(const Schematic& o) {
 			cMap[x][y] = o.cMap[x][y]->copy();
 		}
 	}
-
-	subcircuits = o.subcircuits;
+	
+	for (auto i = o.subcircuits.begin(); i != o.subcircuits.end(); ++i)
+		subcircuits.push_front(new SubcircuitProxy(**i));
 
 	return *this;
 }
@@ -223,6 +233,8 @@ Schematic& Schematic::operator=(Schematic&& o) {
 	}
 
 	subcircuits = o.subcircuits;
+	for (auto i = o.subcircuits.begin(); i != o.subcircuits.end(); ++i)
+		*i = nullptr;
 
 	return *this;
 }
