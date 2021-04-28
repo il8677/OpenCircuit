@@ -1,3 +1,4 @@
 [submodule "OpenCircuit/depen/SFML"]
 	path = OpenCircuit/depen/SFML
 	url = https://github.com/SFML/SFML
+	ignore = dirty
