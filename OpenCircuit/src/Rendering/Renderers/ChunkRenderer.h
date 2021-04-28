@@ -1,13 +1,17 @@
 #pragma once
 #include "../../Utility/vec4.h"
+#include "../Window/SFMLWindow.h"
+
 
 class SFMLWindow;
+class Chunk;
 
 // TODO: Abstract and decouple from SFML
 
-class Chunk;
 
 class ChunkRenderer {
+	static sf::VertexArray cells;
+	static sf::VertexArray grid;
 
 public:
 

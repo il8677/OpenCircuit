@@ -164,7 +164,6 @@ Chunk::Chunk(const Chunk& c)
 		}
 	}
 
-	populateSubcircuits();
 	reset();
 }
 

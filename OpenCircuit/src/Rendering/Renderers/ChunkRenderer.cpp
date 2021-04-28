@@ -1,5 +1,4 @@
 #include "ChunkRenderer.h"
-#include "../Window/SFMLWindow.h"
 #include "../../Simulation/Chunk.h"
 
 #define VERTDIST 15
@@ -47,28 +46,40 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 }
 
 void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
-	sf::VertexArray cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
-	sf::VertexArray grid(sf::Lines, 4 * CHUNK_X);
+	static bool initialized = false;
 
-	const sf::Color GRIDCOLOUR(255, 255, 255, 75);
+	if (!initialized) {
+		initialized = true;
+		
+		const sf::Color GRIDCOLOUR(255, 255, 255, 75);
+		for (int x = 0; x < CHUNK_X; x++) {
+			int index = x * 2;
+			grid[index].position = sf::Vector2f(x * VERTDIST, 0.0f);
+			grid[index + 1].position = sf::Vector2f(x * VERTDIST, CHUNK_Y*VERTDIST);
 
-	//Theres probably a more efficient way of doing this all seperatley
-	for (int x = 0; x < CHUNK_X; x++) {
-		int index = x * 2;
-		grid[index].position = sf::Vector2f(x * VERTDIST, 0.0f);
-		grid[index + 1].position = sf::Vector2f(x * VERTDIST, CHUNK_Y*VERTDIST);
+			grid[index].color = GRIDCOLOUR;
+			grid[index + 1].color = GRIDCOLOUR;
+		}
 
-		grid[index].color = GRIDCOLOUR;
-		grid[index + 1].color = GRIDCOLOUR;
-	}
+		for (int y = 0; y < CHUNK_Y; y++) {
+			int index = (CHUNK_X*2) + y * 2;
+			grid[index].position = sf::Vector2f(0.0f, y * VERTDIST);
+			grid[index + 1].position = sf::Vector2f(CHUNK_X * VERTDIST, y * VERTDIST);
 
-	for (int y = 0; y < CHUNK_Y; y++) {
-		int index = (CHUNK_X*2) + y * 2;
-		grid[index].position = sf::Vector2f(0.0f, y * VERTDIST);
-		grid[index + 1].position = sf::Vector2f(CHUNK_X * VERTDIST, y * VERTDIST);
+			grid[index].color = GRIDCOLOUR;
+			grid[index + 1].color = GRIDCOLOUR;
+		}
 
-		grid[index].color = GRIDCOLOUR;
-		grid[index + 1].color = GRIDCOLOUR;
+		for (int x = 0; x < CHUNK_X; x++) {
+			for (int y = 0; y < CHUNK_Y; y++) {
+				int index = (x * CHUNK_X + y) * 4;
+
+				cells[index].position = sf::Vector2f(x * VERTDIST, y * VERTDIST);
+				cells[index + 1].position = sf::Vector2f((x + 1) * VERTDIST, y * VERTDIST);
+				cells[index + 2].position = sf::Vector2f((x + 1) * VERTDIST, (y + 1) * VERTDIST);
+				cells[index + 3].position = sf::Vector2f(x * VERTDIST, (y + 1) * VERTDIST);
+			}
+		}
 	}
 
 	for (int x = 0; x < CHUNK_X; x++) {
@@ -86,11 +97,6 @@ void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
 			cells[index+1].color = vColour;
 			cells[index+2].color = vColour;
 			cells[index+3].color = vColour;
-
-			cells[index].position = sf::Vector2f(x * VERTDIST, y * VERTDIST);
-			cells[index+1].position = sf::Vector2f((x+1) * VERTDIST, y * VERTDIST);
-			cells[index+2].position = sf::Vector2f((x+1) * VERTDIST, (y+1) * VERTDIST);
-			cells[index+3].position = sf::Vector2f(x * VERTDIST, (y+1) * VERTDIST);
 		}
 	}
 
@@ -104,3 +110,5 @@ void ChunkRenderer::worldToGrid(int& x, int& y)
 	y = y / VERTDIST;
 }
 
+sf::VertexArray ChunkRenderer::cells(sf::Quads, (CHUNK_X)* (CHUNK_Y) * 4);
+sf::VertexArray ChunkRenderer::grid(sf::Lines, 4 * CHUNK_X);
