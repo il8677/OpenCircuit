@@ -165,10 +165,11 @@ Chunk::Chunk(const Chunk& c)
 	}
 
 	populateSubcircuits();
+	reset();
 }
 
 Chunk::Chunk(){
-
+	
 }
 
 Chunk::~Chunk()
@@ -184,7 +185,7 @@ Chunk::Chunk(Schematic* usedSchematic) {
 		}
 	}
 
-	populateSubcircuits();
+	reset();
 }
 
 Chunk& Chunk::operator=(const Chunk& other)
@@ -196,7 +197,7 @@ Chunk& Chunk::operator=(const Chunk& other)
 		}
 	}
 
-	populateSubcircuits();
+	reset();
 	return *this;
 }
 

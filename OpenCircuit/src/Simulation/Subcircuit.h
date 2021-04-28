@@ -11,6 +11,8 @@ class Subcircuit
 	std::vector<char*> inputs;
 	std::vector<char*> outputs;
 
+	std::vector<char> lastInputs;
+
 public: 
 	std::queue<char*> updatedCells;
 

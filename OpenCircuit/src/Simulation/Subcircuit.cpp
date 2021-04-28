@@ -38,7 +38,6 @@ void Subcircuit::tick() {
 		*circuitInputs[i] = *inputs[i];
 
 	containedCircuit.updateInputs();
-
 }
 
 void Subcircuit::setSchematic(Schematic* s)
