@@ -128,7 +128,7 @@ void Chunk::tick() {
 					if (&states[x][y] == c) {
 						createUpdatesAround(x, y);
 						x = CHUNK_X;
-						break;
+						y = CHUNK_Y;
 					}
 				}
 			}
