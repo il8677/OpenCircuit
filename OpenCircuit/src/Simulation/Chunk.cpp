@@ -67,35 +67,20 @@ void Chunk::reset()
 		}
 	}
 
+	findInputs();
+	findOutputs();
 	populateSubcircuits();
 }
 
-std::vector<char*> Chunk::getOutputs()
+std::vector<char*>& Chunk::getOutputs()
 {
-	std::vector<char*> returnVector;
 
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x, y) == 3)
-				returnVector.push_back(&states[x][y]);
-		}
-	}
-
-	return returnVector;
+	return outputs;
 }
 
-std::vector<char*> Chunk::getInputs()
+std::vector<char*>& Chunk::getInputs()
 {
-	std::vector<char*> returnVector;
-
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x, y) == 2)
-				returnVector.push_back(&states[x][y]);
-		}
-	}
-
-	return returnVector;
+	return inputs;
 }
 
 void Chunk::tick() {
@@ -152,6 +137,29 @@ void Chunk::populateSubcircuits() {
 		}
 
 		//subcircuits.back().reset();
+	}
+}
+
+void Chunk::findOutputs()
+{
+	outputs.clear();
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
+			if (schematic->getCellId(x, y) == 3)
+				outputs.push_back(&states[x][y]);
+		}
+	}
+
+}
+
+void Chunk::findInputs()
+{
+	inputs.clear();
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
+			if (schematic->getCellId(x, y) == 2)
+				inputs.push_back(&states[x][y]);
+		}
 	}
 }
 

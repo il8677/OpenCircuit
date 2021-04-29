@@ -31,6 +31,12 @@ class Chunk
 
 	void populateSubcircuits();
 
+	std::vector<char*> outputs;
+	std::vector<char*> inputs;
+
+	void findOutputs();
+	void findInputs();
+
 public:
 	//TODO: Figure out a way for this not to be heap allocated
 	std::vector<Subcircuit> subcircuits;
@@ -43,8 +49,8 @@ public:
 	void updateInputs();
 	void reset();
 
-	std::vector<char*> getOutputs();
-	std::vector<char*> getInputs();
+	std::vector<char*>& getOutputs();
+	std::vector<char*>& getInputs();
 
 	//Propogate jobs
 	void tick();

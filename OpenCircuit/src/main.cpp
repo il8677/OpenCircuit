@@ -145,7 +145,7 @@ private:
 
 		ImGui::Begin("Simulation Manager");
 		if (ImGui::CollapsingHeader("Inputs")) {
-			std::vector<char*> inputs = workspace.getChunk()->getInputs();
+			std::vector<char*>& inputs = workspace.getChunk()->getInputs();
 			for (int i = 0; i < inputs.size(); i++) {
 				ImGui::PushID(i);
 				if (i > 0)
@@ -158,7 +158,7 @@ private:
 		}
 		if (ImGui::CollapsingHeader("Outputs")) {
 
-			std::vector<char*> outputs = workspace.getChunk()->getOutputs();
+			std::vector<char*>& outputs = workspace.getChunk()->getOutputs();
 			for (int i = 0; i < outputs.size(); i++) {
 				if (i > 0)
 					ImGui::SameLine();
