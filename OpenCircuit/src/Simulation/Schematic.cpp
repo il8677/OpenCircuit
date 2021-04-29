@@ -15,8 +15,8 @@ std::vector<Input*> Schematic::getInputs() const
 {
 	std::vector<Input*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y]->id() == 2)
 				returnVector.push_back((Input*)cMap[x][y]);
 		}
@@ -30,8 +30,8 @@ std::vector<Output*> Schematic::getOutputs() const
 {
 	std::vector<Output*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y]->id() == 3)
 				returnVector.push_back((Output*)cMap[x][y]);
 		}
@@ -82,8 +82,8 @@ void Schematic::replace(int x, int y, Component* with) {
 
 void Schematic::deleteSubcircuit(SubcircuitProxy* s) {
 	bool found = false;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y] == s) {
 				cMap[x][y] = new Component();
 				found = true;
@@ -141,16 +141,16 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 
 Schematic::Schematic(std::string name) : name(name)
 {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			cMap[x][y] = new Component();
 		}
 	}
 }
 
 Schematic::~Schematic() {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 		}
 	}
@@ -163,12 +163,12 @@ Schematic::~Schematic() {
 
 Schematic::Schematic(const Schematic& original) {
 	name = original.name;
-	for (int x = 0; x < CHUNK_X; x++)
-		for (int y = 0; y < CHUNK_Y; y++)
+	for (int y = 0; y < CHUNK_Y; y++)
+		for (int x = 0; x < CHUNK_X; x++)
 			cMap[x][y] = nullptr;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			Component* c = original.cMap[x][y];
 			if (cMap[x][y] == nullptr) { //If the component isn't nullptr, it's part of a subcircuit, so should be ignored
 				if (c->id() == 999) {
@@ -190,8 +190,8 @@ Schematic::Schematic(Schematic&& original) noexcept
 {
 	name = std::move(original.name);
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			cMap[x][y] = original.cMap[x][y];
 			original.cMap[x][y] = nullptr;
 		}
@@ -208,8 +208,8 @@ Schematic& Schematic::operator=(const Schematic& o) {
 
 	name = o.name;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 			cMap[x][y] = o.cMap[x][y]->copy();
 		}
@@ -229,8 +229,8 @@ Schematic& Schematic::operator=(Schematic&& o) {
 		return *this;
 	}
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 			cMap[x][y] = o.cMap[x][y];
 			o.cMap[x][y] = nullptr;
@@ -246,8 +246,8 @@ Schematic& Schematic::operator=(Schematic&& o) {
 
 void Schematic::save(std::ofstream& fs)
 {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (getCellId(x, y) != 0 && getCellId(x, y) != 999) {
 				fs << x << "," << y << "," << getCellId(x, y);
 				fs << '[';
@@ -257,8 +257,8 @@ void Schematic::save(std::ofstream& fs)
 
 	//WARNING: BAD CODE AHEAD
 	for (auto it = subcircuits.begin(); it != subcircuits.end(); ++it) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			for (int y = 0; y < CHUNK_Y; y++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			for (int x = 0; x < CHUNK_X; x++) {
 				if (cMap[x][y] == *it) {
 					fs << x << "," << y << "," << 999 << ',' << (*it)->s->getName() << '[';
 					y = CHUNK_Y + 1;
