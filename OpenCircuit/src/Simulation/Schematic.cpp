@@ -120,19 +120,35 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 		}
 		//Place 'inputs'
 		for (int i = 0; i < sc->s->inputCount() * 2; i += 2) {
-			WireInput* wirePlacement = new WireInput();
-			replace(xstart - 1,ystart + i, (Component*)wirePlacement);
+			#define XCOORD xstart - 1
+			#define YCOORD ystart + i
 
-			sc->inx.push_back(xstart - 1);
-			sc->iny.push_back(ystart + i);
+			if (getCellId(XCOORD, YCOORD) == 0) {
+				WireInput* wirePlacement = new WireInput();
+				replace(XCOORD, YCOORD, (Component*)wirePlacement);
+
+				sc->inx.push_back(XCOORD);
+				sc->iny.push_back(YCOORD);
+			}
+			
+			#undef XCOORD
+			#undef YCOORD
 		}
 		//Place 'outputs'
 		for (int i = 0; i < sc->s->outputCount() * 2; i += 2) {
-			Constant* constantPlacement = new Constant();
-			replace(xend, ystart + i, constantPlacement);
+			#define XCOORD xend
+			#define YCOORD ystart + i
 
-			sc->outx.push_back(xend);
-			sc->outy.push_back(ystart + i);
+			if (getCellId(XCOORD, YCOORD) == 0) {
+				Constant* constantPlacement = new Constant();
+				replace(XCOORD, YCOORD, constantPlacement);
+
+				sc->outx.push_back(XCOORD);
+				sc->outy.push_back(YCOORD);
+			}
+
+			#undef XCOORD
+			#undef YCOORD
 		}
 
 		subcircuits.push_front(sc);
