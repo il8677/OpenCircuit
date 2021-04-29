@@ -69,6 +69,10 @@ char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) co
 }
 
 bool Junction::getOutput(DIR sourceDir, char state) {
+	if (sourceDir == NONE) {
+		return state;
+	}
+
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 
 	return state & mask;
