@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <forward_list>
+#include <fstream>
 
 class Subcircuit;
 class Component;
@@ -52,5 +53,8 @@ public:
 
 	Schematic& operator=(const Schematic&);
 	Schematic& operator=(Schematic&&);
+
+	void save(std::ofstream& fs);
+	void load(std::istringstream& is, std::vector<Schematic*>& schematics);
 };
 

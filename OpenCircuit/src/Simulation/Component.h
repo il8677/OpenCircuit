@@ -26,6 +26,7 @@ public:
 
 	static std::vector<Component*> components;
 	static void initializeComponenets();
+	static Component* getComponentOfId(int id);
 };
 
 class Wire : public Component {

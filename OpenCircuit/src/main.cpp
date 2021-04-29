@@ -1,14 +1,15 @@
 #include <imgui.h>
+
 #include <functional>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 #include "Rendering/Window/Event.h"
 #include "Rendering/Renderers/ChunkRenderer.h"
 #include "Rendering/Window/SFMLWindow.h"
 #include "Workspace.h"
 #include "Simulation/Component.h"
-
-#include <iostream>
-#include <string>
 
 // TODO: Do something much better than this
 ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
@@ -182,6 +183,20 @@ private:
 		ImGui::SetNextWindowSize(ImVec2(250,400));
 		ImGui::Begin("Workspace", NULL, menuBarFlags);
 		ImGui::Text("Schematics");
+
+		if (ImGui::Button("Save")) {
+			std::ofstream fs;
+			fs.open("save.workspace");
+			workspace.save(fs);
+			fs.close();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Load")) {
+			std::ifstream fs;
+			fs.open("save.workspace");
+			workspace.load(fs);
+			fs.close();
+		}
 
 		if (ImGui::CollapsingHeader("New schematic")) {
 			static char newSchematicName[20];

@@ -35,4 +35,7 @@ public:
 	void placeSubcircuit(int x, int y, int cid);
 
 	void paint(int gridx, int gridy, int id);
+
+	void save(std::ofstream&);
+	void load(std::ifstream&);
 };

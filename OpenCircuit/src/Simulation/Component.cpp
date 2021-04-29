@@ -18,6 +18,16 @@ void Component::initializeComponenets()
 
 }
 
+Component* Component::getComponentOfId(int id)
+{
+	if (0 < id && id < components.size()) {
+		return components[id]->copy();
+	}
+	else {
+		return new Component();
+	}
+}
+
 //TODO: Split implementations into seperate files
 bool Component::getOutput(DIR direction, char state) {
 	return state;

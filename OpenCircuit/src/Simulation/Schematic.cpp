@@ -1,5 +1,7 @@
 #include <map>
 
+#include <sstream>
+
 #include "Schematic.h"
 #include "Subcircuit.h"
 #include "Component.h"
@@ -240,4 +242,64 @@ Schematic& Schematic::operator=(Schematic&& o) {
 		*i = nullptr;
 
 	return *this;
+}
+
+void Schematic::save(std::ofstream& fs)
+{
+	for (int x = 0; x < CHUNK_X; x++) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			if (getCellId(x, y) != 0 && getCellId(x, y) != 999) {
+				fs << x << "," << y << "," << getCellId(x, y);
+				fs << '[';
+			}
+		}
+	}
+
+	//WARNING: BAD CODE AHEAD
+	for (auto it = subcircuits.begin(); it != subcircuits.end(); ++it) {
+		for (int x = 0; x < CHUNK_X; x++) {
+			for (int y = 0; y < CHUNK_Y; y++) {
+				if (cMap[x][y] == *it) {
+					fs << x << "," << y << "," << 999 << ',' << (*it)->s->getName() << '[';
+					y = CHUNK_Y + 1;
+					x = CHUNK_X + 1;
+				}
+			}
+		}
+	}
+}
+
+void Schematic::load(std::istringstream& is, std::vector<Schematic*>& schematics) {
+	//Messy loading, TODO: Find a cleaner way to load these values
+	std::string line;
+	while (std::getline(is, line, '[')) {
+		std::istringstream linestream(line);
+		std::string buffer;
+		
+		int id;
+		int x, y;
+
+		std::getline(linestream, buffer, ',');
+		x = std::stoi(buffer);
+
+		std::getline(linestream, buffer, ',');
+		y = std::stoi(buffer);
+
+		std::getline(linestream, buffer, ',');
+		id = std::stoi(buffer);
+
+		if (id == 999) {
+			std::getline(linestream, buffer, ',');
+
+			for (int i = 0; i < schematics.size(); i++) {
+				if (schematics[i]->getName() == buffer) {
+					placeSubcircuit(x, y, *schematics[i]);
+					break;
+				}
+			}
+		}
+		else {
+			cMap[x][y] = Component::getComponentOfId(id);
+		}
+	}
 }
