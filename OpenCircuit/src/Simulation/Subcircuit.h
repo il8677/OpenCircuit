@@ -29,8 +29,5 @@ public:
 	
 	Subcircuit(const Chunk& containedChunk);
 	Subcircuit(Schematic* containedSchematic);
-
-	//Subcircuits should only ever be placed, and never copied across schematic instances
-	Subcircuit(const Subcircuit&) = delete;
 };
 

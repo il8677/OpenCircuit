@@ -126,10 +126,10 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 			if (getCellId(XCOORD, YCOORD) == 0) {
 				WireInput* wirePlacement = new WireInput();
 				replace(XCOORD, YCOORD, (Component*)wirePlacement);
-
-				sc->inx.push_back(XCOORD);
-				sc->iny.push_back(YCOORD);
 			}
+
+			sc->inx.push_back(XCOORD);
+			sc->iny.push_back(YCOORD);
 			
 			#undef XCOORD
 			#undef YCOORD
@@ -142,10 +142,10 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 			if (getCellId(XCOORD, YCOORD) == 0) {
 				Constant* constantPlacement = new Constant();
 				replace(XCOORD, YCOORD, constantPlacement);
-
-				sc->outx.push_back(XCOORD);
-				sc->outy.push_back(YCOORD);
 			}
+
+			sc->outy.push_back(YCOORD);
+			sc->outx.push_back(XCOORD);
 
 			#undef XCOORD
 			#undef YCOORD
