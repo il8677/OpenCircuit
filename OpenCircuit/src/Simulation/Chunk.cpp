@@ -142,7 +142,7 @@ void Chunk::populateSubcircuits() {
 	subcircuits.clear();
 
 	for (auto it = schematic->subcircuits.begin(); it != schematic->subcircuits.end(); ++it) {
-		subcircuits.push_back(Subcircuit((*it)->s));
+		subcircuits.emplace_back((*it)->s);
 		for (int i = 0; i < (*it)->inx.size(); i++) {
 			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
 		}
