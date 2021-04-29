@@ -6,6 +6,8 @@
 #include "../Utility/vec4.h"
 #include "Schematic.h"
 #include "Job.h"
+#include "Component.h"      // for Component, Constant, Wire, Component::components, Input, Output
+
 #include <memory>
 
 class Subcircuit;
@@ -25,7 +27,7 @@ class Chunk
 	inline void createUpdateJob(int x, int y, DIR d);
 	inline void createUpdatesAround(int x, int y);
 
-	inline vec4<bool> getNeighbours(int x, int y) const;
+	inline vec4<BOOLEAN> getNeighbours(int x, int y) const;
 
 	void populateSubcircuits();
 
@@ -35,7 +37,7 @@ public:
 
 	Schematic* schematic;
 
-	bool getOutput(int x, int y, DIR from=NONE) const;
+	BOOLEAN getOutput(int x, int y, DIR from=NONE) const;
 
 	//Creates an update job around all the input cells
 	void updateInputs();

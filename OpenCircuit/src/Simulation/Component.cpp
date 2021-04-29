@@ -29,35 +29,48 @@ Component* Component::getComponentOfId(int id)
 }
 
 //TODO: Split implementations into seperate files
-bool Component::getOutput(DIR direction, char state) {
-	return state;
+BOOLEAN Component::getOutput(DIR direction, char state) {
+	return state ? TRUE: FALSE;
 }
 
-char Component::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
+char Component::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
 	return 0;
 }
 
-char Wire::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
+char Wire::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
+	if (neighbours.values[sourceDir] == DC) {
+		return state;
+	}
+
 	return neighbours.values[sourceDir];
 }
 
-char Transistor::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
+char Transistor::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const {
 	return neighbours.up && neighbours.left;
 }
 
-char Not::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
-	return !neighbours.left;
-}
-
-bool Not::getOutput(DIR direction, char state)
+BOOLEAN Transistor::getOutput(DIR direction, char state)
 {
 	if (direction == RIGHT) {
-		return state;
+		return state ? TRUE : FALSE;
 	}
-	return !state;
+
+	return DC;
 }
 
-char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
+char Not::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
+	return neighbours.left == TRUE ? 0 : 1;
+}
+
+BOOLEAN Not::getOutput(DIR direction, char state)
+{
+	if (direction == LEFT) {
+		return DC;
+	}
+	return state ? TRUE : FALSE;
+}
+
+char Junction::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const {
 	//Bit 1 of state stores u/d, bit 2 stores l/r
 
 	//This returns which bit we're meant to be using, if we want to toggle bit 1 it returns 01, otherwise, it returns 10
@@ -68,17 +81,17 @@ char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) co
 	return others | (neighbours.values[sourceDir]<< (mask-1));
 }
 
-bool Junction::getOutput(DIR sourceDir, char state) {
+BOOLEAN Junction::getOutput(DIR sourceDir, char state) {
 	if (sourceDir == NONE) {
-		return state;
+		return state ? TRUE : FALSE;
 	}
 
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 
-	return state & mask;
+	return (state & mask) ? TRUE : FALSE;
 }
 
-char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const
+char Input::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const
 {
 	return state;
 }

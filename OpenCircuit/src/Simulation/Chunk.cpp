@@ -2,7 +2,6 @@
 
 #include "Chunk.h"
 #include "Subcircuit.h"
-#include "Component.h"      // for Component, Constant, Wire, Component::components, Input, Output
 #include "Schematic.h"      // for Schematic
 #include "Job.h"
 
@@ -19,16 +18,16 @@ void Chunk::createUpdatesAround(int x, int y) {
 	createUpdateJob(M_LEFT, DIR::RIGHT);
 }
 
-bool Chunk::getOutput(int x, int y, DIR from) const
+BOOLEAN Chunk::getOutput(int x, int y, DIR from) const
 {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
 		return schematic->getComponent(x,y)->getOutput(from, states[x][y]);
-	return false;
+	return FALSE;
 }
 
-inline vec4<bool> Chunk::getNeighbours(int x, int y) const
+inline vec4<BOOLEAN> Chunk::getNeighbours(int x, int y) const
 {
-	return vec4<bool>(getOutput(M_UP, DOWN), getOutput(M_RIGHT, LEFT), getOutput(M_DOWN, UP), getOutput(M_LEFT, RIGHT));
+	return vec4<BOOLEAN>(getOutput(M_UP, DOWN), getOutput(M_RIGHT, LEFT), getOutput(M_DOWN, UP), getOutput(M_LEFT, RIGHT));
 }
 
 void Chunk::createUpdateJob(int x, int y, DIR d) {
