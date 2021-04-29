@@ -1,5 +1,8 @@
 #include "Workspace.h"
 
+#include <sstream>
+#include <fstream>
+
 Workspace::Workspace() 
 {
 	schematics.push_back(new Schematic("Base schematic"));
@@ -47,6 +50,14 @@ int Workspace::schematicCount()
 
 void Workspace::newSchematic(std::string name)
 {
+	for (int i = 0; i < schematics.size(); i++) {
+		if (schematics[i]->getName() == name) {
+			delete schematics[i];
+			schematics[i] = new Schematic(name);
+			return;
+		}
+	}
+
 	schematics.push_back(new Schematic(name));
 	setWorkingSchematic(schematics.size()-1);
 }
@@ -73,4 +84,29 @@ void Workspace::paint(int gridx, int gridy, int id)
 		workingChunk.schematic->setComponent(id, gridx, gridy);
 	else if (id == 0)
 		workingChunk.schematic->deleteSubcircuit(gridx, gridy);
+}
+
+void Workspace::save(std::ofstream& fs)
+{
+	for (int i = 0; i < schematics.size(); i++) {
+		fs << schematics[i]->getName() << ";";
+		schematics[i]->save(fs);
+		fs << ":";
+	}
+}
+
+void Workspace::load(std::ifstream& fs) {
+	std::string line;
+	while (getline(fs, line, ':')) {
+		std::istringstream ls(line);
+		std::string name;
+		std::string schematicline;
+
+		getline(ls, name, ';');
+		getline(ls, schematicline, ';');
+
+		newSchematic(name);
+		std::istringstream sl(schematicline);
+		schematics.back()->load(sl, schematics);
+	}
 }

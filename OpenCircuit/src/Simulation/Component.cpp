@@ -18,6 +18,16 @@ void Component::initializeComponenets()
 
 }
 
+Component* Component::getComponentOfId(int id)
+{
+	if (0 < id && id < components.size()) {
+		return components[id]->copy();
+	}
+	else {
+		return new Component();
+	}
+}
+
 //TODO: Split implementations into seperate files
 bool Component::getOutput(DIR direction, char state) {
 	return state;
@@ -59,6 +69,10 @@ char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) co
 }
 
 bool Junction::getOutput(DIR sourceDir, char state) {
+	if (sourceDir == NONE) {
+		return state;
+	}
+
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 
 	return state & mask;

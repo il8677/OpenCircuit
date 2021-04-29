@@ -10,3 +10,5 @@ imgui.ini
 
 *.make
 Makefile
+
+*.workspace

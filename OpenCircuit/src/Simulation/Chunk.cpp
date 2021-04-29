@@ -38,8 +38,8 @@ void Chunk::createUpdateJob(int x, int y, DIR d) {
 
 void Chunk::updateInputs() {
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x,y) == 2) 
 				createUpdatesAround(x, y);
 		}
@@ -48,8 +48,8 @@ void Chunk::updateInputs() {
 
 void Chunk::reset()
 {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x,y) != 2) {
 				states[x][y] = 0;
 			}
@@ -59,8 +59,8 @@ void Chunk::reset()
 	std::queue<Job> queue;
 	std::swap(jobQueue, queue);
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x, y) == 2)
 				createUpdatesAround(x, y);
 			else if (schematic->getCellId(x,y) == 5)
@@ -75,8 +75,8 @@ std::vector<char*> Chunk::getOutputs()
 {
 	std::vector<char*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x, y) == 3)
 				returnVector.push_back(&states[x][y]);
 		}
@@ -89,8 +89,8 @@ std::vector<char*> Chunk::getInputs()
 {
 	std::vector<char*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x, y) == 2)
 				returnVector.push_back(&states[x][y]);
 		}
@@ -123,8 +123,8 @@ void Chunk::tick() {
 
 		while (!updateQueue.empty()) {
 			char* c = updateQueue.front();
-			for (int x = 0; x < CHUNK_X; x++) {
-				for (int y = 0; y < CHUNK_Y; y++) {
+			for (int y = 0; y < CHUNK_Y; y++) {
+				for (int x = 0; x < CHUNK_X; x++) {
 					if (&states[x][y] == c) {
 						createUpdatesAround(x, y);
 						x = CHUNK_X;
@@ -142,7 +142,7 @@ void Chunk::populateSubcircuits() {
 	subcircuits.clear();
 
 	for (auto it = schematic->subcircuits.begin(); it != schematic->subcircuits.end(); ++it) {
-		subcircuits.push_back(Subcircuit((*it)->s));
+		subcircuits.emplace_back((*it)->s);
 		for (int i = 0; i < (*it)->inx.size(); i++) {
 			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
 		}
@@ -158,8 +158,8 @@ void Chunk::populateSubcircuits() {
 Chunk::Chunk(const Chunk& c)
 {
 	schematic = c.schematic;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			states[x][y] = c.states[x][y];
 		}
 	}
@@ -178,8 +178,8 @@ Chunk::~Chunk()
 
 Chunk::Chunk(Schematic* usedSchematic) {
 	schematic = usedSchematic;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			states[x][y] = 0;
 		}
 	}
@@ -190,8 +190,8 @@ Chunk::Chunk(Schematic* usedSchematic) {
 Chunk& Chunk::operator=(const Chunk& other)
 {
 	schematic = other.schematic;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			states[x][y] = other.states[x][y];
 		}
 	}

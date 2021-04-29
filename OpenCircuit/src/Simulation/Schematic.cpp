@@ -1,5 +1,7 @@
 #include <map>
 
+#include <sstream>
+
 #include "Schematic.h"
 #include "Subcircuit.h"
 #include "Component.h"
@@ -13,8 +15,8 @@ std::vector<Input*> Schematic::getInputs() const
 {
 	std::vector<Input*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y]->id() == 2)
 				returnVector.push_back((Input*)cMap[x][y]);
 		}
@@ -28,8 +30,8 @@ std::vector<Output*> Schematic::getOutputs() const
 {
 	std::vector<Output*> returnVector;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y]->id() == 3)
 				returnVector.push_back((Output*)cMap[x][y]);
 		}
@@ -80,8 +82,8 @@ void Schematic::replace(int x, int y, Component* with) {
 
 void Schematic::deleteSubcircuit(SubcircuitProxy* s) {
 	bool found = false;
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			if (cMap[x][y] == s) {
 				cMap[x][y] = new Component();
 				found = true;
@@ -118,19 +120,35 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 		}
 		//Place 'inputs'
 		for (int i = 0; i < sc->s->inputCount() * 2; i += 2) {
-			WireInput* wirePlacement = new WireInput();
-			replace(xstart - 1,ystart + i, (Component*)wirePlacement);
+			#define XCOORD xstart - 1
+			#define YCOORD ystart + i
 
-			sc->inx.push_back(xstart - 1);
-			sc->iny.push_back(ystart + i);
+			if (getCellId(XCOORD, YCOORD) == 0) {
+				WireInput* wirePlacement = new WireInput();
+				replace(XCOORD, YCOORD, (Component*)wirePlacement);
+			}
+
+			sc->inx.push_back(XCOORD);
+			sc->iny.push_back(YCOORD);
+			
+			#undef XCOORD
+			#undef YCOORD
 		}
 		//Place 'outputs'
 		for (int i = 0; i < sc->s->outputCount() * 2; i += 2) {
-			Constant* constantPlacement = new Constant();
-			replace(xend, ystart + i, constantPlacement);
+			#define XCOORD xend
+			#define YCOORD ystart + i
 
-			sc->outx.push_back(xend);
-			sc->outy.push_back(ystart + i);
+			if (getCellId(XCOORD, YCOORD) == 0) {
+				Constant* constantPlacement = new Constant();
+				replace(XCOORD, YCOORD, constantPlacement);
+			}
+
+			sc->outy.push_back(YCOORD);
+			sc->outx.push_back(XCOORD);
+
+			#undef XCOORD
+			#undef YCOORD
 		}
 
 		subcircuits.push_front(sc);
@@ -139,16 +157,16 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 
 Schematic::Schematic(std::string name) : name(name)
 {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			cMap[x][y] = new Component();
 		}
 	}
 }
 
 Schematic::~Schematic() {
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 		}
 	}
@@ -161,12 +179,12 @@ Schematic::~Schematic() {
 
 Schematic::Schematic(const Schematic& original) {
 	name = original.name;
-	for (int x = 0; x < CHUNK_X; x++)
-		for (int y = 0; y < CHUNK_Y; y++)
+	for (int y = 0; y < CHUNK_Y; y++)
+		for (int x = 0; x < CHUNK_X; x++)
 			cMap[x][y] = nullptr;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			Component* c = original.cMap[x][y];
 			if (cMap[x][y] == nullptr) { //If the component isn't nullptr, it's part of a subcircuit, so should be ignored
 				if (c->id() == 999) {
@@ -188,8 +206,8 @@ Schematic::Schematic(Schematic&& original) noexcept
 {
 	name = std::move(original.name);
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			cMap[x][y] = original.cMap[x][y];
 			original.cMap[x][y] = nullptr;
 		}
@@ -206,8 +224,8 @@ Schematic& Schematic::operator=(const Schematic& o) {
 
 	name = o.name;
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 			cMap[x][y] = o.cMap[x][y]->copy();
 		}
@@ -227,8 +245,8 @@ Schematic& Schematic::operator=(Schematic&& o) {
 		return *this;
 	}
 
-	for (int x = 0; x < CHUNK_X; x++) {
-		for (int y = 0; y < CHUNK_Y; y++) {
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
 			delete cMap[x][y];
 			cMap[x][y] = o.cMap[x][y];
 			o.cMap[x][y] = nullptr;
@@ -240,4 +258,64 @@ Schematic& Schematic::operator=(Schematic&& o) {
 		*i = nullptr;
 
 	return *this;
+}
+
+void Schematic::save(std::ofstream& fs)
+{
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
+			if (getCellId(x, y) != 0 && getCellId(x, y) != 999) {
+				fs << x << "," << y << "," << getCellId(x, y);
+				fs << '[';
+			}
+		}
+	}
+
+	//WARNING: BAD CODE AHEAD
+	for (auto it = subcircuits.begin(); it != subcircuits.end(); ++it) {
+		for (int y = 0; y < CHUNK_Y; y++) {
+			for (int x = 0; x < CHUNK_X; x++) {
+				if (cMap[x][y] == *it) {
+					fs << x << "," << y << "," << 999 << ',' << (*it)->s->getName() << '[';
+					y = CHUNK_Y + 1;
+					x = CHUNK_X + 1;
+				}
+			}
+		}
+	}
+}
+
+void Schematic::load(std::istringstream& is, std::vector<Schematic*>& schematics) {
+	//Messy loading, TODO: Find a cleaner way to load these values
+	std::string line;
+	while (std::getline(is, line, '[')) {
+		std::istringstream linestream(line);
+		std::string buffer;
+		
+		int id;
+		int x, y;
+
+		std::getline(linestream, buffer, ',');
+		x = std::stoi(buffer);
+
+		std::getline(linestream, buffer, ',');
+		y = std::stoi(buffer);
+
+		std::getline(linestream, buffer, ',');
+		id = std::stoi(buffer);
+
+		if (id == 999) {
+			std::getline(linestream, buffer, ',');
+
+			for (int i = 0; i < schematics.size(); i++) {
+				if (schematics[i]->getName() == buffer) {
+					placeSubcircuit(x, y, *schematics[i]);
+					break;
+				}
+			}
+		}
+		else {
+			cMap[x][y] = Component::getComponentOfId(id);
+		}
+	}
 }
