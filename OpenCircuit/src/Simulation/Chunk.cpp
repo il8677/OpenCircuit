@@ -139,6 +139,7 @@ void Chunk::tick() {
 
 void Chunk::populateSubcircuits() {
 	subcircuits.clear();
+	subcircuits.reserve(schematic->subcircuitCount);
 
 	for (auto it = schematic->subcircuits.begin(); it != schematic->subcircuits.end(); ++it) {
 		subcircuits.emplace_back((*it)->s);

@@ -92,6 +92,7 @@ void Schematic::deleteSubcircuit(SubcircuitProxy* s) {
 	}
 	if (found) {
 		subcircuits.remove(s);
+		subcircuitCount++;
 		delete s;
 	}
 }
@@ -157,6 +158,7 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 		}
 
 		subcircuits.push_front(sc);
+		subcircuitCount++;
 	}
 }
 
@@ -202,8 +204,11 @@ Schematic::Schematic(const Schematic& original) {
 		}
 	}
 	subcircuits = original.subcircuits;
-	for (auto i = original.subcircuits.begin(); i != original.subcircuits.end(); ++i)
+	for (auto i = original.subcircuits.begin(); i != original.subcircuits.end(); ++i) {
 		subcircuits.push_front(new SubcircuitProxy(**i));
+		subcircuitCount++;
+	}
+
 
 }
 
@@ -236,8 +241,10 @@ Schematic& Schematic::operator=(const Schematic& o) {
 		}
 	}
 	
-	for (auto i = o.subcircuits.begin(); i != o.subcircuits.end(); ++i)
+	for (auto i = o.subcircuits.begin(); i != o.subcircuits.end(); ++i) {
 		subcircuits.push_front(new SubcircuitProxy(**i));
+		subcircuitCount++;
+	}
 
 	return *this;
 }

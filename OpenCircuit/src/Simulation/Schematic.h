@@ -19,6 +19,8 @@ class Schematic
 
 	std::string name;
 public:
+	int subcircuitCount = 0;
+
 	std::forward_list<SubcircuitProxy*> subcircuits;
 
 	int getCellId(int x, int y) const;
