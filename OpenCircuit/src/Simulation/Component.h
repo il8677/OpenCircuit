@@ -86,9 +86,9 @@ public:
 	std::vector<int> outy;
 
 	virtual int id() override { return 999; }
-	virtual Component* copy() override {
-		exit(1000);
-	}
+	Component* copy(){
+		return nullptr;
+	};
 
 	int getSizeX();
 	int getSizeY();

@@ -29,6 +29,12 @@ project "OpenCircuit"
 				"sfml-window",
 				"sfml-system"
 			}
+
+		filter "configurations:Debug"
+			symbols "On"
+
+		filter "configurations:Release"
+			optimize "On"
 	end
 	if _ACTION=="vs2019" then
 		links{
