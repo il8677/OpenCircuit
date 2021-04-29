@@ -103,6 +103,11 @@ void Schematic::deleteSubcircuit(int x, int y)
 	}
 }
 
+void Schematic::shift(int amount, int dir)
+{
+
+}
+
 void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 {
 	SubcircuitProxy* sc = new SubcircuitProxy(&s);
@@ -304,6 +309,9 @@ void Schematic::load(std::istringstream& is, std::vector<Schematic*>& schematics
 		std::getline(linestream, buffer, ',');
 		id = std::stoi(buffer);
 
+		if (name == "Motherboard") {
+		}
+	
 		if (id == 999) {
 			std::getline(linestream, buffer, ',');
 

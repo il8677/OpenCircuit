@@ -1,7 +1,7 @@
 #include "ChunkRenderer.h"
 #include "../../Simulation/Chunk.h"
 
-#define VERTDIST 15
+#define VERTDIST 12
 
 // TODO: Do something better than this
 vec4<unsigned char> sfToVec4(sf::Color c) {

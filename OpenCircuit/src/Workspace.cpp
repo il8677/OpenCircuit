@@ -43,6 +43,10 @@ void Workspace::setWorkingSchematic(int i)
 	workingChunkId = i;
 }
 
+void Workspace::duplicateSchematic(int i) {
+	schematics.insert(schematics.begin() + i, new Schematic(*schematics[i]));
+}
+
 int Workspace::schematicCount()
 {
 	return schematics.size();

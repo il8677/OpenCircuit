@@ -22,8 +22,8 @@ public:
 	Chunk* getChunk();
 
 	void deleteSchematic(int i);
-
 	void setWorkingSchematic(int i);
+	void duplicateSchematic(int i);
 
 	int schematicCount();
 	int getWorkingChunk();

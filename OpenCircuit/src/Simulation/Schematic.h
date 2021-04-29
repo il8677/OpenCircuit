@@ -10,8 +10,8 @@ class Input;
 class Output;
 class SubcircuitProxy;
 
-#define CHUNK_X 64
-#define CHUNK_Y 64
+#define CHUNK_X 90
+#define CHUNK_Y 90
 
 class Schematic
 {
@@ -33,6 +33,8 @@ public:
 	void placeSubcircuit(int x, int y, Schematic& s);
 	void deleteSubcircuit(SubcircuitProxy* s);
 	void deleteSubcircuit(int x, int y);
+
+	void shift(int amount, int direction);
 
 	std::vector<Input*>  getInputs() const;
 	std::vector<Output*> getOutputs() const;
