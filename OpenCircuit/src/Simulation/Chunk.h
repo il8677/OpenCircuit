@@ -65,4 +65,11 @@ public:
 	~Chunk();
 
 	Chunk& operator=(const Chunk&);
+
+	//Debug function
+#ifdef DRAWDEBUGMENU
+	std::queue<Job> getJobQueue() {
+		return jobQueue;
+	}
+#endif
 };

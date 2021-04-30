@@ -240,6 +240,20 @@ private:
 		}
 		ImGui::End();
 
+#ifdef DRAWDEBUGMENU
+#include "Debug.cpp"
+		ImGui::Begin("DEBUG");
+		static bool drawUpdates = false;
+		ImGui::Checkbox("DU", &drawUpdates);
+		static int uo = 1;
+		if (drawUpdates) {
+			ImGui::SliderInt("Update Order", &uo, 1, workspace.getChunk()->getJobQueue().size());
+
+			Debug::drawUpdateOverlay(w, workspace.getChunk(), uo);
+		}
+		ImGui::End();
+#endif
+
 		/*
 		//'Menu bar'
 

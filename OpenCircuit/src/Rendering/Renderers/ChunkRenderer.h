@@ -2,6 +2,7 @@
 #include "../../Utility/vec4.h"
 #include "../Window/SFMLWindow.h"
 
+#define VERTDIST 12
 
 class SFMLWindow;
 class Chunk;
