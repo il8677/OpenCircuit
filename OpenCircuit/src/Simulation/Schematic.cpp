@@ -315,9 +315,6 @@ void Schematic::load(std::istringstream& is, std::vector<Schematic*>& schematics
 
 		std::getline(linestream, buffer, ',');
 		id = std::stoi(buffer);
-
-		if (name == "Motherboard") {
-		}
 	
 		if (id == 999) {
 			std::getline(linestream, buffer, ',');

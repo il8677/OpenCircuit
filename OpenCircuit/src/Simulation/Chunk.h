@@ -8,6 +8,7 @@
 #include "Job.h"
 #include "Component.h"      // for Component, Constant, Wire, Component::components, Input, Output
 
+#include <utility>
 #include <memory>
 
 class Subcircuit;
@@ -33,9 +34,10 @@ class Chunk
 
 	std::vector<char*> outputs;
 	std::vector<char*> inputs;
+	std::vector<std::pair<int, int>> inputCoords;
+	std::vector<std::pair<int, int>> notCoords;
 
-	void findOutputs();
-	void findInputs();
+	void precalculateCells();
 
 public:
 	//TODO: Figure out a way for this not to be heap allocated

@@ -37,11 +37,8 @@ void Chunk::createUpdateJob(int x, int y, DIR d) {
 
 void Chunk::updateInputs() {
 
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x,y) == 2) 
-				createUpdatesAround(x, y);
-		}
+	for (int i = 0; i < inputCoords.size(); i++) {
+		createUpdatesAround(inputCoords[i].first, inputCoords[i].second);
 	}
 }
 
@@ -57,24 +54,21 @@ void Chunk::reset()
 
 	std::queue<Job> queue;
 	std::swap(jobQueue, queue);
-
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x, y) == 2)
-				createUpdatesAround(x, y);
-			else if (schematic->getCellId(x,y) == 5)
-				createUpdateJob(x, y, NONE);
-		}
+	
+	for (int i = 0; i < inputCoords.size(); i++) {
+		createUpdatesAround(inputCoords[i].first, inputCoords[i].second);
 	}
 
-	findInputs();
-	findOutputs();
+	for (int i = 0; i < notCoords.size(); i++) {
+		createUpdateJob(notCoords[i].first, notCoords[i].second, NONE);
+	}
+
+	precalculateCells();
 	populateSubcircuits();
 }
 
 std::vector<char*>& Chunk::getOutputs()
 {
-
 	return outputs;
 }
 
@@ -140,27 +134,28 @@ void Chunk::populateSubcircuits() {
 	}
 }
 
-void Chunk::findOutputs()
+void Chunk::precalculateCells()
 {
 	outputs.clear();
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x, y) == 3)
-				outputs.push_back(&states[x][y]);
-		}
-	}
-
-}
-
-void Chunk::findInputs()
-{
 	inputs.clear();
+	inputCoords.clear();
+	notCoords.clear();
+
 	for (int y = 0; y < CHUNK_Y; y++) {
 		for (int x = 0; x < CHUNK_X; x++) {
-			if (schematic->getCellId(x, y) == 2)
+			if (schematic->getCellId(x, y) == 3) {
+				outputs.push_back(&states[x][y]);
+			}
+			else if (schematic->getCellId(x, y) == 2) {
 				inputs.push_back(&states[x][y]);
+				inputCoords.emplace_back(x, y);
+			}
+			else if (schematic->getCellId(x, y) == 5){
+				notCoords.emplace_back(x, y);
+			}
 		}
 	}
+
 }
 
 Chunk::Chunk(const Chunk& c)

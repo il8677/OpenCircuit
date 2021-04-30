@@ -73,12 +73,16 @@ BOOLEAN Not::getOutput(DIR direction, char state)
 char Junction::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const {
 	//Bit 1 of state stores u/d, bit 2 stores l/r
 
+	if (neighbours.values[sourceDir] == DC) {
+		return state;
+	}
+
 	//This returns which bit we're meant to be using, if we want to toggle bit 1 it returns 01, otherwise, it returns 10
 	//conveluted, but it works
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 	char others = state & ~mask; // Everything except what we want masked
-
-	return others | (neighbours.values[sourceDir]<< (mask-1));
+					
+	return others | ((neighbours.values[sourceDir]) << (mask-1));
 }
 
 BOOLEAN Junction::getOutput(DIR sourceDir, char state) {

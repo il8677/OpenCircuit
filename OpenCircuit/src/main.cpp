@@ -180,7 +180,7 @@ private:
 		ImGui::End();
 
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(350,400));
+		ImGui::SetNextWindowSize(ImVec2(250,450));
 		ImGui::Begin("Workspace", NULL, menuBarFlags);
 		ImGui::Text("Schematics");
 
