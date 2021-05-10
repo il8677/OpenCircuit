@@ -23,6 +23,8 @@ class App {
 	int rightBrush = 0, leftBrush = 1;
 
 	bool doAutotick = false;
+	bool doRender = true;
+
 	int autoTickState = 0;
 	int autoTickAmount = 60;
 
@@ -91,7 +93,7 @@ public:
 
 			w.beginDraw();
 
-			ChunkRenderer::Render(w, workspace.getChunk());
+			if(doRender) ChunkRenderer::Render(w, workspace.getChunk());
 
 			w.imGuiBegin();
 			drawImGui();
@@ -178,6 +180,7 @@ private:
 			ImGui::Text("Autotick");
 			ImGui::SliderInt("Tick period", &autoTickAmount, 1, 100);
 			ImGui::Checkbox("Do autotick", &doAutotick);
+			ImGui::Checkbox("Do render", &doRender);
 		}
 		ImGui::End();
 
