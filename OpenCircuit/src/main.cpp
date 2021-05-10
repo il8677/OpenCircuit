@@ -257,13 +257,25 @@ private:
 		}
 
 		if (ImGui::CollapsingHeader("Subcircuit Viewer")) {
+			static Chunk* debugRenderChunk = nullptr;
+
+			if (debugRenderChunk != nullptr) {
+				ChunkRenderer::Render(w, debugRenderChunk);
+				if (ImGui::Button("Return")) {
+					debugRenderChunk = nullptr;
+				}
+			}
+
 			for (int i = 0; i < workspace.getChunk()->getSubcircuitCount(); i++) {
+				ImGui::PushID(i);
 				ImGui::Text(Debug::getSubcircuitName(workspace.getChunk(), i).c_str());
 				ImGui::SameLine();
 				if (ImGui::Button("View")) {
-					ChunkRenderer::Render(w, Debug::getSubcircuitChunk(workspace.getChunk(), i));
+					debugRenderChunk = Debug::getSubcircuitChunk(workspace.getChunk(), i);
 				}
+				ImGui::PopID();
 			}
+
 		}
 		ImGui::End();
 #endif
