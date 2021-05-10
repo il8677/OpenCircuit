@@ -11,6 +11,8 @@
 #include "Workspace.h"
 #include "Simulation/Component.h"
 
+#include "Debug.h"
+
 // TODO: Do something much better than this
 ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
 	return ImVec4(v4.x / 255.0f, v4.y / 255.0f, v4.z / 255.0f, v4.w / 255.0f);
@@ -241,7 +243,6 @@ private:
 		ImGui::End();
 
 #ifdef DRAWDEBUGMENU
-#include "Debug.cpp"
 		ImGui::Begin("DEBUG");
 		static bool drawUpdates = false;
 		ImGui::Checkbox("DU", &drawUpdates);
@@ -249,7 +250,17 @@ private:
 		if (drawUpdates) {
 			ImGui::SliderInt("Update Order", &uo, 1, workspace.getChunk()->getJobQueue().size());
 
-			Debug::drawUpdateOverlay(w, workspace.getChunk(), uo);
+			Debug::drawUpdateOverlay(w, workspace.getChunk(), 999);
+		}
+
+		if (ImGui::CollapsingHeader("Subcircuit Viewer")) {
+			for (int i = 0; i < workspace.getChunk()->getSubcircuitCount(); i++) {
+				ImGui::Text(Debug::getSubcircuitName(workspace.getChunk(), i).c_str());
+				ImGui::SameLine();
+				if (ImGui::Button("View")) {
+					ChunkRenderer::Render(w, Debug::getSubcircuitChunk(workspace.getChunk(), i));
+				}
+			}
 		}
 		ImGui::End();
 #endif

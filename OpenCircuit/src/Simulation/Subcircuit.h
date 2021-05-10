@@ -29,5 +29,9 @@ public:
 	
 	Subcircuit(const Chunk& containedChunk);
 	Subcircuit(Schematic* containedSchematic);
+	
+#ifdef DRAWDEBUGMENU
+	Chunk* getChunk() { return &containedCircuit; }
+#endif
 };
 

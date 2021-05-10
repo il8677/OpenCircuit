@@ -27,8 +27,9 @@ class Chunk
 
 	inline void createUpdateJob(int x, int y, DIR d);
 	inline void createUpdatesAround(int x, int y);
+	inline void createUpdatesAround(int x, int y, const std::array<bool, 4>&);
 
-	inline vec4<BOOLEAN> getNeighbours(int x, int y) const;
+	inline vec4<bool> getNeighbours(int x, int y) const;
 
 	void populateSubcircuits();
 
@@ -40,12 +41,13 @@ class Chunk
 	void precalculateCells();
 
 public:
-	//TODO: Figure out a way for this not to be heap allocated
 	std::vector<Subcircuit> subcircuits;
 
 	Schematic* schematic;
 
-	BOOLEAN getOutput(int x, int y, DIR from=NONE) const;
+	size_t getSubcircuitCount();
+
+	bool getOutput(int x, int y, DIR from=NONE) const;
 
 	//Creates an update job around all the input cells
 	void updateInputs();

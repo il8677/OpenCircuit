@@ -29,73 +29,89 @@ Component* Component::getComponentOfId(int id)
 }
 
 //TODO: Split implementations into seperate files
-BOOLEAN Component::getOutput(DIR direction, char state) {
-	return state ? TRUE: FALSE;
+bool Component::getOutput(DIR direction, char state) {
+	return state;
 }
 
-char Component::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
+char Component::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const{
 	return 0;
 }
 
-char Wire::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
-	if (neighbours.values[sourceDir] == DC) {
-		return state;
+char Wire::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const{
+	char newState = neighbours.values[sourceDir];
+
+	if (newState != state) doUpdate = { true, true, true, true };
+
+	return newState;
+}
+
+char Transistor::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const {
+	char newState = neighbours.up && neighbours.left;
+
+	if (newState != state) {
+		doUpdate = {false, true, false, false};
 	}
 
-	return neighbours.values[sourceDir];
+	return newState;
 }
 
-char Transistor::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const {
-	return neighbours.up && neighbours.left;
-}
-
-BOOLEAN Transistor::getOutput(DIR direction, char state)
+bool Transistor::getOutput(DIR direction, char state)
 {
 	if (direction == RIGHT) {
-		return state ? TRUE : FALSE;
-	}
-
-	return DC;
-}
-
-char Not::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const{
-	return neighbours.left == TRUE ? 0 : 1;
-}
-
-BOOLEAN Not::getOutput(DIR direction, char state)
-{
-	if (direction == LEFT) {
-		return DC;
-	}
-	return state ? TRUE : FALSE;
-}
-
-char Junction::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const {
-	//Bit 1 of state stores u/d, bit 2 stores l/r
-
-	if (neighbours.values[sourceDir] == DC) {
 		return state;
 	}
 
+	return false;
+}
+
+char Not::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const{
+
+	char newState = !neighbours.left;
+
+	if (newState != state) {
+		doUpdate = { false, true, false, false };
+	}
+
+	return newState;
+}
+
+bool Not::getOutput(DIR direction, char state)
+{
+	if (direction == LEFT) {
+	}
+	return state;
+}
+
+char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const {
+	//Bit 1 of state stores u/d, bit 2 stores l/r
 	//This returns which bit we're meant to be using, if we want to toggle bit 1 it returns 01, otherwise, it returns 10
 	//conveluted, but it works
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 	char others = state & ~mask; // Everything except what we want masked
-					
-	return others | ((neighbours.values[sourceDir]) << (mask-1));
+	char newState = others | ((neighbours.values[sourceDir]) << (mask - 1));
+	
+	//Maximum 1 change, 1 if u/d (0, 2) , 2 if l/r (3, 1)
+	char difference = newState ^ state;
+
+	if (difference) {
+		doUpdate[difference-1] = true;
+		doUpdate[difference+1] = true;
+	}
+
+	return newState;
 }
 
-BOOLEAN Junction::getOutput(DIR sourceDir, char state) {
+bool Junction::getOutput(DIR sourceDir, char state) {
 	if (sourceDir == NONE) {
-		return state ? TRUE : FALSE;
+		return state;
 	}
 
 	char mask = (sourceDir % 2 == 0 ? 1 : 2);
 
-	return (state & mask) ? TRUE : FALSE;
+	return (state & mask);
 }
 
-char Input::predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const
+char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const
 {
 	return state;
 }

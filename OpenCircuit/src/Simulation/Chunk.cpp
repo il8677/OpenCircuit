@@ -18,16 +18,30 @@ void Chunk::createUpdatesAround(int x, int y) {
 	createUpdateJob(M_LEFT, DIR::RIGHT);
 }
 
-BOOLEAN Chunk::getOutput(int x, int y, DIR from) const
+void Chunk::createUpdatesAround(int x, int y, const std::array<bool, 4>& dirBools) {
+#define UPDATEDIR(d, o) if(dirBools[d]) createUpdateJob(M_ ## d, DIR::o)
+	UPDATEDIR(UP, DOWN);
+	UPDATEDIR(RIGHT, LEFT);
+	UPDATEDIR(DOWN, UP);
+	UPDATEDIR(LEFT, RIGHT);
+#undef UPDATEDIR
+}
+
+size_t Chunk::getSubcircuitCount()
+{
+	return subcircuits.size();
+}
+
+bool Chunk::getOutput(int x, int y, DIR from) const
 {
 	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
 		return schematic->getComponent(x,y)->getOutput(from, states[x][y]);
-	return FALSE;
+	return false;
 }
 
-inline vec4<BOOLEAN> Chunk::getNeighbours(int x, int y) const
+inline vec4<bool> Chunk::getNeighbours(int x, int y) const
 {
-	return vec4<BOOLEAN>(getOutput(M_UP, DOWN), getOutput(M_RIGHT, LEFT), getOutput(M_DOWN, UP), getOutput(M_LEFT, RIGHT));
+	return vec4<bool>(getOutput(M_UP, DOWN), getOutput(M_RIGHT, LEFT), getOutput(M_DOWN, UP), getOutput(M_LEFT, RIGHT));
 }
 
 void Chunk::createUpdateJob(int x, int y, DIR d) {
@@ -52,6 +66,8 @@ void Chunk::reset()
 		}
 	}
 
+	precalculateCells();
+
 	std::queue<Job> queue;
 	std::swap(jobQueue, queue);
 	
@@ -61,9 +77,9 @@ void Chunk::reset()
 
 	for (int i = 0; i < notCoords.size(); i++) {
 		createUpdateJob(notCoords[i].first, notCoords[i].second, NONE);
+		//createUpdatesAround(notCoords[i].first, notCoords[i].second);
 	}
 
-	precalculateCells();
 	populateSubcircuits();
 }
 
@@ -84,13 +100,12 @@ void Chunk::tick() {
 	while (!queue.empty()) {
 		Job& j = queue.front();
 
-		char last = states[j.x][j.y];
-		states[j.x][j.y] = schematic->getComponent(j.x, j.y)->predictState(getNeighbours(j.x, j.y), j.d, last);
+		std::array<bool, 4> updateDirs = { false, false, false, false };
+		states[j.x][j.y] = schematic->getComponent(j.x, j.y)->predictState(getNeighbours(j.x, j.y), j.d, states[j.x][j.y], updateDirs);
 
-		bool changed = !(last == states[j.x][j.y]);
-		
+		createUpdatesAround(j.x, j.y, updateDirs);
+
 		queue.pop();
-		if(changed) createUpdatesAround(j.x, j.y);
 	}
 
 	for (int i = 0; i < subcircuits.size(); i++) {

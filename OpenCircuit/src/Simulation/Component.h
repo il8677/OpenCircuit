@@ -1,6 +1,7 @@
 #pragma once
 #include "../Utility/vec4.h"
 
+#include <array>
 #include <vector>
 
 //0 = nothing
@@ -13,9 +14,6 @@
 
 #define COMPONENTDEF(identifier, name) public: virtual int id() override{return identifier;} virtual Component* copy() override{return new name();}
 
-//An implementation of boolean that adds "Don't care", used to indicate that the state of a wire should stay the same
-typedef enum : char {FALSE=0, TRUE, DC} BOOLEAN;
-
 class Component
 {
 public:
@@ -23,9 +21,9 @@ public:
 	virtual Component* copy() { return new Component(); }
 
 	// Returns what the updated state would be after a change from  the specified direction
-	virtual char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const;
+	virtual char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const;
 
-	virtual BOOLEAN getOutput(DIR direction, char state);
+	virtual bool getOutput(DIR direction, char state);
 
 	static std::vector<Component*> components;
 	static void initializeComponenets();
@@ -35,13 +33,13 @@ public:
 
 class Wire : public Component {
 	COMPONENTDEF(1, Wire)
-	char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const override;
 public:
 };
 
 class Input : public Component {
 	COMPONENTDEF(2, Input)
-	char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const override;
 };
 
 class Output : public Wire {
@@ -51,23 +49,23 @@ public:
 
 class Transistor : public Component {
 	COMPONENTDEF(4, Transistor)
-	char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const override;
-	BOOLEAN getOutput(DIR direction, char state) override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const override;
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Not : public Component {
 	COMPONENTDEF(5, Not)
 public:
-	char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const override;
-	BOOLEAN getOutput(DIR direction, char state) override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const override;
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Junction : public Component {
 	COMPONENTDEF(6, Junction);
 public:
-	char predictState(vec4<BOOLEAN> neighbours, DIR sourceDir, char state) const override;
+	char predictState(vec4<bool> neighbours, DIR sourceDir, char state, std::array<bool, 4>& doUpdate) const override;
 
-	BOOLEAN getOutput(DIR direction, char state) override;
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Constant : public Component {
