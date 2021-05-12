@@ -31,6 +31,8 @@ class App {
 	Workspace workspace;
 
 	int subcircuitPlacement = -1;
+	
+	std::string info = "";
 
 	//Handler for mouse down events, paints targeted square
 	void paint(int gridPosX, int gridPosY, bool right) {
@@ -56,6 +58,7 @@ class App {
 		else {
 			paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
 		}
+
 	}
 
 	//Handler for mouse move
@@ -70,6 +73,16 @@ class App {
 
 		if (mbe->rightDown || mbe->leftDown)
 			paint(targetX, targetY, mbe->rightDown);
+
+		//TODO: Move this out somewhere else
+		if (workspace.getChunk()->schematic->getCellId(targetX, targetY) == 999) {
+			SubcircuitProxy* targetSubcircuit = (SubcircuitProxy*)workspace.getChunk()->schematic->getComponent(targetX, targetY);
+
+			info = targetSubcircuit->s->getName();
+		}
+		else {
+			info = std::to_string(workspace.getChunk()->schematic->getCellId(targetX, targetY));
+		}
 	}
 
 public:
@@ -93,7 +106,9 @@ public:
 
 			w.beginDraw();
 
-			if(doRender) ChunkRenderer::Render(w, workspace.getChunk());
+			if (doRender) {
+				ChunkRenderer::Render(w, workspace.getChunk());
+			}
 
 			w.imGuiBegin();
 			drawImGui();
@@ -120,12 +135,21 @@ private:
 
 	void drawImGui() {
 		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-		ImGuiWindowFlags menuBarFlags =
+		ImGuiWindowFlags lockedWindowFlag =
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoResize   |
 			ImGuiWindowFlags_NoNav      |
 			ImGuiWindowFlags_NoMove     |
+			ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_MenuBar;
+
+		ImGuiWindowFlags floatingOverlayFlag =
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoDecoration |
+			ImGuiWindowFlags_NoNav;
 
 
 		ImGui::Begin("Pallette");
@@ -184,9 +208,15 @@ private:
 		}
 		ImGui::End();
 
+		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 125, main_viewport->WorkSize.y-25), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(125,25));
+		ImGui::Begin("Info", NULL, floatingOverlayFlag);
+		ImGui::LabelText(info.c_str(), "");
+		ImGui::End();
+
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(250,450));
-		ImGui::Begin("Workspace", NULL, menuBarFlags);
+		ImGui::Begin("Workspace", NULL, lockedWindowFlag);
 		ImGui::Text("Schematics");
 
 		if (ImGui::Button("Save")) {
@@ -283,7 +313,7 @@ private:
 		/*
 		//'Menu bar'
 
-		ImGui::Begin("Menu bar", NULL, menuBarFlags);
+		ImGui::Begin("Menu bar", NULL, lockedWindowFlag);
 		ImGui::BeginMenuBar();
 
 		if (ImGui::BeginMenu("File")) {
