@@ -126,7 +126,7 @@ private:
 
         simManager.render();
 
-		ImGui::Begin("Pallette");
+		ImGui::Begin("Palette");
 		//Bad practice but whatever
 		static char* componentTooltips[7] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not", "Junction"};
 		for (int i = 1; i < 7; i++) {
