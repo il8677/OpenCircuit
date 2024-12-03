@@ -8,8 +8,9 @@
 #include "Rendering/Window/Event.h"
 #include "Rendering/Renderers/ChunkRenderer.h"
 #include "Rendering/Window/SFMLWindow.h"
-#include "Workspace.h"
 #include "Simulation/Component.h"
+#include "UI/SimulationManager.h"
+#include "Workspace.h"
 
 // TODO: Do something much better than this
 ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
@@ -20,9 +21,9 @@ class App {
 	SFMLWindow w;
 	int rightBrush = 0, leftBrush = 1;
 
-	bool doAutotick = false;
 	int autoTickState = 0;
-	int autoTickAmount = 60;
+
+    SimulationManager simManager;
 
 	Workspace workspace;
 
@@ -70,7 +71,7 @@ class App {
 
 public:
 
-	App() : w(1920, 1080){
+	App() : w(1920, 1080), simManager(workspace) {
 		Component::initializeComponenets();
 
 		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
@@ -97,9 +98,9 @@ public:
 
 			w.endDraw();
 
-			if (doAutotick) {
+			if (simManager.doAutotick()) {
 				autoTickState++;
-				if (autoTickState > autoTickAmount) {
+				if (autoTickState > simManager.getAutotickAmount()) {
 					autoTickState = 0;
 					workspace.getChunk()->tick();
 				}
@@ -123,6 +124,7 @@ private:
 			ImGuiWindowFlags_NoMove     |
 			ImGuiWindowFlags_MenuBar;
 
+        simManager.render();
 
 		ImGui::Begin("Pallette");
 		//Bad practice but whatever
@@ -143,41 +145,6 @@ private:
 		}
 		ImGui::End();
 
-		ImGui::Begin("Simulation Manager");
-		if (ImGui::CollapsingHeader("Inputs")) {
-			std::vector<char*> inputs = workspace.getChunk()->getInputs();
-			for (int i = 0; i < inputs.size(); i++) {
-				ImGui::PushID(i);
-				if (i > 0)
-					ImGui::SameLine();
-				if (ImGui::Checkbox(" ", (bool*)inputs[i])) {
-					workspace.getChunk()->updateInputs();
-				}
-				ImGui::PopID();
-			}
-		}
-		if (ImGui::CollapsingHeader("Outputs")) {
-
-			std::vector<char*> outputs = workspace.getChunk()->getOutputs();
-			for (int i = 0; i < outputs.size(); i++) {
-				if (i > 0)
-					ImGui::SameLine();
-				ImGui::Text("%d", *outputs[i]);
-			}
-		}
-		if (ImGui::CollapsingHeader("Controls")) {
-			if (ImGui::Button("Reset")) {
-				workspace.getChunk()->reset();
-			}
-			if (ImGui::Button("Tick")) {
-				workspace.getChunk()->tick();
-			}
-
-			ImGui::Text("Autotick");
-			ImGui::SliderInt("Tick period", &autoTickAmount, 1, 100);
-			ImGui::Checkbox("Do autotick", &doAutotick);
-		}
-		ImGui::End();
 
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(250,400));
