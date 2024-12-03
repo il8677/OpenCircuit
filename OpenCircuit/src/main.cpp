@@ -10,6 +10,7 @@
 #include "Rendering/Window/SFMLWindow.h"
 #include "Simulation/Component.h"
 #include "UI/SimulationManager.h"
+#include "UI/WorkspacePanel.h"
 #include "Workspace.h"
 
 // TODO: Do something much better than this
@@ -24,10 +25,9 @@ class App {
 	int autoTickState = 0;
 
     SimulationManager simManager;
+    WorkspacePanel workspacePanel;
 
 	Workspace workspace;
-
-	int subcircuitPlacement = -1;
 
 	//Handler for mouse down events, paints targeted square
 	void paint(int gridPosX, int gridPosY, bool right) {
@@ -46,10 +46,8 @@ class App {
 		w.screenToWorld(targetX, targetY);
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
-		if (subcircuitPlacement != -1) {
-			workspace.placeSubcircuit(targetX, targetY, subcircuitPlacement);
-			subcircuitPlacement = -1;
-		}
+		if (workspacePanel.hasSelectedSubcircuit())
+			workspace.placeSubcircuit(targetX, targetY, workspacePanel.popSelectedSubcircuit());
 		else {
 			paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
 		}
@@ -71,7 +69,7 @@ class App {
 
 public:
 
-	App() : w(1920, 1080), simManager(workspace) {
+	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace) {
 		Component::initializeComponenets();
 
 		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
@@ -117,14 +115,9 @@ private:
 
 	void drawImGui() {
 		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-		ImGuiWindowFlags menuBarFlags =
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoResize   |
-			ImGuiWindowFlags_NoNav      |
-			ImGuiWindowFlags_NoMove     |
-			ImGuiWindowFlags_MenuBar;
 
         simManager.render();
+        workspacePanel.render();
 
 		ImGui::Begin("Palette");
 		//Bad practice but whatever
@@ -148,63 +141,7 @@ private:
 
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(250,400));
-		ImGui::Begin("Workspace", NULL, menuBarFlags);
-		ImGui::Text("Schematics");
 
-		if (ImGui::Button("Save")) {
-			std::ofstream fs;
-			fs.open("save.workspace");
-			workspace.save(fs);
-			fs.close();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Load")) {
-			std::ifstream fs;
-			fs.open("save.workspace");
-			workspace.load(fs);
-			fs.close();
-		}
-
-		if (ImGui::CollapsingHeader("New schematic")) {
-			static char newSchematicName[20];
-			ImGui::InputText("Name", newSchematicName, 20);
-			if (ImGui::Button("Create")) {
-				workspace.newSchematic(std::string(newSchematicName));
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Edit schematics")) {
-			for (int i = workspace.schematicCount()-1; i >= 0; i--) {
-				ImGui::PushID(i);
-				if (ImGui::Button("^")) {
-					workspace.moveUp(i);
-				}
-				ImGui::SameLine();
-				ImGui::Text(workspace.getSchematic(i)->getName().c_str());
-				ImGui::SameLine();
-
-				if (ImGui::Button("Edit")) {
-					workspace.setWorkingSchematic(i);
-				}
-				if (i > 0) {
-					ImGui::SameLine();
-					if (ImGui::Button("x")) {
-						workspace.deleteSchematic(i);
-					}
-
-				}
-				//Subcircuits can only be placed in circuits *below* the current circuit
-				if (i < workspace.getWorkingChunk()) {
-
-					ImGui::SameLine();
-					if (ImGui::Button("Place")) {
-						subcircuitPlacement = i;
-					}
-				}
-				ImGui::PopID();
-			}
-		}
-		ImGui::End();
 
 		/*
 		//'Menu bar'
