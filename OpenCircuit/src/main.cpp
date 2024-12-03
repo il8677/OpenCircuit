@@ -11,28 +11,24 @@
 #include "Simulation/Component.h"
 #include "UI/SimulationManager.h"
 #include "UI/WorkspacePanel.h"
+#include "UI/PalettePanel.h"
 #include "Workspace.h"
-
-// TODO: Do something much better than this
-ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
-	return ImVec4(v4.x / 255.0f, v4.y / 255.0f, v4.z / 255.0f, v4.w / 255.0f);
-}
 
 class App {
 	SFMLWindow w;
-	int rightBrush = 0, leftBrush = 1;
 
 	int autoTickState = 0;
 
     SimulationManager simManager;
     WorkspacePanel workspacePanel;
+    PalettePanel palettePanel;
 
 	Workspace workspace;
 
 	//Handler for mouse down events, paints targeted square
 	void paint(int gridPosX, int gridPosY, bool right) {
 		
-		int resultComponent = right ? rightBrush : leftBrush;
+		int resultComponent = right ? palettePanel.getRightBrush() : palettePanel.getLeftBrush();
 		workspace.paint(gridPosX, gridPosY, resultComponent);
 	}
 	
@@ -76,9 +72,8 @@ public:
 		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {mouseDownHandler(e); });
 		w.addEventCallback(EventCode::M_MouseMove, [this](Event* e) {mouseMoveHandler(e); });
 
-		//This is probably bad practice (or at least weird), but I was too lazy to write a proper event system
 		for (int i = 0; i < 6; i++) {
-			w.addEventCallback(EventCode::D_Num1 + i, [this, i](Event* e) {leftBrush = i + 1; });
+			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });
 		}
 	}
 
@@ -117,30 +112,13 @@ private:
 		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 
         simManager.render();
-        workspacePanel.render();
-
-		ImGui::Begin("Palette");
-		//Bad practice but whatever
-		static char* componentTooltips[7] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not", "Junction"};
-		for (int i = 1; i < 7; i++) {
-			ImGui::PushID(i);
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Button, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, vec4ToImVec4(ChunkRenderer::getComponentColour(i)));
-			if (ImGui::Button(" ", ImVec2(20, 20)))
-				leftBrush = i;
-			if (ImGui::IsItemHovered())
-				ImGui::SetTooltip(componentTooltips[i]);
-
-			ImGui::PopStyleColor(3);
-			ImGui::PopID();
-		}
-		ImGui::End();
-
 
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(250,400));
+        workspacePanel.render();
+
+        palettePanel.render();
+
 
 
 		/*
