@@ -12,6 +12,8 @@ elseif (LINUX)
 	set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 endif()
 
+find_package(imgui CONFIG REQUIRED)
+find_package(ImGui-SFML CONFIG REQUIRED)
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
 file(GLOB_RECURSE SOURCES
@@ -26,3 +28,4 @@ add_executable(OpenCircuit ${SOURCES} ${HEADERS})
 
 target_include_directories(OpenCircuit PUBLIC ${CMAKE_SOURCE_DIR}/OpenCircuit/depen/ImGUI/include)
 target_link_libraries(OpenCircuit PUBLIC opengl32 sfml-graphics sfml-audio sfml-window sfml-system)
+target_link_libraries(OpenCircuit PUBLIC imgui::imgui ImGui-SFML::ImGui-SFML)
