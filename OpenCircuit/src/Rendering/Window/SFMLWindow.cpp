@@ -87,6 +87,9 @@ SFMLWindow::SFMLWindow(int x, int y) : _window(sf::VideoMode(x, y), "OpenCircuit
 	_window.setVerticalSyncEnabled(true);
 	
 	ImGui::SFML::Init(_window);
+    auto& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    
 	_window.resetGLStates();
 	_deltaClock.restart();
 
