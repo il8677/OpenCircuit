@@ -10,6 +10,7 @@
 #include "Rendering/Window/SFMLWindow.h"
 #include "Simulation/Component.h"
 #include "UI/SimulationManager.h"
+#include "UI/ChunkViewPanel.h"
 #include "UI/WorkspacePanel.h"
 #include "UI/PalettePanel.h"
 #include "Workspace.h"
@@ -22,6 +23,7 @@ class App {
     SimulationManager simManager;
     WorkspacePanel workspacePanel;
     PalettePanel palettePanel;
+	ChunkViewPanel viewPanel;
 
 	Workspace workspace;
 
@@ -65,7 +67,7 @@ class App {
 
 public:
 
-	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace) {
+	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace), viewPanel(*workspace.getChunk()) {
 		Component::initializeComponenets();
 
 		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
@@ -82,9 +84,6 @@ public:
 			w.handleEvents();
 
 			w.beginDraw();
-
-			ChunkRenderer::Render(w, workspace.getChunk());
-
 			w.imGuiBegin();
 			drawImGui();
 			w.imGuiDraw();
@@ -118,7 +117,7 @@ private:
         workspacePanel.render();
 
         palettePanel.render();
-
+		viewPanel.render();
 
 
 		/*
