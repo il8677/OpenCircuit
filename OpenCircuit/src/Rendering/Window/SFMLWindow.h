@@ -25,5 +25,5 @@ public:
 
 	void screenToWorld(int& x, int& y) override;
 
-	void renderVerts(sf::VertexArray va);
+    operator sf::RenderWindow&() { return _window; }
 };

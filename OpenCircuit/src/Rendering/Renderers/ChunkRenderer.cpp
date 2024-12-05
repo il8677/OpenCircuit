@@ -45,7 +45,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 	}
 }
 
-void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
+void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c) {
 	static bool initialized = false;
 
 	if (!initialized) {
@@ -100,8 +100,8 @@ void ChunkRenderer::Render(SFMLWindow& w, Chunk* c) {
 		}
 	}
 
-	w.renderVerts(cells);
-	w.renderVerts(grid);
+	renderTarget.draw(cells);
+	renderTarget.draw(grid);
 }
 
 void ChunkRenderer::worldToGrid(int& x, int& y)

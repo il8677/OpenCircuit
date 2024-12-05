@@ -12,11 +12,6 @@ void SFMLWindow::screenToWorld(int& x, int& y) {
 
 }
 
-void SFMLWindow::renderVerts(sf::VertexArray va)
-{
-	_window.draw(va);
-}
-
 void SFMLWindow::handleEvents()
 {
 	sf::Event e;
