@@ -25,6 +25,8 @@ public:
 	void setSchematic(Schematic* s);
 	Schematic* getSchematic();
 
+    Chunk& getChunk() { return containedCircuit; }
+
 	std::string getName();
 	
 	Subcircuit(const Chunk& containedChunk);

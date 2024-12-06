@@ -134,7 +134,7 @@ void Schematic::placeSubcircuit(int xstart, int ystart, Schematic& s)
 		//Place 'outputs'
 		for (int i = 0; i < sc->s->outputCount() * 2; i += 2) {
 			const int XCOORD = xend;
-			const int YCOORD = ystart + i;
+			const int YCOORD = ystart + i + (sc->s->outputCount() % 2);
 
 			if (getCellId(XCOORD, YCOORD) == 0) {
 				Constant* constantPlacement = new Constant();

@@ -1,5 +1,7 @@
 #include "ChunkViewPanel.h"
 #include "../Simulation/Chunk.h"
+#include "../Simulation/Schematic.h"
+#include "../Simulation/Subcircuit.h"
 #include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include "PalettePanel.h"
@@ -31,7 +33,16 @@ void ChunkViewPanel::setupEvents() {
 			return;
 		}
 
+		if(mbe->leftDown){
+			if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
+				SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
+				m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
+                return;
+			}
+		}
+
 		if (mbe->rightDown || mbe->leftDown) {
+            m_popupChunk = nullptr;
 			int resultComponent = mbe->rightDown ? m_palettePanel.getRightBrush() : m_palettePanel.getLeftBrush();
 			Paint(m_chunk, targetX, targetY, resultComponent);
 		}
@@ -43,16 +54,36 @@ void ChunkViewPanel::setupEvents() {
 }
 
 void ChunkViewPanel::render(){
-	if(ImGui::Begin(m_chunk.schematic->getName().c_str())) {
-		m_viewportSize = ImGui::GetWindowSize();;
-		m_texture.create(m_viewportSize.x, m_viewportSize.y);
-		m_texture.clear(sf::Color::Black);
-		ChunkRenderer::Render(m_texture, &m_chunk);
+	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str());
 
-		ImGui::ImageButton(m_texture, 0);
-		handleInputs();
-	}
+    if(!enabled){
+        ImGui::End();
+        return;
+    }
+
+    m_viewportSize = ImGui::GetWindowSize();;
+    m_texture.create(m_viewportSize.x, m_viewportSize.y);
+    m_texture.clear(sf::Color::Black);
+    ChunkRenderer::Render(m_texture, &m_chunk);
+
+    ImGui::ImageButton(m_texture, 0);
+    handleInputs();
+
+
+    if(m_popupChunk){
+        const char* popupName = m_popupChunk->schematic->getName().c_str();
+        ImGui::OpenPopup(popupName);
+        if(ImGui::BeginPopup(popupName)){
+            m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
+            m_popupTexture.clear(sf::Color::Black);
+            ChunkRenderer::Render(m_popupTexture, m_popupChunk);
+
+            ImGui::ImageButton(m_popupTexture, 0);
+            ImGui::EndPopup();
+        }
+    }
 	ImGui::End();
+
 }
 
 void ChunkViewPanel::handleInputs() {

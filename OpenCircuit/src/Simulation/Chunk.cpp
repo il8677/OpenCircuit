@@ -26,6 +26,14 @@ bool Chunk::getOutput(int x, int y, DIR from) const
 	return false;
 }
 
+Subcircuit& Chunk::getSubcircuitFromProxy(SubcircuitProxy* proxy) {
+    if(subcircuits.size() != std::distance(schematic->subcircuits.begin(), schematic->subcircuits.end())){
+        populateSubcircuits();
+    }
+
+    return subcircuits.at(proxy);
+}
+
 inline vec4<bool> Chunk::getNeighbours(int x, int y) const
 {
 	return vec4<bool>(getOutput(M_UP, DOWN), getOutput(M_RIGHT, LEFT), getOutput(M_DOWN, UP), getOutput(M_LEFT, RIGHT));
@@ -115,11 +123,11 @@ void Chunk::tick() {
 		if(changed) createUpdatesAround(j.x, j.y);
 	}
 
-	for (int i = 0; i < subcircuits.size(); i++) {
+	for (auto& [proxy, circuit] : subcircuits) {
 		//TODO: speed this up (Don't use queue, since searching through the state map is relativley slow
-		subcircuits[i].tick();
+		circuit.tick();
 		std::queue<char*> updateQueue;
-		std::swap(updateQueue, subcircuits[i].updatedCells);
+		std::swap(updateQueue, circuit.updatedCells);
 
 		while (!updateQueue.empty()) {
 			char* c = updateQueue.front();
@@ -141,14 +149,14 @@ void Chunk::tick() {
 void Chunk::populateSubcircuits() {
 	subcircuits.clear();
 
-	for (auto it = schematic->subcircuits.begin(); it != schematic->subcircuits.end(); ++it) {
-		subcircuits.emplace_back((*it)->s);
-		for (int i = 0; i < (*it)->inx.size(); i++) {
-			subcircuits.back().addInput(&states[(*it)->inx[i]][(*it)->iny[i]]);
+	for (SubcircuitProxy* proxy : schematic->subcircuits) {
+		subcircuits.emplace(proxy, proxy->s);
+		for (int i = 0; i < proxy->inx.size(); i++) {
+			subcircuits.at(proxy).addInput(&states[proxy->inx[i]][proxy->iny[i]]);
 		}
 
-		for (int i = 0; i < (*it)->outx.size(); i++) {
-			subcircuits.back().addOutput(&states[(*it)->outx[i]][(*it)->outy[i]]);
+		for (int i = 0; i < proxy->outx.size(); i++) {
+			subcircuits.at(proxy).addOutput(&states[proxy->outx[i]][proxy->outy[i]]);
 		}
 
 		//subcircuits.back().reset();

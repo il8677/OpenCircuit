@@ -24,6 +24,9 @@ private:
 	Chunk& m_chunk;
 	Workspace& m_workspace;
 
+	Chunk* m_popupChunk=nullptr;
+
 	ImVec2 m_viewportSize;
 	sf::RenderTexture m_texture;
+	sf::RenderTexture m_popupTexture;
 };

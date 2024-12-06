@@ -2,11 +2,12 @@
 #include <vector>
 #include <queue>
 #include <forward_list>
+#include <memory>
+#include <unordered_map>
 
 #include "../Utility/vec4.h"
 #include "Schematic.h"
 #include "Job.h"
-#include <memory>
 
 class Subcircuit;
 
@@ -29,13 +30,14 @@ class Chunk
 
 	void populateSubcircuits();
 
+	std::unordered_map<SubcircuitProxy*, Subcircuit> subcircuits;
 public:
-	//TODO: Figure out a way for this not to be heap allocated
-	std::vector<Subcircuit> subcircuits;
 
 	Schematic* schematic;
 
 	bool getOutput(int x, int y, DIR from=NONE) const;
+
+    Subcircuit& getSubcircuitFromProxy(SubcircuitProxy* proxy);
 
 	//Creates an update job around all the input cells
 	void updateInputs();
