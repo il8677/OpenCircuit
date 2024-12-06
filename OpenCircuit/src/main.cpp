@@ -26,53 +26,11 @@ class App {
 	ChunkViewPanel viewPanel;
 
 	Workspace workspace;
-
-	//Handler for mouse down events, paints targeted square
-	void paint(int gridPosX, int gridPosY, bool right) {
-		
-		int resultComponent = right ? palettePanel.getRightBrush() : palettePanel.getLeftBrush();
-		workspace.paint(gridPosX, gridPosY, resultComponent);
-	}
 	
-	void mouseDownHandler(Event* e) {
-		MouseButtonEvent* mbe = (MouseButtonEvent*)e;
-
-		int targetX = mbe->posx;
-		int targetY = mbe->posy;
-
-
-		w.screenToWorld(targetX, targetY);
-		ChunkRenderer::worldToGrid(targetX, targetY);
-
-		if (workspacePanel.hasSelectedSubcircuit())
-			workspace.placeSubcircuit(targetX, targetY, workspacePanel.popSelectedSubcircuit());
-		else {
-			paint(targetX, targetY, mbe->id == EventCode::M_RightDown);
-		}
-	}
-
-	//Handler for mouse move
-	void mouseMoveHandler(Event* e) {
-		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
-
-		int targetX = mbe->posx;
-		int targetY = mbe->posy;
-
-		w.screenToWorld(targetX, targetY);
-		ChunkRenderer::worldToGrid(targetX, targetY);
-
-		if (mbe->rightDown || mbe->leftDown)
-			paint(targetX, targetY, mbe->rightDown);
-	}
-
 public:
 
-	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace), viewPanel(*workspace.getChunk()) {
+	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace), viewPanel(*workspace.getChunk(), palettePanel, workspacePanel, workspace) {
 		Component::initializeComponenets();
-
-		w.addEventCallback(EventCode::M_LeftDown, [this](Event* e) {mouseDownHandler(e); });
-		w.addEventCallback(EventCode::M_RightDown, [this](Event* e) {mouseDownHandler(e); });
-		w.addEventCallback(EventCode::M_MouseMove, [this](Event* e) {mouseMoveHandler(e); });
 
 		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });

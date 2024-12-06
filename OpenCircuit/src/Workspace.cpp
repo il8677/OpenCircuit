@@ -72,20 +72,6 @@ int Workspace::getWorkingChunk()
 	return workingChunkId;
 }
 
-void Workspace::placeSubcircuit(int x, int y, int sid) {
-	Schematic& s = *getSchematic(sid);
-	getSchematic()->placeSubcircuit(x, y, s);
-	workingChunk.reset();
-}
-
-void Workspace::paint(int gridx, int gridy, int id)
-{
-	if (workingChunk.schematic->getCellId(gridx, gridy) != 999)
-		workingChunk.schematic->setComponent(id, gridx, gridy);
-	else if (id == 0)
-		workingChunk.schematic->deleteSubcircuit(gridx, gridy);
-}
-
 void Workspace::save(std::ofstream& fs)
 {
 	for (int i = 0; i < schematics.size(); i++) {
