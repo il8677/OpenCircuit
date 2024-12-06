@@ -39,9 +39,9 @@ void WorkspacePanel::render(){
     }
 
     if (ImGui::CollapsingHeader("Edit schematics")) {
-        for (int i = m_workspace.schematicCount()-1; i >= 0; i--) {
+        for (int i = 0; i < m_workspace.schematicCount(); i++) {
             ImGui::PushID(i);
-            if (ImGui::Button("^")) {
+            if (ImGui::Button("v")) {
                 m_workspace.moveUp(i);
             }
             ImGui::SameLine();

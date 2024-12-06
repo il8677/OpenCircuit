@@ -74,7 +74,7 @@ int Workspace::getWorkingChunk()
 
 void Workspace::save(std::ofstream& fs)
 {
-	for (int i = 0; i < schematics.size(); i++) {
+	for (int i = 0; i  < schematics.size(); i++) {
 		fs << schematics[i]->getName() << ";";
 		schematics[i]->save(fs);
 		fs << ":";
@@ -82,6 +82,7 @@ void Workspace::save(std::ofstream& fs)
 }
 
 void Workspace::load(std::ifstream& fs) {
+    schematics.clear();
 	std::string line;
 	while (getline(fs, line, ':')) {
 		std::istringstream ls(line);
