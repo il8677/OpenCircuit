@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "Schematic.h"
 
 void Component::initializeComponenets()
 {
@@ -84,10 +85,8 @@ char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const
 }
 
 int SubcircuitProxy::getSizeX() {
-	return 3;
+	return s->inputCount() >= 3 ? 3 : 1;
 }
-
-#include "Schematic.h"
 
 int SubcircuitProxy::getSizeY() {
 	int maxPins = s->inputCount() > s->outputCount() ? s->inputCount() : s->outputCount();
