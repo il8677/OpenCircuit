@@ -67,7 +67,7 @@ private:
 
 	void drawImGui() {
 		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-
+		ImGui::DockSpaceOverViewport();
         simManager.render();
 
 		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
