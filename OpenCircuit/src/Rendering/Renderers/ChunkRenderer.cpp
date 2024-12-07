@@ -1,6 +1,6 @@
 #include "ChunkRenderer.h"
 #include "../../Simulation/Chunk.h"
-
+#include <iostream>
 #define VERTDIST 31
 
 // TODO: Do something better than this
@@ -45,7 +45,7 @@ vec4<unsigned char> ChunkRenderer::getComponentColour(int componenetId)
 	}
 }
 
-void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c) {
+void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip) {
 	static bool initialized = false;
 
 	if (!initialized) {
@@ -82,14 +82,44 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c) {
 		}
 	}
 
-	for (int y = 0; y < CHUNK_Y; y++) {
-		for (int x = 0; x < CHUNK_X; x++) {
-			int cellId = c->schematic->getCellId(x, y);
-			int index = (x*CHUNK_X + y)*4;
+    int startX = 0, startY = 0;
+    int endX = CHUNK_X, endY = CHUNK_Y;
+
+    if(doClip){
+        startX = CHUNK_X; startY = CHUNK_Y;
+        endX = 0; endY = 0;
+
+        for(int y = 0; y < CHUNK_Y; y++){
+            for(int x = 0; x < CHUNK_X; x++){
+                if(c->schematic->getCellId(x, y)){
+                    startX = std::min(x, startX);
+                    startY = std::min(y, startY);
+                    endX = std::max(x, endX);
+                    endY = std::max(x, endY);
+                }
+            }
+        }
+
+        if(startX > endX){
+            startX = 0;
+            endX = CHUNK_X;
+        }
+
+        if(startY > endY){
+            startY = 0;
+            endY = CHUNK_Y;
+        }
+    }
+
+
+    for (int x = 0; x < CHUNK_X-startX; x++) {
+        for (int y = 0; y < CHUNK_Y-startY; y++) {
+			int cellId = c->schematic->getCellId(x+startX, y+startY);
+			int index = ((x)*CHUNK_X + (y))*4;
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
 			
-			if (!c->getOutput(x, y, NONE)) {
+			if (!c->getOutput(x+startX, y+startY, NONE)) {
 				vColour = vColour * sf::Color(100, 100, 100);;
 			}
 

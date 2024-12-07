@@ -76,7 +76,7 @@ void ChunkViewPanel::render(){
         if(ImGui::BeginPopup(popupName)){
             m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
             m_popupTexture.clear(sf::Color::Black);
-            ChunkRenderer::Render(m_popupTexture, m_popupChunk);
+            ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
 
             ImGui::ImageButton(m_popupTexture, 0);
             ImGui::EndPopup();
