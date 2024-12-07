@@ -55,7 +55,7 @@ void ChunkViewPanel::setupEvents() {
 }
 
 void ChunkViewPanel::render(){
-	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str());
+	bool enabled = ImGui::Begin("Editor");
 
     if(!enabled){
         ImGui::End();
