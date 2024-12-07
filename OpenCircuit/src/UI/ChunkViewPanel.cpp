@@ -37,6 +37,7 @@ void ChunkViewPanel::setupEvents() {
 			if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
 				SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
 				m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
+                ImGui::OpenPopup("PopupChunk");
                 return;
 			}
 		}
@@ -69,18 +70,13 @@ void ChunkViewPanel::render(){
     ImGui::ImageButton(m_texture, 0);
     handleInputs();
 
+    if(ImGui::BeginPopup("PopupChunk")){
+        m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
+        m_popupTexture.clear(sf::Color::Black);
+        ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
 
-    if(m_popupChunk){
-        const char* popupName = m_popupChunk->schematic->getName().c_str();
-        ImGui::OpenPopup(popupName);
-        if(ImGui::BeginPopup(popupName)){
-            m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
-            m_popupTexture.clear(sf::Color::Black);
-            ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
-
-            ImGui::ImageButton(m_popupTexture, 0);
-            ImGui::EndPopup();
-        }
+        ImGui::ImageButton(m_popupTexture, 0);
+        ImGui::EndPopup();
     }
 	ImGui::End();
 
