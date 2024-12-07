@@ -70,8 +70,6 @@ private:
 		ImGui::DockSpaceOverViewport();
         simManager.render();
 
-		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkSize.x - 250, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(250,400));
         workspacePanel.render();
 
         palettePanel.render();

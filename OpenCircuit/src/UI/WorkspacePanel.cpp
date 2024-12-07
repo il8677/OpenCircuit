@@ -7,12 +7,7 @@
 #include <fstream>
 
 void WorkspacePanel::render(){
-    const ImGuiWindowFlags menuBarFlags =
-        ImGuiWindowFlags_NoCollapse |
-        ImGuiWindowFlags_NoResize   |
-        ImGuiWindowFlags_NoNav      |
-        ImGuiWindowFlags_NoMove     |
-        ImGuiWindowFlags_MenuBar;
+    const ImGuiWindowFlags menuBarFlags=0;
     ImGui::Begin("Workspace", NULL, menuBarFlags);
     ImGui::Text("Schematics");
 
