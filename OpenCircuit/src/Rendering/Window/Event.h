@@ -13,17 +13,15 @@ public:
 
 class MouseMovedEvent : public Event {
 public:
-    bool leftDown;
-    bool rightDown; //TODO: Have a better system for identifying which mouse buttons are down
+    bool left; // If the left button is pressed
+    bool right;  // If the right buutton is pressed
+
+    bool isLeftDown; // If the left button is pressed down this frame
+    bool isRightDown; // If the left button is pressed down this frame
+
     int posx, posy;
 
-    MouseMovedEvent(int x, int y, bool ld, bool rd);
-};
-
-class MouseButtonEvent : public Event {
-public:
-    int posx, posy;
-    MouseButtonEvent(int x, int y, int id);
+    MouseMovedEvent(int x, int y, bool l, bool r, bool ld, bool rd);
 };
 
 enum EventCode

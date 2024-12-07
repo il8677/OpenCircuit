@@ -30,22 +30,23 @@ void SFMLWindow::handleEvents()
 				_eManager.handleEvent(new KeyEvent(e.key.code + 100));
 		}
 		else if (e.type == sf::Event::MouseMoved) {
-			_eManager.handleEvent(new MouseMovedEvent(e.mouseMove.x, e.mouseMove.y, sf::Mouse::isButtonPressed(sf::Mouse::Left), sf::Mouse::isButtonPressed(sf::Mouse::Right)));
+			_eManager.handleEvent(new MouseMovedEvent(e.mouseMove.x, e.mouseMove.y, sf::Mouse::isButtonPressed(sf::Mouse::Left), sf::Mouse::isButtonPressed(sf::Mouse::Right), false, false));
 		}
 		else if (e.type == sf::Event::MouseButtonPressed) {
-			int id;
+            bool left = false;
+            bool right = false;
 
 			switch (e.mouseButton.button) {
 			case sf::Mouse::Right:
-				id = EventCode::M_RightDown;
+                right = true;
 				break;
 			case sf::Mouse::Left:
-				id = EventCode::M_LeftDown;
+                left = true;
 				break;
 			default:
 				continue;
 			}
-			_eManager.handleEvent(new MouseButtonEvent(e.mouseButton.x, e.mouseButton.y, id));
+			_eManager.handleEvent(new MouseMovedEvent(e.mouseButton.x, e.mouseButton.y,sf::Mouse::isButtonPressed(sf::Mouse::Left), sf::Mouse::isButtonPressed(sf::Mouse::Right), left, right));
 		}
 	}
 }

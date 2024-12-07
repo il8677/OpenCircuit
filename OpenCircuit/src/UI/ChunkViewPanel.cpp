@@ -27,13 +27,13 @@ void ChunkViewPanel::setupEvents() {
 
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
-		if (mbe->leftDown && m_workspacePanel.hasSelectedSubcircuit()){
+		if (mbe->left && m_workspacePanel.hasSelectedSubcircuit()){
 			Schematic& s = *m_workspace.getSchematic(m_workspacePanel.popSelectedSubcircuit());
 			m_chunk.schematic->placeSubcircuit(targetX, targetY, s);
 			return;
 		}
 
-		if(mbe->leftDown){
+		if(mbe->isLeftDown){
 			if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
 				SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
 				m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
@@ -41,9 +41,9 @@ void ChunkViewPanel::setupEvents() {
 			}
 		}
 
-		if (mbe->rightDown || mbe->leftDown) {
+		if (mbe->right || mbe->left) {
             m_popupChunk = nullptr;
-			int resultComponent = mbe->rightDown ? m_palettePanel.getRightBrush() : m_palettePanel.getLeftBrush();
+			int resultComponent = mbe->right ? m_palettePanel.getRightBrush() : m_palettePanel.getLeftBrush();
 			Paint(m_chunk, targetX, targetY, resultComponent);
 		}
 	};
@@ -96,6 +96,6 @@ void ChunkViewPanel::handleInputs() {
 	ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
 
 	if(isHovered && isFocused){
-		m_eventManager.handleEvent(new MouseMovedEvent(mousePositionRelative.x, mousePositionRelative.y, ImGui::IsMouseDown(ImGuiMouseButton_Left), ImGui::IsMouseDown(ImGuiMouseButton_Right)));
+		m_eventManager.handleEvent(new MouseMovedEvent(mousePositionRelative.x, mousePositionRelative.y, ImGui::IsMouseDown(ImGuiMouseButton_Left), ImGui::IsMouseDown(ImGuiMouseButton_Right), ImGui::IsMouseClicked(ImGuiMouseButton_Left), ImGui::IsMouseClicked(ImGuiMouseButton_Right)));
 	}
 }
