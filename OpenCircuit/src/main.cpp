@@ -9,6 +9,7 @@
 #include "Rendering/Renderers/ChunkRenderer.h"
 #include "Rendering/Window/SFMLWindow.h"
 #include "Simulation/Component.h"
+#include "UI/UIPanel.h"
 #include "UI/SimulationManager.h"
 #include "UI/ChunkViewPanel.h"
 #include "UI/WorkspacePanel.h"
@@ -20,17 +21,19 @@ class App {
 
 	int autoTickState = 0;
 
+    std::vector<std::unique_ptr<UIPanel>> panels;
     SimulationManager simManager;
     WorkspacePanel workspacePanel;
     PalettePanel palettePanel;
-	ChunkViewPanel viewPanel;
 
 	Workspace workspace;
 	
 public:
 
-	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace), viewPanel(*workspace.getChunk(), palettePanel, workspacePanel, workspace) {
+	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace) {
 		Component::initializeComponenets();
+
+        panels.emplace_back(std::make_unique<ChunkViewPanel>(*workspace.getChunk(), palettePanel, workspacePanel, workspace));
 
 		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });
@@ -68,12 +71,16 @@ private:
 	void drawImGui() {
 		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 		ImGui::DockSpaceOverViewport();
+
+        for(auto& child : panels) {
+            child->render();
+        }
+        
         simManager.render();
 
         workspacePanel.render();
 
         palettePanel.render();
-		viewPanel.render();
 
         ImGui::ShowDebugLogWindow();
 	}

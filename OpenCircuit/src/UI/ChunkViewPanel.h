@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+#include "UIPanel.h"
 #include "../Rendering/Window/EventManager.h"
 #include <imgui.h>
 
@@ -8,14 +9,13 @@ class PalettePanel;
 class WorkspacePanel;
 class Workspace;
 
-class ChunkViewPanel {
+class ChunkViewPanel : public UIPanel {
 public:
 	ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, WorkspacePanel& workspacePanel, Workspace& workspace) : m_chunk(chunk), m_palettePanel(palettePanel), m_workspacePanel(workspacePanel), m_workspace(workspace) { setupEvents(); }
 
-	void render();
 private:
+	virtual void onImGuiDraw() override;
 	void setupEvents();
-	void handleInputs();
 
 	EventManager m_eventManager;
 

@@ -49,12 +49,12 @@ void ChunkViewPanel::setupEvents() {
 		}
 	};
 
-	m_eventManager.addEventCallback(EventCode::M_MouseMove, mouseHandler);
-	m_eventManager.addEventCallback(EventCode::M_LeftDown, mouseHandler);
-	m_eventManager.addEventCallback(EventCode::M_RightDown, mouseHandler);
+	registerEventHandler(EventCode::M_MouseMove, mouseHandler);
+	registerEventHandler(EventCode::M_LeftDown, mouseHandler);
+	registerEventHandler(EventCode::M_RightDown, mouseHandler);
 }
 
-void ChunkViewPanel::render(){
+void ChunkViewPanel::onImGuiDraw(){
 	bool enabled = ImGui::Begin("Editor");
 
     if(!enabled){
@@ -68,7 +68,7 @@ void ChunkViewPanel::render(){
     ChunkRenderer::Render(m_texture, &m_chunk);
 
     ImGui::ImageButton(m_texture, 0);
-    handleInputs();
+    handleEvents();
 
     if(ImGui::BeginPopup("PopupChunk")){
         m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
@@ -80,18 +80,4 @@ void ChunkViewPanel::render(){
     }
 	ImGui::End();
 
-}
-
-void ChunkViewPanel::handleInputs() {
-	// Handle events
-	ImGuiIO& io = ImGui::GetIO();
-	bool isHovered = ImGui::IsItemHovered();
-	bool isFocused = ImGui::IsItemFocused();
-	ImVec2 mousePositionAbsolute = ImGui::GetMousePos();
-	ImVec2 screenPositionAbsolute = ImGui::GetItemRectMin();
-	ImVec2 mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
-
-	if(isHovered && isFocused){
-		m_eventManager.handleEvent(new MouseMovedEvent(mousePositionRelative.x, mousePositionRelative.y, ImGui::IsMouseDown(ImGuiMouseButton_Left), ImGui::IsMouseDown(ImGuiMouseButton_Right), ImGui::IsMouseClicked(ImGuiMouseButton_Left), ImGui::IsMouseClicked(ImGuiMouseButton_Right)));
-	}
 }
