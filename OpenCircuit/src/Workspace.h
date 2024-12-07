@@ -16,7 +16,6 @@ public:
 	Workspace();
 
 	Schematic* getSchematic(int i);
-
 	Schematic* getSchematic();
 
 	Chunk* getChunk();

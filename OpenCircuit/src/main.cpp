@@ -77,28 +77,7 @@ private:
         palettePanel.render();
 		viewPanel.render();
 
-
-		/*
-		//'Menu bar'
-
-		ImGui::Begin("Menu bar", NULL, menuBarFlags);
-		ImGui::BeginMenuBar();
-
-		if (ImGui::BeginMenu("File")) {
-			}
-			if (ImGui::MenuItem("New Workspace"))  newWorkspace();
-			if (ImGui::MenuItem("Save Workspace"))  newWorkspace();
-			if (ImGui::MenuItem("Open Workspace")) openWorkspaceWindow();
-			//if (ImGui::MenuItem("Save")) saveSchematic();
-
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-		ImGui::End();
-		*/
-#ifdef DEBUG
-		Debug::drawImGui(workspace, w);
-#endif // DEBUG
+        ImGui::ShowDebugLogWindow();
 	}
 };
 
