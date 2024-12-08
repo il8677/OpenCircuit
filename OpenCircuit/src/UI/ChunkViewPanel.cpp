@@ -14,9 +14,13 @@ ChunkViewPanel::ChunkViewPanel(Chunk& chunk) : m_chunk(chunk) {
 		int targetX = mbe->posx;
 		int targetY = mbe->posy;
 
-        ChunkRenderer::worldToGrid(targetX, targetY);
 
         if(mbe->left){
+            if (m_clipView)
+                ChunkRenderer::worldToGridClip(targetX, targetY, m_chunk);
+            else
+                ChunkRenderer::worldToGrid(targetX, targetY);
+
             if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
                 SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
                 m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();

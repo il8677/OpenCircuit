@@ -86,31 +86,8 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip
     int endX = CHUNK_X, endY = CHUNK_Y;
 
     if(doClip){
-        startX = CHUNK_X; startY = CHUNK_Y;
-        endX = 0; endY = 0;
-
-        for(int y = 0; y < CHUNK_Y; y++){
-            for(int x = 0; x < CHUNK_X; x++){
-                if(c->schematic->getCellId(x, y)){
-                    startX = std::min(x, startX);
-                    startY = std::min(y, startY);
-                    endX = std::max(x, endX);
-                    endY = std::max(x, endY);
-                }
-            }
-        }
-
-        if(startX > endX){
-            startX = 0;
-            endX = CHUNK_X;
-        }
-
-        if(startY > endY){
-            startY = 0;
-            endY = CHUNK_Y;
-        }
-    }
-
+		std::tie(startX, startY, endX, endY) = getChunkBounds(*c);
+	}
 
     for (int x = 0; x < CHUNK_X-startX; x++) {
         for (int y = 0; y < CHUNK_Y-startY; y++) {
@@ -134,10 +111,47 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip
 	renderTarget.draw(grid);
 }
 
-void ChunkRenderer::worldToGrid(int& x, int& y)
-{
+std::tuple<int, int, int, int>  ChunkRenderer::getChunkBounds(Chunk& c) {
+	int startX = CHUNK_X, startY = CHUNK_Y;
+	int endX = 0, endY = 0;
+
+	for(int y = 0; y < CHUNK_Y; y++){
+		for(int x = 0; x < CHUNK_X; x++){
+			if(c.schematic->getCellId(x, y)){
+				startX = std::min(x, startX);
+				startY = std::min(y, startY);
+				endX = std::max(x, endX);
+				endY = std::max(x, endY);
+			}
+		}
+	}
+
+	if(startX > endX){
+		startX = 0;
+		endX = CHUNK_X;
+	}
+
+	if(startY > endY){
+		startY = 0;
+		endY = CHUNK_Y;
+	}
+
+	return {startX, startY, endX, endY};
+}
+
+void ChunkRenderer::worldToGrid(int& x, int& y) {
 	x = x / VERTDIST;
 	y = y / VERTDIST;
+}
+
+
+void ChunkRenderer::worldToGridClip(int& x, int& y, Chunk& c) {
+	auto [startX, startY, endX, endY] = getChunkBounds(c);
+
+	worldToGrid(x, y);
+
+	x += startX;
+	y += startY;
 }
 
 sf::VertexArray ChunkRenderer::cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
