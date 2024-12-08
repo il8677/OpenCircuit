@@ -52,17 +52,17 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip
 		initialized = true;
 		
 		const sf::Color GRIDCOLOUR(255, 255, 255, 75);
-		for (int x = 0; x < CHUNK_Y; x++) {
+		for (int x = 0; x < CHUNK_Y+1; x++) {
 			int index = x * 2;
-			grid[index].position = sf::Vector2f(x * VERTDIST, 0.0f);
-			grid[index + 1].position = sf::Vector2f(x * VERTDIST, CHUNK_Y*VERTDIST);
+			grid[index].position = sf::Vector2f(x * VERTDIST+1, 0.0f);
+			grid[index + 1].position = sf::Vector2f(x * VERTDIST+1, CHUNK_Y*VERTDIST);
 
 			grid[index].color = GRIDCOLOUR;
 			grid[index + 1].color = GRIDCOLOUR;
 		}
 
-		for (int y = 0; y < CHUNK_X; y++) {
-			int index = (CHUNK_X*2) + y * 2;
+		for (int y = 0; y < CHUNK_X+1; y++) {
+			int index = (CHUNK_Y*2+2) + y * 2;
 			grid[index].position = sf::Vector2f(0.0f, y * VERTDIST);
 			grid[index + 1].position = sf::Vector2f(CHUNK_X * VERTDIST, y * VERTDIST);
 
@@ -140,5 +140,5 @@ void ChunkRenderer::worldToGrid(int& x, int& y)
 	y = y / VERTDIST;
 }
 
-sf::VertexArray ChunkRenderer::cells(sf::Quads, (CHUNK_X)* (CHUNK_Y) * 4);
-sf::VertexArray ChunkRenderer::grid(sf::Lines, 4 * CHUNK_X);
+sf::VertexArray ChunkRenderer::cells(sf::Quads, (CHUNK_X) * (CHUNK_Y) * 4);
+sf::VertexArray ChunkRenderer::grid(sf::Lines, 2 * CHUNK_X + 2 * CHUNK_Y + 4);
