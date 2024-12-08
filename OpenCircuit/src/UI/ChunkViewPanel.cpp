@@ -35,7 +35,16 @@ void ChunkViewPanel::setSchematic(Schematic* s) {
 }
 
 void ChunkViewPanel::onImGuiDraw(){
-	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str());
+    const ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
+
+    bool keepOpen = true;
+	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str(), &keepOpen, flags);
+
+    if(!keepOpen){
+        destroy();
+        ImGui::End();
+        return;
+    }
 
     if(!enabled){
         ImGui::End();
