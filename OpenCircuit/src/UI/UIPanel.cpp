@@ -7,6 +7,10 @@ void UIPanel::registerEventHandler(EventCode eventCode, EventCallback callback){
 }
 
 void UIPanel::render() {
+	while(m_jobQueue.size()){
+		m_jobQueue.front()();
+		m_jobQueue.pop();
+	}
     onImGuiDraw();
 
     for(auto& child : m_children){

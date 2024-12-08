@@ -4,6 +4,7 @@
 #include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui-SFML.h>
 
 ChunkViewPanel::ChunkViewPanel(Chunk& chunk) : m_chunk(chunk) {
@@ -44,17 +45,26 @@ void ChunkViewPanel::onImGuiDraw(){
     m_viewportSize = ImGui::GetWindowSize();;
     m_texture.create(m_viewportSize.x, m_viewportSize.y);
     m_texture.clear(sf::Color::Black);
-    ChunkRenderer::Render(m_texture, &m_chunk);
+    ChunkRenderer::Render(m_texture, &m_chunk, m_clipView);
 
     ImGui::ImageButton(m_texture, 0);
     handleEvents();
 
     if(ImGui::BeginPopup("PopupChunk")){
         if(ImGui::Button("Pin")) {
+            const ImGuiWindow* window = ImGui::GetCurrentWindow();
+            auto windowPos = window->Pos;
+            auto windowSize = window->SizeFull;
+
             ChunkViewPanel& child = emplaceChild<ChunkViewPanel, Chunk&>(*m_popupChunk);
+            child.setClipView(true);
 
             child.registerEventHandler(I_ChunkChanged, [&](Event*) {
                    child.destroy(); 
+            });
+            child.addJob([=](){
+                ImGui::SetNextWindowPos(windowPos);
+                ImGui::SetNextWindowSize(windowSize);
             });
 
             ImGui::CloseCurrentPopup();

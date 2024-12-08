@@ -10,6 +10,7 @@ public:
 	ChunkViewPanel(Chunk& chunk);
 
 	void setSchematic(Schematic* schematic);
+	void setClipView(bool clipView) { m_clipView = clipView; }
 protected:
 	virtual void onImGuiDraw() override;
 
@@ -22,4 +23,6 @@ private:
 	ImVec2 m_viewportSize;
 	sf::RenderTexture m_texture;
 	sf::RenderTexture m_popupTexture;
+
+	bool m_clipView = false;
 };

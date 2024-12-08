@@ -3,12 +3,15 @@
 
 #include <memory>
 #include <vector>
+#include <queue>
 
 class UIPanel {
 public:
     void destroy() { m_destroy = true; }
     void render();
+
     void registerEventHandler(EventCode eventCode, EventCallback callback);
+    void addJob(std::function<void()> job) { m_jobQueue.push(job); }
 
     virtual ~UIPanel()=default;
 protected:
@@ -30,5 +33,6 @@ private:
 
     bool m_destroy = false;
 
+    std::queue<std::function<void()>> m_jobQueue;
     std::vector<std::unique_ptr<UIPanel>> m_children;
 };
