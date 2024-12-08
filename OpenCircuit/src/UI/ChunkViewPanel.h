@@ -2,9 +2,9 @@
 
 #include "UIPanel.h"
 #include "../Rendering/Window/EventManager.h"
+#include "../Simulation/Chunk.h"
 #include <imgui.h>
 
-class Chunk;
 class PalettePanel;
 class WorkspacePanel;
 class SimulationManager;
@@ -12,7 +12,7 @@ class Workspace;
 
 class ChunkViewPanel : public UIPanel {
 public:
-	ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel); 
+	ChunkViewPanel(PalettePanel& palettePanel); 
     void setSchematic(Schematic* schematic);
 	void setSelectedScematic(Schematic* schematic);
 
@@ -22,9 +22,9 @@ private:
 
 	EventManager m_eventManager;
 
-	Chunk& m_chunk;
 	PalettePanel& m_palettePanel;
 	SimulationManager& m_simulationManager;
+	Chunk m_chunk;
 
 	Schematic* m_selectedSchematic=nullptr;
 	Chunk* m_popupChunk=nullptr;

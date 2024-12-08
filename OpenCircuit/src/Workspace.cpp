@@ -6,21 +6,11 @@
 Workspace::Workspace() 
 {
 	schematics.push_back(new Schematic("Base schematic"));
-	workingChunk = Chunk(schematics[0]);
 }
 
 Schematic* Workspace::getSchematic(int i)
 {
 	return schematics[i];
-}
-
-Schematic* Workspace::getSchematic() {
-	return workingChunk.schematic;
-}
-
-
-Chunk* Workspace::getChunk() {
-	return &workingChunk;
 }
 
 void Workspace::deleteSchematic(int i)
@@ -35,12 +25,6 @@ void Workspace::deleteSchematic(int i)
 		schematics.erase(schematics.begin() + i);		
 	}
 	*/
-}
-
-void Workspace::setWorkingSchematic(int i)
-{
-	workingChunk = Chunk(schematics[i]);
-	workingChunkId = i;
 }
 
 int Workspace::schematicCount()
@@ -59,17 +43,10 @@ void Workspace::newSchematic(std::string name)
 	}
 
 	schematics.push_back(new Schematic(name));
-	setWorkingSchematic(schematics.size()-1);
 }
 
 void Workspace::moveUp(int i) {
 	std::swap(schematics[i], schematics[i + 1]);
-	setWorkingSchematic(workingChunkId);
-}
-
-int Workspace::getWorkingChunk()
-{
-	return workingChunkId;
 }
 
 void Workspace::save(std::ofstream& fs)

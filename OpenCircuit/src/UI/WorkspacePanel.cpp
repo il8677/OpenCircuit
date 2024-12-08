@@ -54,12 +54,10 @@ void WorkspacePanel::onImGuiDraw(){
 
             }
             //Subcircuits can only be placed in circuits *below* the current circuit
-            if (i < m_workspace.getWorkingChunk()) {
-
-                ImGui::SameLine();
-                if (ImGui::Button("Place")) {
-                    dispatchEvent(new SchematicPlaceEvent(m_workspace.getSchematic(i)));
-                }
+            // At some point the UI should enforce that
+            ImGui::SameLine();
+            if (ImGui::Button("Place")) {
+                dispatchEvent(new SchematicPlaceEvent(m_workspace.getSchematic(i)));
             }
             ImGui::PopID();
         }

@@ -9,23 +9,15 @@
 class Workspace
 {
 	std::vector<Schematic*> schematics;
-	
-	Chunk workingChunk;
-	int workingChunkId;
 public:
 	Workspace();
 
 	Schematic* getSchematic(int i);
 	Schematic* getSchematic();
 
-	Chunk* getChunk();
-
 	void deleteSchematic(int i);
 
-	void setWorkingSchematic(int i);
-
 	int schematicCount();
-	int getWorkingChunk();
 
 	void moveUp(int i);
 
