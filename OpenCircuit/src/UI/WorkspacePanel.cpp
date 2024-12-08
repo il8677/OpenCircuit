@@ -44,7 +44,8 @@ void WorkspacePanel::onImGuiDraw(){
             ImGui::SameLine();
 
             if (ImGui::Button("Edit")) {
-                dispatchEvent(new SchematicChangedEvent(m_workspace.getSchematic(i)));
+                auto e = SchematicChangedEvent(m_workspace.getSchematic(i));
+                dispatchEvent(&e);
             }
             if (i > 0) {
                 ImGui::SameLine();
@@ -57,7 +58,8 @@ void WorkspacePanel::onImGuiDraw(){
             // At some point the UI should enforce that
             ImGui::SameLine();
             if (ImGui::Button("Place")) {
-                dispatchEvent(new SchematicPlaceEvent(m_workspace.getSchematic(i)));
+                auto e = SchematicPlaceEvent(m_workspace.getSchematic(i));
+                dispatchEvent(&e);
             }
             ImGui::PopID();
         }

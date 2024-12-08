@@ -28,11 +28,13 @@ ChunkViewPanel::ChunkViewPanel(Chunk& chunk) : m_chunk(chunk) {
 }
 
 void ChunkViewPanel::setSchematic(Schematic* s) {
+    auto e = Event(I_ChunkChanged);
+    dispatchEvent(&e);
     m_chunk = Chunk(s);
 }
 
 void ChunkViewPanel::onImGuiDraw(){
-	bool enabled = ImGui::Begin("Editor");
+	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str());
 
     if(!enabled){
         ImGui::End();
@@ -48,6 +50,15 @@ void ChunkViewPanel::onImGuiDraw(){
     handleEvents();
 
     if(ImGui::BeginPopup("PopupChunk")){
+        if(ImGui::Button("Pin")) {
+            ChunkViewPanel& child = emplaceChild<ChunkViewPanel, Chunk&>(*m_popupChunk);
+
+            child.registerEventHandler(I_ChunkChanged, [&](Event*) {
+                   child.destroy(); 
+            });
+
+            ImGui::CloseCurrentPopup();
+        }
         m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
         m_popupTexture.clear(sf::Color::Black);
         ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);

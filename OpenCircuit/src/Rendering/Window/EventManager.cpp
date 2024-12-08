@@ -8,8 +8,13 @@ void EventManager::addEventCallback(int eventId, EventCallback ec) {
 }
 
 void EventManager::handleEvent(Event* event) {
+	handleEventPassthrough(event);
+	delete event;
+}
+
+
+void EventManager::handleEventPassthrough(Event* event) {
 	for (int i = 0; i < eventCallbacks[event->id].size(); i++) {
 		eventCallbacks[event->id][i](event);
 	}
-	delete event;
 }

@@ -203,5 +203,6 @@ enum EventCode
     // ---------------- UI Events ----------------
 
     I_SchematicChanged = 300,
-    I_SchematicPlaced
+    I_SchematicPlaced,
+    I_ChunkChanged
 };

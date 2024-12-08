@@ -15,5 +15,6 @@ class EventManager
 public:
 	void addEventCallback(int eventId, EventCallback ec);
 
-	void handleEvent(Event* eventId);
+	void handleEvent(Event* event);
+	void handleEventPassthrough(Event* event);
 };
