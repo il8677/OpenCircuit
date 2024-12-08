@@ -15,6 +15,9 @@ protected:
 	virtual void onImGuiDraw() override;
 
 private:
+	void drawPopup();
+	void pinPopup();
+
 	Chunk& m_chunk;
 
 	Chunk* m_popupChunk=nullptr;

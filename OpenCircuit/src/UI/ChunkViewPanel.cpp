@@ -51,31 +51,39 @@ void ChunkViewPanel::onImGuiDraw(){
     handleEvents();
 
     if(ImGui::BeginPopup("PopupChunk")){
-        if(ImGui::Button("Pin")) {
-            const ImGuiWindow* window = ImGui::GetCurrentWindow();
-            auto windowPos = window->Pos;
-            auto windowSize = window->SizeFull;
-
-            ChunkViewPanel& child = emplaceChild<ChunkViewPanel, Chunk&>(*m_popupChunk);
-            child.setClipView(true);
-
-            child.registerEventHandler(I_ChunkChanged, [&](Event*) {
-                   child.destroy(); 
-            });
-            child.addJob([=](){
-                ImGui::SetNextWindowPos(windowPos);
-                ImGui::SetNextWindowSize(windowSize);
-            });
-
-            ImGui::CloseCurrentPopup();
-        }
-        m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
-        m_popupTexture.clear(sf::Color::Black);
-        ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
-
-        ImGui::ImageButton(m_popupTexture, 0);
+        drawPopup();
         ImGui::EndPopup();
     }
 	ImGui::End();
 
+}
+
+void ChunkViewPanel::drawPopup() {
+    if(ImGui::Button("Pin")) {
+        pinPopup();
+    }
+    m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
+    m_popupTexture.clear(sf::Color::Black);
+    ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
+
+    ImGui::ImageButton(m_popupTexture, 0);
+}
+
+void ChunkViewPanel::pinPopup() {
+    const ImGuiWindow* window = ImGui::GetCurrentWindow();
+    auto windowPos = window->Pos;
+    auto windowSize = window->SizeFull;
+
+    ChunkViewPanel& child = emplaceChild<ChunkViewPanel, Chunk&>(*m_popupChunk);
+    child.setClipView(true);
+
+    child.registerEventHandler(I_ChunkChanged, [&](Event*) {
+            child.destroy(); 
+    });
+    child.addJob([=](){
+        ImGui::SetNextWindowPos(windowPos);
+        ImGui::SetNextWindowSize(windowSize);
+    });
+
+    ImGui::CloseCurrentPopup();
 }
