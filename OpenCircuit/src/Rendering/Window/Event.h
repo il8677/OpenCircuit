@@ -1,4 +1,5 @@
 #pragma once
+
 class Event
 {
 public:
@@ -22,6 +23,13 @@ public:
     int posx, posy;
 
     MouseMovedEvent(int x, int y, bool l, bool r, bool ld, bool rd);
+};
+
+class Schematic;
+struct SchematicChangedEvent : public Event {
+    SchematicChangedEvent(Schematic* s);
+
+    Schematic* changedSchematic;
 };
 
 enum EventCode
@@ -184,5 +192,9 @@ enum EventCode
     M_LeftDown = 200,
     M_RightDown,
 
-    M_MouseMove
+    M_MouseMove,
+
+    // ---------------- UI Events ----------------
+
+    I_SchematicChanged = 300
 };

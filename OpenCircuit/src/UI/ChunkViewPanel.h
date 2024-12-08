@@ -13,6 +13,8 @@ class ChunkViewPanel : public UIPanel {
 public:
 	ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, WorkspacePanel& workspacePanel, Workspace& workspace) : m_chunk(chunk), m_palettePanel(palettePanel), m_workspacePanel(workspacePanel), m_workspace(workspace) { setupEvents(); }
 
+    void setSchematic(Schematic* schematic);
+
 private:
 	virtual void onImGuiDraw() override;
 	void setupEvents();

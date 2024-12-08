@@ -18,6 +18,10 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 		c.schematic->deleteSubcircuit(targetX, targetY);
 }
 
+void ChunkViewPanel::setSchematic(Schematic* s) {
+    m_chunk = Chunk(s);
+}
+
 void ChunkViewPanel::setupEvents() {
 	auto mouseHandler = [this](Event* e) {
 		MouseMovedEvent* mbe = (MouseMovedEvent*) e;

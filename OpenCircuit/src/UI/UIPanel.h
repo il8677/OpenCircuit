@@ -7,11 +7,11 @@
 class UIPanel {
 public:
     void render();
+    void registerEventHandler(EventCode eventCode, EventCallback callback);
 protected:
     UIPanel()=default;
 
     void handleEvents();
-    void registerEventHandler(EventCode eventCode, EventCallback callback);
     void dispatchEvent(Event* e) { m_eventManager.handleEvent(e); }
 
     template <class T, typename... Args>

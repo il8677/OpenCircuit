@@ -33,7 +33,14 @@ public:
 	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace) {
 		Component::initializeComponenets();
 
-        panels.emplace_back(std::make_unique<ChunkViewPanel>(*workspace.getChunk(), palettePanel, workspacePanel, workspace));
+        ChunkViewPanel* chunkView = reinterpret_cast<ChunkViewPanel*>(panels.emplace_back(std::make_unique<ChunkViewPanel>(*workspace.getChunk(), palettePanel, workspacePanel, workspace)
+).get());
+
+        workspacePanel.registerEventHandler(I_SchematicChanged, [=](Event* e) {
+            SchematicChangedEvent* sce = reinterpret_cast<SchematicChangedEvent*>(e);
+
+            chunkView->setSchematic(sce->changedSchematic);
+        });
 
 		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });

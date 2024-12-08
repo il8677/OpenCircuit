@@ -44,7 +44,7 @@ void WorkspacePanel::onImGuiDraw(){
             ImGui::SameLine();
 
             if (ImGui::Button("Edit")) {
-                m_workspace.setWorkingSchematic(i);
+                dispatchEvent(new SchematicChangedEvent(m_workspace.getSchematic(i)));
             }
             if (i > 0) {
                 ImGui::SameLine();
