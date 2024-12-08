@@ -82,7 +82,10 @@ SFMLWindow::SFMLWindow(int x, int y) : _window(sf::VideoMode(x, y), "OpenCircuit
 {
 	_window.setVerticalSyncEnabled(true);
 	
-	ImGui::SFML::Init(_window);
+	if(!ImGui::SFML::Init(_window)) {
+		exit(0);
+	}
+
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     

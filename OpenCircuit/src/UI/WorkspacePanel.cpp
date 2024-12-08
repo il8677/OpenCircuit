@@ -40,7 +40,7 @@ void WorkspacePanel::onImGuiDraw(){
                 m_workspace.moveUp(i);
             }
             ImGui::SameLine();
-            ImGui::Text(m_workspace.getSchematic(i)->getName().c_str());
+            ImGui::Text("%s", m_workspace.getSchematic(i)->getName().c_str());
             ImGui::SameLine();
 
             if (ImGui::Button("Edit")) {

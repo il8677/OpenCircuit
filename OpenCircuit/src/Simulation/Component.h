@@ -87,7 +87,7 @@ public:
 	std::vector<int> outy;
 
 	virtual int id() override { return 999; }
-	Component* copy(){
+	Component* copy() override {
 		return nullptr;
 	};
 

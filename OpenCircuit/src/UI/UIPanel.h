@@ -8,6 +8,8 @@ class UIPanel {
 public:
     void render();
     void registerEventHandler(EventCode eventCode, EventCallback callback);
+
+    virtual ~UIPanel()=default;
 protected:
     UIPanel()=default;
 

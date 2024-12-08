@@ -11,7 +11,7 @@ ImVec4 vec4ToImVec4(vec4<unsigned char> v4) {
 void PalettePanel::render(){
 		ImGui::Begin("Palette");
 		//Bad practice but whatever
-		static char* componentTooltips[7] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not", "Junction"};
+		static char const* componentTooltips[7] = { "Nothing", "Wire", "Input", "Output", "Transistor", "Not", "Junction"};
 		for (int i = 1; i < 7; i++) {
 			ImGui::PushID(i);
 			ImGui::SameLine();
@@ -21,7 +21,7 @@ void PalettePanel::render(){
 			if (ImGui::Button(" ", ImVec2(20, 20)))
 				m_leftBrush = i;
 			if (ImGui::IsItemHovered())
-				ImGui::SetTooltip(componentTooltips[i]);
+				ImGui::SetTooltip("%s", componentTooltips[i]);
 
 			ImGui::PopStyleColor(3);
 			ImGui::PopID();
