@@ -11,8 +11,9 @@ class Workspace;
 
 class ChunkViewPanel : public UIPanel {
 public:
-	ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, WorkspacePanel& workspacePanel, Workspace& workspace); 
+	ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel); 
     void setSchematic(Schematic* schematic);
+	void setSelectedScematic(Schematic* schematic);
 
 private:
 	virtual void onImGuiDraw() override;
@@ -20,13 +21,13 @@ private:
 
 	EventManager m_eventManager;
 
-	WorkspacePanel& m_workspacePanel;
 	PalettePanel& m_palettePanel;
 	Chunk& m_chunk;
-	Workspace& m_workspace;
 
+	Schematic* m_selectedSchematic=nullptr;
 	Chunk* m_popupChunk=nullptr;
 
+	// Rendering stuff
 	ImVec2 m_viewportSize;
 	sf::RenderTexture m_texture;
 	sf::RenderTexture m_popupTexture;

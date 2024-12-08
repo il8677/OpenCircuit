@@ -32,6 +32,12 @@ struct SchematicChangedEvent : public Event {
     Schematic* changedSchematic;
 };
 
+struct SchematicPlaceEvent : public Event {
+    SchematicPlaceEvent(Schematic* s);
+
+    Schematic* placedSchematic;
+};
+
 enum EventCode
 {
     //Key Down
@@ -196,5 +202,6 @@ enum EventCode
 
     // ---------------- UI Events ----------------
 
-    I_SchematicChanged = 300
+    I_SchematicChanged = 300,
+    I_SchematicPlaced
 };

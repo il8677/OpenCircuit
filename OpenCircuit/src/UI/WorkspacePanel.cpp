@@ -58,7 +58,7 @@ void WorkspacePanel::onImGuiDraw(){
 
                 ImGui::SameLine();
                 if (ImGui::Button("Place")) {
-                    m_subcircuitPlacement = i;
+                    dispatchEvent(new SchematicPlaceEvent(m_workspace.getSchematic(i)));
                 }
             }
             ImGui::PopID();

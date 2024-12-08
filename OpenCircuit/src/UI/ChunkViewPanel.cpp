@@ -18,8 +18,8 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 		c.schematic->deleteSubcircuit(targetX, targetY);
 }
 
-ChunkViewPanel::ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, WorkspacePanel& workspacePanel, Workspace& workspace) : 
-	m_chunk(chunk), m_palettePanel(palettePanel), m_workspacePanel(workspacePanel), m_workspace(workspace) { 
+ChunkViewPanel::ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel) : 
+	m_chunk(chunk), m_palettePanel(palettePanel) { 
 
 	setupEvents(); 
 }
@@ -27,6 +27,10 @@ ChunkViewPanel::ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, Workspa
 
 void ChunkViewPanel::setSchematic(Schematic* s) {
     m_chunk = Chunk(s);
+}
+
+void ChunkViewPanel::setSelectedScematic(Schematic* s) {
+	m_selectedSchematic = s;
 }
 
 void ChunkViewPanel::setupEvents() {
@@ -38,9 +42,9 @@ void ChunkViewPanel::setupEvents() {
 
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
-		if (mbe->left && m_workspacePanel.hasSelectedSubcircuit()){
-			Schematic& s = *m_workspace.getSchematic(m_workspacePanel.popSelectedSubcircuit());
-			m_chunk.schematic->placeSubcircuit(targetX, targetY, s);
+		if (mbe->left && m_selectedSchematic){
+			m_chunk.schematic->placeSubcircuit(targetX, targetY, *m_selectedSchematic);
+			m_selectedSchematic = nullptr;
 			return;
 		}
 

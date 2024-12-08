@@ -9,3 +9,7 @@ MouseMovedEvent::MouseMovedEvent(int x, int y, bool l, bool r, bool ld, bool rd)
 SchematicChangedEvent::SchematicChangedEvent(Schematic* s) : Event(I_SchematicChanged), changedSchematic(s) {
 
 }
+
+SchematicPlaceEvent::SchematicPlaceEvent(Schematic* s) : Event(I_SchematicPlaced), placedSchematic(s) {
+
+}
