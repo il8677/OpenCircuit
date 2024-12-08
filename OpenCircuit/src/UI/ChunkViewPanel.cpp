@@ -6,6 +6,7 @@
 
 #include "PalettePanel.h"
 #include "WorkspacePanel.h"
+#include "SimulationManager.h"
 #include "../Workspace.h"
 
 #include <imgui.h>
@@ -19,8 +20,8 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 }
 
 ChunkViewPanel::ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel) : 
-	m_chunk(chunk), m_palettePanel(palettePanel) { 
-
+	m_chunk(chunk), m_palettePanel(palettePanel),
+	m_simulationManager(emplaceChild<SimulationManager, Chunk&>(m_chunk)) { 
 	setupEvents(); 
 }
 
@@ -70,6 +71,14 @@ void ChunkViewPanel::setupEvents() {
 }
 
 void ChunkViewPanel::onImGuiDraw(){
+	if (m_simulationManager.doAutotick()) {
+		autoTickState++;
+		if (autoTickState > m_simulationManager.getAutotickAmount()) {
+			autoTickState = 0;
+			m_chunk.tick();
+		}
+	}
+
 	bool enabled = ImGui::Begin("Editor");
 
     if(!enabled){

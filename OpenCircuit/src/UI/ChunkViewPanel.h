@@ -7,6 +7,7 @@
 class Chunk;
 class PalettePanel;
 class WorkspacePanel;
+class SimulationManager;
 class Workspace;
 
 class ChunkViewPanel : public UIPanel {
@@ -21,11 +22,14 @@ private:
 
 	EventManager m_eventManager;
 
-	PalettePanel& m_palettePanel;
 	Chunk& m_chunk;
+	PalettePanel& m_palettePanel;
+	SimulationManager& m_simulationManager;
 
 	Schematic* m_selectedSchematic=nullptr;
 	Chunk* m_popupChunk=nullptr;
+
+	int autoTickState = 0;
 
 	// Rendering stuff
 	ImVec2 m_viewportSize;

@@ -19,10 +19,7 @@
 class App {
 	SFMLWindow w;
 
-	int autoTickState = 0;
-
     std::vector<std::unique_ptr<UIPanel>> panels;
-    SimulationManager simManager;
     WorkspacePanel workspacePanel;
     PalettePanel palettePanel;
 
@@ -30,7 +27,7 @@ class App {
 	
 public:
 
-	App() : w(1920, 1080), simManager(workspace), workspacePanel(workspace) {
+	App() : w(1920, 1080), workspacePanel(workspace) {
 		Component::initializeComponenets();
 
         ChunkViewPanel* chunkView = reinterpret_cast<ChunkViewPanel*>(panels.emplace_back(std::make_unique<ChunkViewPanel>(*workspace.getChunk(), palettePanel)
@@ -65,13 +62,6 @@ public:
 
 			w.endDraw();
 
-			if (simManager.doAutotick()) {
-				autoTickState++;
-				if (autoTickState > simManager.getAutotickAmount()) {
-					autoTickState = 0;
-					workspace.getChunk()->tick();
-				}
-			}
 		}
 	}
 	
@@ -90,8 +80,6 @@ private:
             child->render();
         }
         
-        simManager.render();
-
         workspacePanel.render();
 
         palettePanel.render();

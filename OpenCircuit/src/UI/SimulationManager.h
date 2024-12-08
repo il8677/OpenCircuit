@@ -1,10 +1,10 @@
 #include "UIPanel.h"
 
-class Workspace;
+class Chunk;
 
 class SimulationManager : public UIPanel {
 public:
-    SimulationManager(Workspace& ws) : m_workspace(ws){}
+    SimulationManager(Chunk& chunk) : m_chunk(chunk) {}
 
     bool doAutotick() { return m_doAutotick; }
     int  getAutotickAmount() { return m_autoTickAmount; }
@@ -12,7 +12,7 @@ public:
 private:
     void onImGuiDraw() override;
 
-    Workspace& m_workspace;
+    Chunk& m_chunk;
 
 	bool m_doAutotick = false;
 	int  m_autoTickAmount = 60;

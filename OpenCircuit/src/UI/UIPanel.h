@@ -18,7 +18,7 @@ protected:
 
     template <class T, typename... Args>
     T& emplaceChild(Args... args){
-        return *m_children.emplace_back(std::make_unique<T>(std::forward(args...)));
+        return reinterpret_cast<T&>(*m_children.emplace_back(std::make_unique<T>(std::forward<Args>(args)...)));
     }
     
 private:
