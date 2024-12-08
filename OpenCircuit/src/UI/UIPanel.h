@@ -27,7 +27,6 @@ protected:
 
     
 private:
-    void removeChild(UIPanel* child);
     virtual void onImGuiDraw()=0;
     EventManager m_eventManager;
 

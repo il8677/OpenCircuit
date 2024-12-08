@@ -13,12 +13,13 @@ void UIPanel::render() {
 	}
     onImGuiDraw();
 
-    for(auto& child : m_children){
-		if(child->m_destroy){
-			removeChild(child.get());
+    for(auto it = m_children.begin(); it != m_children.end(); ++it){
+		if((*it)->m_destroy){
+			it = m_children.erase(it);
+			it--;
 			continue;
 		}
-        child->render();
+        (*it)->render();
     }
 }
 
@@ -42,11 +43,4 @@ void UIPanel::dispatchEvent(Event* e) {
 	for(auto& child : m_children) {
 		child->dispatchEvent(e);
 	}
-}
-
-void UIPanel::removeChild(UIPanel* child) {
-	m_children.erase(std::remove_if(m_children.begin(), m_children.end(), 
-	[&](const std::unique_ptr<UIPanel>& el){
-		return el.get() == child;
-	}), m_children.end());
 }
