@@ -16,7 +16,7 @@ protected:
 
     template <class T, typename... Args>
     T& emplaceChild(Args... args){
-        return *children.emplace_back(std::make_unique<T>(std::forward(args)));
+        return *m_children.emplace_back(std::make_unique<T>(std::forward(args...)));
     }
     
 private:
