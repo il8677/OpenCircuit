@@ -5,7 +5,7 @@
 
 #include "../Workspace.h"
 
-void SimulationManager::render(){
+void SimulationManager::onImGuiDraw(){
     ImGui::Begin("Simulation Manager");
     if (ImGui::CollapsingHeader("Inputs")) {
         std::vector<char*> inputs = m_workspace.getChunk()->getInputs();
