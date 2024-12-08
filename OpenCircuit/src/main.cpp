@@ -11,7 +11,7 @@
 #include "Simulation/Component.h"
 #include "UI/UIPanel.h"
 #include "UI/SimulationManager.h"
-#include "UI/ChunkViewPanel.h"
+#include "UI/ChunkViewEditorPanel.h"
 #include "UI/WorkspacePanel.h"
 #include "UI/PalettePanel.h"
 #include "Workspace.h"
@@ -30,7 +30,7 @@ public:
 	App() : w(1920, 1080), workspacePanel(workspace) {
 		Component::initializeComponenets();
 
-        ChunkViewPanel* chunkView = reinterpret_cast<ChunkViewPanel*>(panels.emplace_back(std::make_unique<ChunkViewPanel>(palettePanel)).get());
+        ChunkViewEditorPanel* chunkView = reinterpret_cast<ChunkViewEditorPanel*>(panels.emplace_back(std::make_unique<ChunkViewEditorPanel>(palettePanel)).get());
 		chunkView->setSchematic(workspace.getSchematic(0));
 
         workspacePanel.registerEventHandler(I_SchematicChanged, [=](Event* e) {
