@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-void WorkspacePanel::render(){
+void WorkspacePanel::onImGuiDraw(){
     const ImGuiWindowFlags menuBarFlags=0;
     ImGui::Begin("Workspace", NULL, menuBarFlags);
     ImGui::Text("Schematics");

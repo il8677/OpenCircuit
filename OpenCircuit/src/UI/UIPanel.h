@@ -12,6 +12,7 @@ protected:
 
     void handleEvents();
     void registerEventHandler(EventCode eventCode, EventCallback callback);
+    void dispatchEvent(Event* e) { m_eventManager.handleEvent(e); }
 
     template <class T, typename... Args>
     T& emplaceChild(Args... args){
