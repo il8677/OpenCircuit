@@ -18,6 +18,13 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 		c.schematic->deleteSubcircuit(targetX, targetY);
 }
 
+ChunkViewPanel::ChunkViewPanel(Chunk& chunk, PalettePanel& palettePanel, WorkspacePanel& workspacePanel, Workspace& workspace) : 
+	m_chunk(chunk), m_palettePanel(palettePanel), m_workspacePanel(workspacePanel), m_workspace(workspace) { 
+
+	setupEvents(); 
+}
+
+
 void ChunkViewPanel::setSchematic(Schematic* s) {
     m_chunk = Chunk(s);
 }
