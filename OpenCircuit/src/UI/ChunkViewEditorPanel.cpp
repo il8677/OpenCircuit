@@ -1,17 +1,14 @@
 #include "ChunkViewEditorPanel.h"
 
-#include "../Simulation/Chunk.h"
 #include "../Simulation/Schematic.h"
 #include "../Simulation/Subcircuit.h"
-#include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include "PalettePanel.h"
 #include "WorkspacePanel.h"
 #include "SimulationManager.h"
-#include "../Workspace.h"
+#include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include <imgui.h>
-#include <imgui-SFML.h>
 
 void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 	if (c.schematic->getCellId(targetX, targetY) != 999)
@@ -21,16 +18,13 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 }
 
 ChunkViewEditorPanel::ChunkViewEditorPanel(PalettePanel& palettePanel) : 
+	ChunkViewPanel(m_chunk),
 	m_palettePanel(palettePanel),
 	m_simulationManager(emplaceChild<SimulationManager, Chunk&>(m_chunk)) { 
 
 	setupEvents(); 
 }
 
-
-void ChunkViewEditorPanel::setSchematic(Schematic* s) {
-    m_chunk = Chunk(s);
-}
 
 void ChunkViewEditorPanel::setSelectedScematic(Schematic* s) {
 	m_selectedSchematic = s;
@@ -51,17 +45,8 @@ void ChunkViewEditorPanel::setupEvents() {
 			return;
 		}
 
-		if(mbe->isLeftDown){
-			if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
-				SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
-				m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
-                ImGui::OpenPopup("PopupChunk");
-                return;
-			}
-		}
 
 		if (mbe->right || mbe->left) {
-            m_popupChunk = nullptr;
 			int resultComponent = mbe->right ? m_palettePanel.getRightBrush() : m_palettePanel.getLeftBrush();
 			Paint(m_chunk, targetX, targetY, resultComponent);
 		}
@@ -81,29 +66,5 @@ void ChunkViewEditorPanel::onImGuiDraw(){
 		}
 	}
 
-	bool enabled = ImGui::Begin("Editor");
-
-    if(!enabled){
-        ImGui::End();
-        return;
-    }
-
-    m_viewportSize = ImGui::GetWindowSize();;
-    m_texture.create(m_viewportSize.x, m_viewportSize.y);
-    m_texture.clear(sf::Color::Black);
-    ChunkRenderer::Render(m_texture, &m_chunk);
-
-    ImGui::ImageButton(m_texture, 0);
-    handleEvents();
-
-    if(ImGui::BeginPopup("PopupChunk")){
-        m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
-        m_popupTexture.clear(sf::Color::Black);
-        ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
-
-        ImGui::ImageButton(m_popupTexture, 0);
-        ImGui::EndPopup();
-    }
-	ImGui::End();
-
+	ChunkViewPanel::onImGuiDraw();
 }
