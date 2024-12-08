@@ -7,7 +7,7 @@ class Chunk;
 
 class ChunkViewPanel : public UIPanel {
 public:
-	ChunkViewPanel(Chunk& chunk);
+	ChunkViewPanel(std::string name, Chunk& chunk);
 
 	void setSchematic(Schematic* schematic);
 	void setClipView(bool clipView) { m_clipView = clipView; }
@@ -26,6 +26,8 @@ private:
 	ImVec2 m_viewportSize;
 	sf::RenderTexture m_texture;
 	sf::RenderTexture m_popupTexture;
+
+	std::string m_name;
 
 	bool m_clipView = false;
 };

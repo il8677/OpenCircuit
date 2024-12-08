@@ -17,8 +17,8 @@ void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
 		c.schematic->deleteSubcircuit(targetX, targetY);
 }
 
-ChunkViewEditorPanel::ChunkViewEditorPanel(PalettePanel& palettePanel) : 
-	ChunkViewPanel(m_chunk),
+ChunkViewEditorPanel::ChunkViewEditorPanel(std::string name, PalettePanel& palettePanel) : 
+	ChunkViewPanel(name, m_chunk),
 	m_palettePanel(palettePanel),
 	m_simulationManager(emplaceChild<SimulationManager, Chunk&>(m_chunk)) { 
 

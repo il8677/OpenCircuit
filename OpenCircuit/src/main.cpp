@@ -30,7 +30,7 @@ public:
 	App() : w(1920, 1080), workspacePanel(workspace) {
 		Component::initializeComponenets();
 
-        ChunkViewEditorPanel* chunkView = reinterpret_cast<ChunkViewEditorPanel*>(panels.emplace_back(std::make_unique<ChunkViewEditorPanel>(palettePanel)).get());
+        ChunkViewEditorPanel* chunkView = reinterpret_cast<ChunkViewEditorPanel*>(panels.emplace_back(std::make_unique<ChunkViewEditorPanel>("Editor", palettePanel)).get());
 		chunkView->setSchematic(workspace.getSchematic(0));
 
         workspacePanel.registerEventHandler(I_SchematicChanged, [=](Event* e) {

@@ -8,7 +8,7 @@ class Workspace;
 
 class ChunkViewEditorPanel : public ChunkViewPanel {
 public:
-	ChunkViewEditorPanel(PalettePanel& palettePanel); 
+	ChunkViewEditorPanel(std::string name, PalettePanel& palettePanel); 
     
 	void setSelectedScematic(Schematic* schematic);
 

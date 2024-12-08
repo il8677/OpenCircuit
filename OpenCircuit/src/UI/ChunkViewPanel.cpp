@@ -7,7 +7,11 @@
 #include <imgui_internal.h>
 #include <imgui-SFML.h>
 
-ChunkViewPanel::ChunkViewPanel(Chunk& chunk) : m_chunk(chunk) {
+#include <sstream>
+#include <iomanip>
+
+ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk) 
+    : m_name(name), m_chunk(chunk) {
 	registerEventHandler(EventCode::M_MouseMove, [&](Event* e){
 		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
 
@@ -42,7 +46,7 @@ void ChunkViewPanel::onImGuiDraw(){
     const ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
 
     bool keepOpen = true;
-	bool enabled = ImGui::Begin(m_chunk.schematic->getName().c_str(), &keepOpen, flags);
+	bool enabled = ImGui::Begin(m_name.c_str(), &keepOpen, flags);
 
     if(!keepOpen){
         destroy();
@@ -87,9 +91,13 @@ void ChunkViewPanel::pinPopup() {
     auto windowPos = window->Pos;
     auto windowSize = window->SizeFull;
 
-    ChunkViewPanel& child = emplaceChild<ChunkViewPanel, Chunk&>(*m_popupChunk);
-    child.setClipView(true);
+    std::stringstream childName; 
+    
+    childName << m_name << "." << m_popupChunk->schematic->getName();
+    childName << std::hex << (reinterpret_cast<long>(m_popupChunk)&0xff);
+    ChunkViewPanel& child = emplaceChild<ChunkViewPanel>(childName.str(), *m_popupChunk);
 
+    child.setClipView(true);
     child.registerEventHandler(I_ChunkChanged, [&](Event*) {
             child.destroy(); 
     });

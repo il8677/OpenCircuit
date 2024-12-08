@@ -21,7 +21,7 @@ protected:
     void dispatchEvent(Event* e); 
 
     template <class T, typename... Args>
-    T& emplaceChild(Args... args){
+    T& emplaceChild(Args&&... args){
         return reinterpret_cast<T&>(*m_children.emplace_back(std::make_unique<T>(std::forward<Args>(args)...)));
     }
 
