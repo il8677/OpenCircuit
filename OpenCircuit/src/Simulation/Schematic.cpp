@@ -51,8 +51,9 @@ int Schematic::outputCount() {
 
 int Schematic::getCellId(int x, int y) const
 {
-	//if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
-	return cMap[x][y]->id();
+	if (x >= 0 && y >= 0 && y < CHUNK_Y && x < CHUNK_X)
+		return cMap[x][y]->id();
+	return -1;
 }
 
 void Schematic::setComponent(Component* c, int x, int y) {
