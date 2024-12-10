@@ -57,4 +57,6 @@ public:
 	~Chunk();
 
 	Chunk& operator=(const Chunk&);
+
+	friend class Debug;
 };

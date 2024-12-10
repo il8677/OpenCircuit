@@ -7,6 +7,7 @@
 
 #include "Rendering/Window/Event.h"
 #include "Rendering/Renderers/ChunkRenderer.h"
+#include "Rendering/Renderers/DebugRenderer.h"
 #include "Rendering/Window/SFMLWindow.h"
 #include "Simulation/Component.h"
 #include "UI/UIPanel.h"
@@ -81,10 +82,11 @@ private:
         }
         
         workspacePanel.render();
-
         palettePanel.render();
 
-        ImGui::ShowDebugLogWindow();
+		ImGui::Begin("Debug");
+		ImGui::Checkbox("Debug Chunks:", &Debug::drawDebugChunks);
+		ImGui::End();
 	}
 };
 

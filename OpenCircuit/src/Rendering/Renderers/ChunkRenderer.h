@@ -3,6 +3,7 @@
 #include "../Window/SFMLWindow.h"
 #include <tuple>
 
+#define VERTDIST 31
 
 class Chunk;
 
