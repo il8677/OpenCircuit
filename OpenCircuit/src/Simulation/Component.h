@@ -3,23 +3,29 @@
 
 #include <vector>
 
-//0 = nothing
-//1 = wire
-//2 = input
-//3 = outputs
-//4 = transistor
-//5 = Not
-//6 = Junction
+enum ComponentType {
+	NOCOMPONENT=0,
+	WIRE,
+	INPUT,
+	OUTPUT,
+	TRANSISTOR,
+	NOT,
+	JUNCTION,
+	CONSTANT,
+	WIRE_INPUT,
+
+	SUBCIRCUIT_PROXY=999
+};
 
 #define COMPONENTDEF(identifier, name) \
 	public: \
-		virtual int id() override{return identifier;} \
+		virtual ComponentType id() override{return identifier;} \
 		virtual Component* copy() override{return new name();}
 
 class Component
 {
 public:
-	virtual int id() { return 0;}
+	virtual ComponentType id() { return NOCOMPONENT;}
 	virtual Component* copy() { return new Component(); }
 
 	// Returns what the updated state would be after a change from  the specified direction
@@ -33,45 +39,45 @@ public:
 };
 
 class Wire : public Component {
-	COMPONENTDEF(1, Wire)
+	COMPONENTDEF(WIRE, Wire)
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 	bool getOutput(DIR direction, char state) override;
 };
 
 class Input : public Component {
-	COMPONENTDEF(2, Input)
+	COMPONENTDEF(INPUT, Input)
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 
 class Output : public Wire {
-	COMPONENTDEF(3, Output)
+	COMPONENTDEF(OUTPUT, Output)
 public:
 };
 
 class Transistor : public Component {
-	COMPONENTDEF(4, Transistor)
+	COMPONENTDEF(TRANSISTOR, Transistor)
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 };
 
 class Not : public Component {
-	COMPONENTDEF(5, Not)
+	COMPONENTDEF(NOT, Not)
 public:
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
 	bool getOutput(DIR direction, char state) override;
 };
 
 class Junction : public Wire {
-	COMPONENTDEF(6, Junction);
+	COMPONENTDEF(JUNCTION, Junction);
 public:
 	bool getOutput(DIR direction, char state) override;
 };
 
 class Constant : public Component {
-	COMPONENTDEF(7, Constant);
+	COMPONENTDEF(CONSTANT, Constant);
 };
 
 class WireInput : public Wire {
-	COMPONENTDEF(8, WireInput);
+	COMPONENTDEF(INPUT, WireInput);
 
 };
 
@@ -87,7 +93,7 @@ public:
 	std::vector<int> outx;
 	std::vector<int> outy;
 
-	virtual int id() override { return 999; }
+	virtual ComponentType id() override { return SUBCIRCUIT_PROXY; }
 	Component* copy() override {
 		return nullptr;
 	};
