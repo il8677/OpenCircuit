@@ -12,11 +12,11 @@
 #define M_LEFT x - 1, y
 
 
-void Chunk::createUpdatesAround(int x, int y) {
-	createUpdateJob(M_UP, DIR::DOWN);
-	createUpdateJob(M_RIGHT, DIR::LEFT);
-	createUpdateJob(M_DOWN, DIR::UP);
-	createUpdateJob(M_LEFT, DIR::RIGHT);
+void Chunk::createUpdatesAround(int x, int y, DIR exclude) {
+	if(DIR::UP != exclude) createUpdateJob(M_UP, DIR::DOWN);
+	if(DIR::RIGHT != exclude) createUpdateJob(M_RIGHT, DIR::LEFT);
+	if(DIR::DOWN != exclude) createUpdateJob(M_DOWN, DIR::UP);
+	if(DIR::LEFT != exclude) createUpdateJob(M_LEFT, DIR::RIGHT);
 }
 
 bool Chunk::getOutput(int x, int y, DIR from) const
@@ -49,7 +49,7 @@ void Chunk::updateInputs() {
 	for (int y = 0; y < CHUNK_Y; y++) {
 		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x,y) == 2) 
-				createUpdatesAround(x, y);
+				createUpdatesAround(x, y, NONE);
 		}
 	}
 }
@@ -70,7 +70,7 @@ void Chunk::reset()
 	for (int y = 0; y < CHUNK_Y; y++) {
 		for (int x = 0; x < CHUNK_X; x++) {
 			if (schematic->getCellId(x, y) == 2)
-				createUpdatesAround(x, y);
+				createUpdatesAround(x, y, NONE);
 			else if (schematic->getCellId(x,y) == 5)
 				createUpdateJob(x, y, NONE);
 		}
@@ -120,7 +120,7 @@ void Chunk::tick() {
 		bool changed = !(last == states[j.x][j.y]);
 		
 		queue.pop();
-		if(changed) createUpdatesAround(j.x, j.y);
+		if(changed) createUpdatesAround(j.x, j.y, j.d);
 	}
 
 	for (auto& [proxy, circuit] : subcircuits) {
@@ -134,7 +134,7 @@ void Chunk::tick() {
 			for (int y = 0; y < CHUNK_Y; y++) {
 				for (int x = 0; x < CHUNK_X; x++) {
 					if (&states[x][y] == c) {
-						createUpdatesAround(x, y);
+						createUpdatesAround(x, y, NONE);
 						x = CHUNK_X;
 						break;
 					}

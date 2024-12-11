@@ -20,11 +20,11 @@ class Subcircuit;
 class Chunk
 {
 	std::queue<Job> jobQueue;
-
+public:
 	char states[CHUNK_X][CHUNK_Y];
 
 	inline void createUpdateJob(int x, int y, DIR d);
-	inline void createUpdatesAround(int x, int y);
+	inline void createUpdatesAround(int x, int y, DIR exclude);
 
 	inline vec4<bool> getNeighbours(int x, int y) const;
 

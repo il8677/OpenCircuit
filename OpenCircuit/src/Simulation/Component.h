@@ -32,7 +32,7 @@ public:
 class Wire : public Component {
 	COMPONENTDEF(1, Wire)
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
-public:
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Input : public Component {
@@ -57,11 +57,9 @@ public:
 	bool getOutput(DIR direction, char state) override;
 };
 
-class Junction : public Component {
+class Junction : public Wire {
 	COMPONENTDEF(6, Junction);
 public:
-	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
-
 	bool getOutput(DIR direction, char state) override;
 };
 

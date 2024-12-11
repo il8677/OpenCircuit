@@ -39,7 +39,15 @@ char Component::predictState(vec4<bool> neighbours, DIR sourceDir, char state) c
 }
 
 char Wire::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
-	return neighbours.values[sourceDir];
+	char targetBit = 1 << sourceDir;
+	char setTo = neighbours.values[sourceDir] << sourceDir;
+
+	return state & ~targetBit | setTo;
+}
+
+bool Wire::getOutput(DIR direction, char state) {
+	char targetBit = 1 << direction;
+	return state & ~targetBit;
 }
 
 char Transistor::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
@@ -58,25 +66,16 @@ bool Not::getOutput(DIR direction, char state)
 	return !state;
 }
 
-char Junction::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const {
-	//Bit 1 of state stores u/d, bit 2 stores l/r
-
-	//This returns which bit we're meant to be using, if we want to toggle bit 1 it returns 01, otherwise, it returns 10
-	//conveluted, but it works
-	char mask = (sourceDir % 2 == 0 ? 1 : 2);
-	char others = state & ~mask; // Everything except what we want masked
-
-	return others | (neighbours.values[sourceDir]<< (mask-1));
-}
-
 bool Junction::getOutput(DIR sourceDir, char state) {
-	if (sourceDir == NONE) {
+	if (sourceDir == NONE)
 		return state;
-	}
+	else if (sourceDir == UP) sourceDir = DOWN;
+	else if (sourceDir == LEFT) sourceDir = RIGHT;
+	else if (sourceDir == DOWN) sourceDir = UP;
+	else if (sourceDir == RIGHT) sourceDir = RIGHT;
 
-	char mask = (sourceDir % 2 == 0 ? 1 : 2);
-
-	return state & mask;
+	char targetBit = 1 << sourceDir;
+	return state & targetBit;
 }
 
 char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const

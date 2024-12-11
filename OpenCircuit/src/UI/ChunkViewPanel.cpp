@@ -18,12 +18,17 @@ ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk)
 		int targetX = mbe->posx;
 		int targetY = mbe->posy;
 
-
-        if(mbe->left){
             if (m_clipView)
                 ChunkRenderer::worldToGridClip(targetX, targetY, m_chunk);
             else
                 ChunkRenderer::worldToGrid(targetX, targetY);
+
+            ImGui::Begin("Debug pos");
+            char s = m_chunk.states[targetX][targetY];
+            ImGui::Text("%d%d%d%d", s&1, s&2, s&4, s&8);
+            ImGui::End();
+
+        if(mbe->left){
 
             if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
                 SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
