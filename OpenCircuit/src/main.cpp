@@ -15,6 +15,7 @@
 #include "UI/ChunkViewEditorPanel.h"
 #include "UI/WorkspacePanel.h"
 #include "UI/PalettePanel.h"
+#include "UI/ValidationPanel.h"
 #include "Workspace.h"
 
 class App {
@@ -46,6 +47,7 @@ public:
 			chunkView->setSelectedScematic(spe->placedSchematic);
 		});
 
+		panels.emplace_back(std::make_unique<ValidationPanel>());
 
 		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });
