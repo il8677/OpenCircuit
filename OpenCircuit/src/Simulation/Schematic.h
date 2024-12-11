@@ -10,8 +10,8 @@ class Input;
 class Output;
 class SubcircuitProxy;
 
-#define CHUNK_X 16
-#define CHUNK_Y 16
+#define CHUNK_X 32
+#define CHUNK_Y 32
 
 class Schematic
 {
