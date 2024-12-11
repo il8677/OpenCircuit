@@ -28,5 +28,6 @@ file(GLOB_RECURSE HEADERS
 add_executable(OpenCircuit ${SOURCES} ${HEADERS})
 
 target_include_directories(OpenCircuit PUBLIC ${CMAKE_SOURCE_DIR}/OpenCircuit/depen/ImGUI/include)
+target_include_directories(OpenCircuit PUBLIC ${CMAKE_SOURCE_DIR}/OpenCircuit/src)
 target_link_libraries(OpenCircuit PUBLIC ${OPENGL_gl_LIBRARY} sfml-graphics sfml-audio sfml-window sfml-system)
 target_link_libraries(OpenCircuit PUBLIC imgui::imgui ImGui-SFML::ImGui-SFML)
