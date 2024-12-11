@@ -72,7 +72,7 @@ bool Junction::getOutput(DIR sourceDir, char state) {
 	else if (sourceDir == UP) sourceDir = DOWN;
 	else if (sourceDir == LEFT) sourceDir = RIGHT;
 	else if (sourceDir == DOWN) sourceDir = UP;
-	else if (sourceDir == RIGHT) sourceDir = RIGHT;
+	else if (sourceDir == RIGHT) sourceDir = LEFT;
 
 	char targetBit = 1 << sourceDir;
 	return state & targetBit;
