@@ -77,7 +77,7 @@ class Constant : public Component {
 };
 
 class WireInput : public Wire {
-	COMPONENTDEF(INPUT, WireInput);
+	COMPONENTDEF(WIRE, WireInput);
 
 };
 
