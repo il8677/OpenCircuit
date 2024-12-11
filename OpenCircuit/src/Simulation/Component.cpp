@@ -84,7 +84,15 @@ char Input::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const
 }
 
 int SubcircuitProxy::getSizeX() {
-	return s->inputCount() >= 3 ? 3 : 1;
+	switch (std::max(s->inputCount(), s->outputCount())){
+		case 1:
+		case 2:
+			return 1;
+		case 3:
+			return 2;
+		default:
+			return 3;
+	}
 }
 
 int SubcircuitProxy::getSizeY() {
