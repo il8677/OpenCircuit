@@ -23,11 +23,6 @@ ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk)
             else
                 ChunkRenderer::worldToGrid(targetX, targetY);
 
-            ImGui::Begin("Debug pos");
-            char s = m_chunk.states[targetX][targetY];
-            ImGui::Text("%d%d%d%d", s&1, s&2, s&4, s&8);
-            ImGui::End();
-
         if(mbe->left){
 
             if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
