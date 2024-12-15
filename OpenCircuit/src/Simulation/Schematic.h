@@ -1,4 +1,6 @@
 #pragma once
+#include <Validation/ValidationSet.h>
+
 #include <string>
 #include <vector>
 #include <forward_list>
@@ -18,6 +20,8 @@ class Schematic
 	Component* cMap[CHUNK_X][CHUNK_Y];
 
 	std::string name;
+
+	ValidationSet validationSet;
 public:
 	std::forward_list<SubcircuitProxy*> subcircuits;
 
@@ -56,5 +60,7 @@ public:
 
 	void save(std::ofstream& fs);
 	void load(std::istringstream& is, std::vector<Schematic*>& schematics);
+
+	ValidationSet& getValidationSet() { return validationSet; }
 };
 

@@ -6,9 +6,7 @@
 
 class ValidationSet {
 public:
-	ValidationSet(const std::string& name);
-
-	const std::string& getName() { return m_name; }
+	ValidationSet();
 
 	TestCaseTransformer& getTransformer() { return m_transformer; }
 	const TestCaseTransformer& getTransformer() const { return m_transformer; }
@@ -19,7 +17,6 @@ public:
 
 	int tickRequirement=4;
 private:
-	std::string m_name;
 	TestCaseTransformer m_transformer;
 	std::vector<TestCase> m_cases;
 

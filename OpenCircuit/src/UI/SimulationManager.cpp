@@ -8,7 +8,9 @@
 void SimulationManager::onImGuiDraw(){
     ImGui::Begin("Simulation Manager");
     ImGui::SeparatorText("Inputs");
+    // TODO: Keep track of inputs without having to do a search, also update the validation somewhere not this hacky
     std::vector<char*> inputs = m_chunk.getInputs();
+    m_chunk.schematic->getValidationSet().getTransformer().setInputCount(inputs.size());
     for (int i = 0; i < inputs.size(); i++) {
         ImGui::PushID(i);
         if (i > 0)
@@ -21,6 +23,7 @@ void SimulationManager::onImGuiDraw(){
 
     ImGui::SeparatorText("Outputs");
     std::vector<char*> outputs = m_chunk.getOutputs();
+    m_chunk.schematic->getValidationSet().getTransformer().setOutputCount(outputs.size());
     for (int i = 0; i < outputs.size(); i++) {
         if (i > 0)
             ImGui::SameLine();

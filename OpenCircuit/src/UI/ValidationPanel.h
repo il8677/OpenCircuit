@@ -10,10 +10,8 @@ public:
 private:
     virtual void onImGuiDraw();
 
-	std::vector<ValidationSet> m_sets;
 	std::string m_latestResult;
 
-	size_t m_selectedSet = -1;
 	size_t m_selectedCase = -1;
 
 	Chunk& m_activeChunk;
