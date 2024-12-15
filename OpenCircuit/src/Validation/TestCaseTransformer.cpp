@@ -52,7 +52,7 @@ std::vector<bool> TestCaseTransformer::getInput(std::string s) {
 	return output;
 }
 
-std::string convertOutput(std::vector<bool> outputs) {
+std::string TestCaseTransformer::convertOutput(std::vector<bool> outputs) {
 	std::string result;
 	result.resize(outputs.size());
 	for(size_t i = 0; i < outputs.size(); i++){

@@ -1,8 +1,10 @@
 #include "ValidationPanel.h"
-
+#include <Validation/Validator.h>
+#include <Simulation/Chunk.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 
-ValidationPanel::ValidationPanel() {
+ValidationPanel::ValidationPanel(Chunk& c) : m_activeChunk(c) {
 
 }
 
@@ -80,12 +82,18 @@ void ValidationPanel::onImGuiDraw() {
 			}
 		}
 
-		tc.input.reserve(1024);
-		tc.expectedOutput.reserve(1024);
+		ImGui::InputTextMultiline("Input", &tc.input);
+		ImGui::InputTextMultiline("Output", &tc.expectedOutput);
 
-		ImGui::InputTextMultiline("Input", tc.input.data(), 1024);
-		ImGui::InputTextMultiline("Output", tc.expectedOutput.data(), 1024);
+		if(ImGui::Button("Run set")) {
+			Validator validator;
+			std::vector<bool> results = validator.validate(m_sets[m_selectedSet], *m_activeChunk.schematic);
+			m_latestResult.clear();
+			for(bool res : results) m_latestResult.push_back(res ? '1' : '0');
+		}	
 	}
-
+	if(m_latestResult.size()) {
+		ImGui::Text("%s", m_latestResult.data());
+	}
 	ImGui::End();
 }

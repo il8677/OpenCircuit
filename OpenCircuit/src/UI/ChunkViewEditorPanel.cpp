@@ -6,6 +6,7 @@
 #include "PalettePanel.h"
 #include "WorkspacePanel.h"
 #include "SimulationManager.h"
+#include "ValidationPanel.h"
 #include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include <imgui.h>
@@ -22,6 +23,8 @@ ChunkViewEditorPanel::ChunkViewEditorPanel(std::string name, PalettePanel& palet
 	m_palettePanel(palettePanel),
 	m_simulationManager(emplaceChild<SimulationManager, Chunk&>(m_chunk)) { 
 
+
+	emplaceChild<ValidationPanel, Chunk&>(m_chunk);
 	setupEvents(); 
 }
 

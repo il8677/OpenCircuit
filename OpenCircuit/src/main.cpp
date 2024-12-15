@@ -47,8 +47,6 @@ public:
 			chunkView->setSelectedScematic(spe->placedSchematic);
 		});
 
-		panels.emplace_back(std::make_unique<ValidationPanel>());
-
 		for (int i = 0; i < 6; i++) {
 			w.addEventCallback(EventCode::D_Num1 + i, [&, i](Event* e) { palettePanel.setLeftBrush(i + 1); });
 		}
