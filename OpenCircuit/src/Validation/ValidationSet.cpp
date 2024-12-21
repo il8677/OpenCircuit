@@ -58,6 +58,8 @@ void ValidationSet::load(std::istream& is) {
 		is >> st;
 	}
 
+	// Get rid of leading ' '
+	is.seekg(1, std::ios::cur);
 	for(size_t i = 0; i < m_cases.size(); i++) {
 		std::getline(is, m_cases[i].input, ',');
 		std::getline(is, m_cases[i].expectedOutput, ',');
