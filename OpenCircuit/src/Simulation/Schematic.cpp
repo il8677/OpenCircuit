@@ -5,6 +5,7 @@
 #include "Schematic.h"
 #include "Subcircuit.h"
 #include "Component.h"
+#include <Utility/Serialization.h>
 
 
 std::string Schematic::getName() {
@@ -261,7 +262,7 @@ void Schematic::save(std::ofstream& fs)
 		for (int x = 0; x < CHUNK_X; x++) {
 			if (getCellId(x, y) != 0 && getCellId(x, y) != 999) {
 				fs << x << "," << y << "," << getCellId(x, y);
-				fs << '[';
+				fs << SER_COMPONENT_DELIM;
 			}
 		}
 	}
@@ -271,19 +272,29 @@ void Schematic::save(std::ofstream& fs)
 		for (int y = 0; y < CHUNK_Y; y++) {
 			for (int x = 0; x < CHUNK_X; x++) {
 				if (cMap[x][y] == *it) {
-					fs << x << "," << y << "," << 999 << ',' << (*it)->s->getName() << '[';
+					fs << x << "," << y << "," << 999 << ',' << (*it)->s->getName() << SER_COMPONENT_DELIM;
 					y = CHUNK_Y + 1;
 					x = CHUNK_X + 1;
 				}
 			}
 		}
 	}
+
+	fs << SER_VALIDATOR_START_DELIM;
+	validationSet.save(fs);
 }
 
 void Schematic::load(std::istringstream& is, std::vector<Schematic*>& schematics) {
 	//Messy loading, TODO: Find a cleaner way to load these values
 	std::string line;
-	while (std::getline(is, line, '[')) {
+	while (std::getline(is, line, SER_COMPONENT_DELIM)) {
+		if(line[0] == SER_VALIDATOR_START_DELIM) {
+			std::istringstream validatorStream (line);
+			validatorStream.seekg(1);
+			validationSet.load(validatorStream);
+			break;
+		}
+
 		std::istringstream linestream(line);
 		std::string buffer;
 		

@@ -1,4 +1,5 @@
 #include "Workspace.h"
+#include <utility/Serialization.h>
 
 #include <sstream>
 #include <fstream>
@@ -52,22 +53,22 @@ void Workspace::moveUp(int i) {
 void Workspace::save(std::ofstream& fs)
 {
 	for (int i = 0; i  < schematics.size(); i++) {
-		fs << schematics[i]->getName() << ";";
+		fs << schematics[i]->getName() << SER_SCHEM_NAME_DELIM;
 		schematics[i]->save(fs);
-		fs << ":";
+		fs << SER_SCHEM_END_DELIM;
 	}
 }
 
 void Workspace::load(std::ifstream& fs) {
     schematics.clear();
 	std::string line;
-	while (getline(fs, line, ':')) {
+	while (getline(fs, line, SER_SCHEM_END_DELIM)) {
 		std::istringstream ls(line);
 		std::string name;
 		std::string schematicline;
 
-		getline(ls, name, ';');
-		getline(ls, schematicline, ';');
+		getline(ls, name, SER_SCHEM_NAME_DELIM);
+		getline(ls, schematicline, SER_SCHEM_NAME_DELIM);
 
 		newSchematic(name);
 		std::istringstream sl(schematicline);

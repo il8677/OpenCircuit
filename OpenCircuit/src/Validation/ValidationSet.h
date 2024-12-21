@@ -6,7 +6,7 @@
 
 class ValidationSet {
 public:
-	ValidationSet();
+	ValidationSet()=default;
 
 	TestCaseTransformer& getTransformer() { return m_transformer; }
 	const TestCaseTransformer& getTransformer() const { return m_transformer; }
@@ -14,6 +14,9 @@ public:
 	void addTestCase() { m_cases.emplace_back(); }
 	size_t getTestCaseCount() { return m_cases.size(); }
 	TestCase& getTestCase(size_t i) { return m_cases[i]; }
+
+	void save(std::ofstream& fs);
+	void load(std::istream& is);
 
 	int tickRequirement=4;
 private:
