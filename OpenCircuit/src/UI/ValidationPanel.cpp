@@ -35,6 +35,9 @@ void ValidationPanel::onImGuiDraw() {
 			transformer.setInputLines(lineCounts[0]);
 			transformer.setOutputLines(lineCounts[1]);
 		}
+		ImGui::PopItemWidth();
+
+		ImGui::PushItemWidth(80);
 		ImGui::InputInt("Tick requirement", &set.tickRequirement);
 		ImGui::PopItemWidth();
 
