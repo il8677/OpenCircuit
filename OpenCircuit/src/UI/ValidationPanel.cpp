@@ -26,7 +26,7 @@ void ValidationPanel::onImGuiDraw() {
 
 	if(m_selectedCase != -1) {
 		TestCaseTransformer& transformer = set.getTransformer();
-		TestCase& tc =  set.getTestCase(m_selectedCase);
+		TestCase& tc = set.getTestCase(m_selectedCase);
 
 		int lineCounts[2] = { transformer.getInputLines(), transformer.getOutputLines() };
 
