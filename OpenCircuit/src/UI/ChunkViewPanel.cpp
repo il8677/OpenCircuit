@@ -12,6 +12,12 @@
 
 ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk) 
     : m_name(name), m_chunk(chunk) {
+    registerEventHandler(EventCode::I_SchematicChanged, [&](Event* e){
+        SchematicChangedEvent* sce = reinterpret_cast<SchematicChangedEvent*>(e);
+
+        setSchematic(sce->changedSchematic);
+    });
+
 	registerEventHandler(EventCode::M_MouseMove, [&](Event* e){
 		MouseMovedEvent* mbe = (MouseMovedEvent*) e;
 

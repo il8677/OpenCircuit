@@ -13,12 +13,12 @@ public:
     void registerEventHandler(EventCode eventCode, EventCallback callback);
     void addJob(std::function<void()> job) { m_jobQueue.push(job); }
 
+    void dispatchEvent(Event* e); 
     virtual ~UIPanel()=default;
 protected:
     UIPanel()=default;
 
     void handleEvents();
-    void dispatchEvent(Event* e); 
 
     template <class T, typename... Args>
     T& emplaceChild(Args&&... args){

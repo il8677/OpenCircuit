@@ -36,9 +36,7 @@ public:
 		chunkView->setSchematic(workspace.getSchematic(0));
 
         workspacePanel.registerEventHandler(I_SchematicChanged, [=](Event* e) {
-            SchematicChangedEvent* sce = reinterpret_cast<SchematicChangedEvent*>(e);
-
-            chunkView->setSchematic(sce->changedSchematic);
+            chunkView->dispatchEvent(e);
         });
 
 		workspacePanel.registerEventHandler(I_SchematicPlaced, [=](Event* e) {

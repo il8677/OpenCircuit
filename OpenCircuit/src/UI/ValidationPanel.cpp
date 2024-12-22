@@ -6,6 +6,10 @@
 
 ValidationPanel::ValidationPanel(Chunk& c) : m_activeChunk(c) { // TODO, hook up to event system instead of passing chunk
 
+	registerEventHandler(EventCode::I_SchematicChanged, [&](Event* e) {
+		m_selectedCase = -1;
+		m_latestResult.clear();
+	});
 }
 
 void ValidationPanel::onImGuiDraw() {
