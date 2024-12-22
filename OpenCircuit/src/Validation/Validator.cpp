@@ -20,6 +20,8 @@ std::vector<bool> Validator::validate(ValidationSet& validatorSet, Chunk& c) {
 			*chunkInputs[j] = input[j];
 		}
 
+		c.updateInputs();
+
 		for(size_t tick = 0; tick < validatorSet.tickRequirement; tick++) {
 			c.tick();
 		}
