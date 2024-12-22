@@ -3,10 +3,9 @@
 #include "ValidationSet.h"
 #include <Simulation/Chunk.h>
 
-std::vector<bool> Validator::validate(ValidationSet& validatorSet, Schematic& schematic) {
+std::vector<bool> Validator::validate(ValidationSet& validatorSet, Chunk& c) {
 	std::vector<bool> result(validatorSet.getTestCaseCount());
 	
-	Chunk c(&schematic);
 	std::vector<char*> chunkInputs = c.getInputs();
 	std::vector<char*> chunkOutputs = c.getOutputs();
 
@@ -37,4 +36,9 @@ std::vector<bool> Validator::validate(ValidationSet& validatorSet, Schematic& sc
 	}
 
 	return result;
+}
+
+std::vector<bool> Validator::validate(ValidationSet& validatorSet, Schematic& schematic) {
+	Chunk c(&schematic);
+	return validate(validatorSet, c);
 }

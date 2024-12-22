@@ -57,7 +57,7 @@ void ValidationPanel::onImGuiDraw() {
 
 		if(ImGui::Button("Run set")) {
 			Validator validator;
-			std::vector<bool> results = validator.validate(set, *m_activeChunk.schematic);
+			std::vector<bool> results = validator.validate(set, m_activeChunk);
 			m_latestResult.clear();
 			for(bool res : results) m_latestResult.push_back(res ? '1' : '0');
 		}	
