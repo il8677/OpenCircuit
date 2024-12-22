@@ -46,7 +46,7 @@ std::vector<bool> TestCaseTransformer::getInput(std::string s) {
 
 	for(size_t line : m_inputLineMapping) {
 		int nextForThisLine = next[line]++;
-		output.push_back(lines[line][nextForThisLine] == '0');
+		output.push_back(lines[line][nextForThisLine] == '1');
 	}
 
 	return output;
