@@ -10,6 +10,8 @@ class Workspace
 {
 	std::vector<Schematic*> schematics;
 public:
+	std::string notes;
+
 	Workspace();
 
 	Schematic* getSchematic(int i);

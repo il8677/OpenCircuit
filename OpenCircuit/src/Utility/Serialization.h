@@ -6,6 +6,7 @@ constexpr char SER_COMPONENT_DELIM = '[';
 constexpr char SER_VALIDATOR_START_DELIM = '>';
 constexpr char SER_SCHEM_NAME_DELIM = ';';
 constexpr char SER_SCHEM_END_DELIM = ':';
+constexpr char SER_NOTE_DELIM = '\2';
 
 template <typename T>
 void Save(std::ostream& os, const std::vector<T>& v) {

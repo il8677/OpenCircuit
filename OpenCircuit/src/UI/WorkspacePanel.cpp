@@ -3,6 +3,7 @@
 #include "../Workspace.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 
 #include <fstream>
 
@@ -62,5 +63,10 @@ void WorkspacePanel::onImGuiDraw(){
         }
         ImGui::PopID();
     }
+    ImGui::End();
+
+    ImGui::Begin("Notes");
+    ImGui::SetNextItemWidth(-1);
+    ImGui::InputTextMultiline("##Notes", &m_workspace.notes);
     ImGui::End();
 }

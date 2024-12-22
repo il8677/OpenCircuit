@@ -52,6 +52,10 @@ void Workspace::moveUp(int i) {
 
 void Workspace::save(std::ofstream& fs)
 {
+	if(notes != "") {
+		fs << SER_NOTE_DELIM; fs << notes; fs << SER_NOTE_DELIM;
+	}
+
 	for (int i = 0; i  < schematics.size(); i++) {
 		fs << schematics[i]->getName() << SER_SCHEM_NAME_DELIM;
 		schematics[i]->save(fs);
@@ -61,6 +65,12 @@ void Workspace::save(std::ofstream& fs)
 
 void Workspace::load(std::ifstream& fs) {
     schematics.clear();
+
+	if(fs.peek() == SER_NOTE_DELIM) {
+		fs.seekg(1, std::ios::cur);
+		getline(fs, notes, SER_NOTE_DELIM);
+	}
+
 	std::string line;
 	while (getline(fs, line, SER_SCHEM_END_DELIM)) {
 		std::istringstream ls(line);
