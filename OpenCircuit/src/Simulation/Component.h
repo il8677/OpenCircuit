@@ -57,6 +57,7 @@ public:
 class Transistor : public Component {
 	COMPONENTDEF(TRANSISTOR, Transistor)
 	char predictState(vec4<bool> neighbours, DIR sourceDir, char state) const override;
+	bool getOutput(DIR direction, char state) override;
 };
 
 class Not : public Component {

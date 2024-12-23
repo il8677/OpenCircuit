@@ -54,12 +54,17 @@ char Transistor::predictState(vec4<bool> neighbours, DIR sourceDir, char state) 
 	return neighbours.up && neighbours.left;
 }
 
+bool Transistor::getOutput(DIR direction, char state) {
+	if(direction == RIGHT || direction == NONE) return state;
+
+	return false;
+}
+
 char Not::predictState(vec4<bool> neighbours, DIR sourceDir, char state) const{
 	return !neighbours.left;
 }
 
-bool Not::getOutput(DIR direction, char state)
-{
+bool Not::getOutput(DIR direction, char state) {
 	if (direction == RIGHT) {
 		return state;
 	}
