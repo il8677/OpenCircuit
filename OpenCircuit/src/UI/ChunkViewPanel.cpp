@@ -24,10 +24,10 @@ ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk)
 		int targetX = mbe->posx;
 		int targetY = mbe->posy;
 
-            if (m_clipView)
-                ChunkRenderer::worldToGridClip(targetX, targetY, m_chunk);
-            else
-                ChunkRenderer::worldToGrid(targetX, targetY);
+        if (m_clipView)
+            ChunkRenderer::worldToGridClip(targetX, targetY, m_chunk);
+        else
+            ChunkRenderer::worldToGrid(targetX, targetY);
 
         if(mbe->left){
 
