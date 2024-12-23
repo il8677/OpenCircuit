@@ -110,9 +110,7 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip
 	renderTarget.draw(cells);
 	renderTarget.draw(grid);
 
-	if(Debug::drawDebugChunks){
-		Debug::drawUpdateOverlay(renderTarget, c, vec4<int>(startX, startY, endX, endY), 10);
-	}
+	Debug::drawUpdateOverlay(renderTarget, c, vec4<int>(startX, startY, endX, endY), 10);
 }
 
 std::tuple<int, int, int, int>  ChunkRenderer::getChunkBounds(Chunk& c) {

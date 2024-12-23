@@ -8,6 +8,7 @@ class Chunk;
 class Debug {
 public:
 	static bool drawDebugChunks;
+	static bool drawStates;
 
 	static void drawUpdateOverlay(sf::RenderTarget& w, Chunk* c, vec4<int> clipData, int uo);
 };

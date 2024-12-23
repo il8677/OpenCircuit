@@ -83,7 +83,9 @@ private:
         palettePanel.render();
 
 		ImGui::Begin("Debug");
-		ImGui::Checkbox("Debug Chunks:", &Debug::drawDebugChunks);
+		ImGui::Checkbox("Updates", &Debug::drawDebugChunks);
+		ImGui::SameLine();
+		ImGui::Checkbox("States", &Debug::drawStates);
 		ImGui::End();
 	}
 };
