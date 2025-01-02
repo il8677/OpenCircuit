@@ -12,11 +12,9 @@ void Subcircuit::addOutput(char* out)
 }
 
 Subcircuit::Subcircuit(const Chunk& containedChunk) : containedCircuit(containedChunk) {
-	containedCircuit.reset();
 }
 
 Subcircuit::Subcircuit(Schematic* containedSchematic) : containedCircuit(containedSchematic) {
-	containedCircuit.reset();
 }
 
 void Subcircuit::reset()

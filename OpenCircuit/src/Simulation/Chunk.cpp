@@ -208,4 +208,17 @@ Chunk& Chunk::operator=(const Chunk& other)
 	return *this;
 }
 
+Chunk& Chunk::operator=(Chunk&& other) {
+	schematic = other.schematic;
+	for (int y = 0; y < CHUNK_Y; y++) {
+		for (int x = 0; x < CHUNK_X; x++) {
+			states[x][y] = other.states[x][y];
+		}
+	}
+
+	subcircuits = std::move(other.subcircuits);
+
+	return *this;
+}
+
 std::vector<Component*> Component::components;

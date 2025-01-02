@@ -31,5 +31,11 @@ public:
 	
 	Subcircuit(const Chunk& containedChunk);
 	Subcircuit(Schematic* containedSchematic);
+
+	Subcircuit(const Subcircuit&)=default;
+	Subcircuit(Subcircuit&&)=default;
+
+	Subcircuit& operator=(const Subcircuit&)=default;
+	Subcircuit& operator=(Subcircuit&&)=default;
 };
 
