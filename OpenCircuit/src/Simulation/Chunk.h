@@ -19,9 +19,10 @@ class Subcircuit;
 //5 = ntransistor
 class Chunk
 {
-	std::queue<Job> jobQueue;
-public:
 	char states[CHUNK_X][CHUNK_Y];
+	std::unordered_map<SubcircuitProxy*, Subcircuit> subcircuits;
+
+	std::queue<Job> jobQueue;
 
 	inline void createUpdateJob(int x, int y, DIR d);
 	inline void createUpdatesAround(int x, int y, DIR exclude);
@@ -30,7 +31,6 @@ public:
 
 	void populateSubcircuits();
 
-	std::unordered_map<SubcircuitProxy*, Subcircuit> subcircuits;
 public:
 
 	Schematic* schematic;
