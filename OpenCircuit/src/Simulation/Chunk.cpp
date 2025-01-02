@@ -217,6 +217,7 @@ Chunk& Chunk::operator=(Chunk&& other) {
 	}
 
 	subcircuits = std::move(other.subcircuits);
+	jobQueue = std::move(other.jobQueue);
 
 	return *this;
 }
