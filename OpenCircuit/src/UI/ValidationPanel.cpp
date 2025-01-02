@@ -15,7 +15,7 @@ ValidationPanel::ValidationPanel(Chunk& c) : m_activeChunk(c) { // TODO, hook up
 void ValidationPanel::onImGuiDraw() {
 	ImGui::Begin("Validator");
 
-	ValidationSet& set = m_activeChunk.schematic->getValidationSet();
+	ValidationSet& set = m_activeChunk.getSchematic()->getValidationSet();
 	if(ImGui::SmallButton("+")) {
 		set.addTestCase();
 	}

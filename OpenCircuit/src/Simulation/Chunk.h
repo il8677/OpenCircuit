@@ -19,6 +19,36 @@ class Subcircuit;
 //5 = ntransistor
 class Chunk
 {
+	friend class Debug;
+public:
+	Chunk(Schematic*);
+	Chunk(const Chunk&);
+
+	Chunk();
+	~Chunk();
+
+	Chunk& operator=(const Chunk&);
+	Chunk& operator=(Chunk&&);
+
+	Schematic* getSchematic() { return schematic; }
+
+	bool getOutput(int x, int y, DIR from=NONE) const;
+
+	std::vector<char*> getOutputs();
+	std::vector<char*> getInputs();
+
+    Subcircuit& getSubcircuitFromProxy(SubcircuitProxy* proxy);
+
+	//Creates an update job around all the input cells
+	void updateInputs();
+	void reset();
+
+
+	//Propogate jobs
+	void tick();
+
+private:
+	Schematic* schematic;
 	char states[CHUNK_X][CHUNK_Y];
 	std::unordered_map<SubcircuitProxy*, Subcircuit> subcircuits;
 
@@ -30,34 +60,4 @@ class Chunk
 	inline vec4<bool> getNeighbours(int x, int y) const;
 
 	void populateSubcircuits();
-
-public:
-
-	Schematic* schematic;
-
-	bool getOutput(int x, int y, DIR from=NONE) const;
-
-    Subcircuit& getSubcircuitFromProxy(SubcircuitProxy* proxy);
-
-	//Creates an update job around all the input cells
-	void updateInputs();
-	void reset();
-
-	std::vector<char*> getOutputs();
-	std::vector<char*> getInputs();
-
-	//Propogate jobs
-	void tick();
-
-
-	Chunk(Schematic*);
-	Chunk(const Chunk&);
-
-	Chunk();
-	~Chunk();
-
-	Chunk& operator=(const Chunk&);
-	Chunk& operator=(Chunk&&);
-
-	friend class Debug;
 };

@@ -12,10 +12,10 @@
 #include <imgui.h>
 
 void Paint(Chunk& c, int targetX, int targetY, int resultComponent){
-	if (c.schematic->getCellId(targetX, targetY) != 999)
-		c.schematic->setComponent(resultComponent, targetX, targetY);
+	if (c.getSchematic()->getCellId(targetX, targetY) != 999)
+		c.getSchematic()->setComponent(resultComponent, targetX, targetY);
 	else if (resultComponent == 0)
-		c.schematic->deleteSubcircuit(targetX, targetY);
+		c.getSchematic()->deleteSubcircuit(targetX, targetY);
 }
 
 ChunkViewEditorPanel::ChunkViewEditorPanel(std::string name, PalettePanel& palettePanel) : 
@@ -43,7 +43,7 @@ void ChunkViewEditorPanel::setupEvents() {
 		ChunkRenderer::worldToGrid(targetX, targetY);
 
 		if (mbe->left && m_selectedSchematic){
-			m_chunk.schematic->placeSubcircuit(targetX, targetY, *m_selectedSchematic);
+			m_chunk.getSchematic()->placeSubcircuit(targetX, targetY, *m_selectedSchematic);
 			m_selectedSchematic = nullptr;
 			return;
 		}

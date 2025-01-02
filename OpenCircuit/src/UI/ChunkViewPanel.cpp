@@ -30,9 +30,8 @@ ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk)
             ChunkRenderer::worldToGrid(targetX, targetY);
 
         if(mbe->left){
-
-            if(m_chunk.schematic->getCellId(targetX, targetY) == 999){
-                SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.schematic->getComponent(targetX, targetY));
+            if(m_chunk.getSchematic()->getCellId(targetX, targetY) == 999){
+                SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.getSchematic()->getComponent(targetX, targetY));
                 m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
                 ImGui::OpenPopup("PopupChunk");
                 return;
@@ -99,7 +98,7 @@ void ChunkViewPanel::pinPopup() {
 
     std::stringstream childName; 
     
-    childName << m_name << "." << m_popupChunk->schematic->getName();
+    childName << m_name << "." << m_popupChunk->getSchematic()->getName();
     childName << std::hex << (reinterpret_cast<long>(m_popupChunk)&0xff);
     ChunkViewPanel& child = emplaceChild<ChunkViewPanel>(childName.str(), *m_popupChunk);
 

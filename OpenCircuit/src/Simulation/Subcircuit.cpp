@@ -45,7 +45,7 @@ void Subcircuit::setSchematic(Schematic* s)
 
 Schematic* Subcircuit::getSchematic()
 {
-	return containedCircuit.schematic;
+	return containedCircuit.getSchematic();
 }
 
 std::string Subcircuit::getName()

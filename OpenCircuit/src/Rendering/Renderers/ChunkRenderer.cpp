@@ -91,7 +91,7 @@ void ChunkRenderer::Render(sf::RenderTarget& renderTarget, Chunk* c, bool doClip
 
     for (int x = 0; x < CHUNK_X-startX; x++) {
         for (int y = 0; y < CHUNK_Y-startY; y++) {
-			int cellId = c->schematic->getCellId(x+startX, y+startY);
+			int cellId = c->getSchematic()->getCellId(x+startX, y+startY);
 			int index = ((x)*CHUNK_X + (y))*4;
 
 			sf::Color vColour = vec4ToSf( getComponentColour(cellId) );
@@ -119,7 +119,7 @@ std::tuple<int, int, int, int>  ChunkRenderer::getChunkBounds(Chunk& c) {
 
 	for(int y = 0; y < CHUNK_Y; y++){
 		for(int x = 0; x < CHUNK_X; x++){
-			if(c.schematic->getCellId(x, y)){
+			if(c.getSchematic()->getCellId(x, y)){
 				startX = std::min(x, startX);
 				startY = std::min(y, startY);
 				endX = std::max(x, endX);
