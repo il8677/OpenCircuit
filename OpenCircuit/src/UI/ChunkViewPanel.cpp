@@ -4,11 +4,19 @@
 #include "../Rendering/Renderers/ChunkRenderer.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <imgui_internal.h>
 #include <imgui-SFML.h>
 
 #include <sstream>
 #include <iomanip>
+
+std::string GetChunkDisplayName(Chunk& chunk, const std::string parentName) {
+    std::stringstream childName; 
+    childName << parentName << "." << chunk.getSchematic()->getName();
+    childName << std::hex << (reinterpret_cast<long>(&chunk)&0xfff);
+    return childName.str();
+}
 
 ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk) 
     : m_name(name), m_chunk(chunk) {
@@ -33,6 +41,7 @@ ChunkViewPanel::ChunkViewPanel(std::string name, Chunk& chunk)
             if(m_chunk.getSchematic()->getCellId(targetX, targetY) == 999){
                 SubcircuitProxy* proxy = reinterpret_cast<SubcircuitProxy*>(m_chunk.getSchematic()->getComponent(targetX, targetY));
                 m_popupChunk = &m_chunk.getSubcircuitFromProxy(proxy).getChunk();
+                m_popupName = GetChunkDisplayName(*m_popupChunk, m_name);
                 ImGui::OpenPopup("PopupChunk");
                 return;
             }
@@ -84,6 +93,9 @@ void ChunkViewPanel::drawPopup() {
     if(ImGui::Button("Pin")) {
         pinPopup();
     }
+    ImGui::SameLine();
+    ImGui::Text("%s", m_popupName.c_str());
+
     m_popupTexture.create(m_viewportSize.x/4, m_viewportSize.y/4);
     m_popupTexture.clear(sf::Color::Black);
     ChunkRenderer::Render(m_popupTexture, m_popupChunk, true);
@@ -96,11 +108,7 @@ void ChunkViewPanel::pinPopup() {
     auto windowPos = window->Pos;
     auto windowSize = window->SizeFull;
 
-    std::stringstream childName; 
-    
-    childName << m_name << "." << m_popupChunk->getSchematic()->getName();
-    childName << std::hex << (reinterpret_cast<long>(m_popupChunk)&0xff);
-    ChunkViewPanel& child = emplaceChild<ChunkViewPanel>(childName.str(), *m_popupChunk);
+    ChunkViewPanel& child = emplaceChild<ChunkViewPanel>(m_popupName, *m_popupChunk);
 
     child.setClipView(true);
     child.registerEventHandler(I_ChunkChanged, [&](Event*) {

@@ -21,6 +21,7 @@ private:
 	Chunk& m_chunk;
 
 	Chunk* m_popupChunk=nullptr;
+	std::string m_popupName;
 
 	// Rendering stuff
 	ImVec2 m_viewportSize;
